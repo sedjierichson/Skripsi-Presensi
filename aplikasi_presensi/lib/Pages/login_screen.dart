@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -17,9 +18,18 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController tfLoginPassword = TextEditingController();
 
   void pindahkeHomePage() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-      return const HomePage();
-    }));
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+    //   return const HomePage();
+    // }));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return BottomNavBar();
+        },
+      ),
+      (route) => false,
+    );
   }
 
   @override
