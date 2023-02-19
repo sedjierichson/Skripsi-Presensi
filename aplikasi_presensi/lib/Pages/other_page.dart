@@ -69,6 +69,45 @@ class _OtherPageState extends State<OtherPage> {
                         Icon(Icons.arrow_forward_ios, size: 15,)
                       ],
                     ),
+                  ),
+                  SizedBox(height: 10,),
+                  MaterialButton(
+                    padding: EdgeInsets.all(15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    color: Color.fromARGB(255, 207, 207, 207),
+                    onPressed: () {},
+                    child: Row(
+                      children: [
+                        Icon(Icons.assignment_rounded),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: Text('Syarat dan Ketentuan'),
+                        ),
+                        Icon(Icons.arrow_forward_ios, size: 15,)
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  MaterialButton(
+                    padding: EdgeInsets.all(15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    color: Color.fromARGB(255, 207, 207, 207),
+                    onPressed: () {},
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout, color: Colors.red,),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: Text('Keluar', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
