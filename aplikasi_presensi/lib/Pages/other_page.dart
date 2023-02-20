@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -12,6 +13,14 @@ class OtherPage extends StatefulWidget {
 }
 
 class _OtherPageState extends State<OtherPage> {
+
+  void pindahkeEnterPIN() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return const EnterPin();
+    }));
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +45,9 @@ class _OtherPageState extends State<OtherPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     color: Color.fromARGB(255, 207, 207, 207),
-                    onPressed: () {},
+                    onPressed: () {
+                      pindahkeEnterPIN();
+                    },
                     child: Row(
                       children: [
                         Icon(Icons.lock),
