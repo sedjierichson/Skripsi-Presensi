@@ -19,28 +19,28 @@ class VerifPin extends StatefulWidget {
 class _VerifPinState extends State<VerifPin> {
   String VerifikasiPin = '';
 
+  @override
+  void initState() {
+    super.initState();
+    // print('aaaa' + widget.pinLogin);
+  }
+
   void successGantiPin() {
-    if (VerifikasiPin == widget.pinLogin.toString()) {
+    if (VerifikasiPin == widget.pinLogin) {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.success,
         text: 'PIN berhasil diganti',
         confirmBtnText: 'OK',
         confirmBtnColor: Colors.blueAccent,
-        onConfirmBtnTap: () {
-          Navigator.pop(context);
-          Navigator.of(context)
-              .pushReplacement(MaterialPageRoute(builder: (context) {
-            return const OtherPage();
-          }));
-        },
+        autoCloseDuration: Duration(seconds: 5)
       );
     } else {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
         text: 'PIN tidak sama',
-        confirmBtnText: 'OK',
+        confirmBtnText: 'Coba Lagi',
         confirmBtnColor: Colors.blueAccent,
       );
     }
@@ -79,7 +79,7 @@ class _VerifPinState extends State<VerifPin> {
                       keyboardType: TextInputType.number,
                       underlineUnfocusedColor: Colors.black,
                       onCompleted: (value) {
-                        // print("AAAAB" + value);
+                        print("AAAAB" + value);
                         setState(() {
                           VerifikasiPin = value;
                         });
@@ -99,6 +99,10 @@ class _VerifPinState extends State<VerifPin> {
                         color: Colors.cyan,
                         onPressed: () {
                           successGantiPin();
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                            return const OtherPage();
+                          }));
                         },
                         child: Text(
                           'ATUR PIN',

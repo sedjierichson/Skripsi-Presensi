@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
+import 'package:aplikasi_presensi/Pages/set_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -13,12 +14,15 @@ class OtherPage extends StatefulWidget {
 }
 
 class _OtherPageState extends State<OtherPage> {
-
   void pindahkeEnterPIN() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return const EnterPin();
     }));
-    
+  }
+  void pindahkeSetReminder() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return const SetReminder();
+    }));
   }
 
   @override
@@ -57,17 +61,24 @@ class _OtherPageState extends State<OtherPage> {
                         Expanded(
                           child: Text('Atur PIN Login'),
                         ),
-                        Icon(Icons.arrow_forward_ios, size: 15,)
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
                     padding: EdgeInsets.all(15),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     color: Color.fromARGB(255, 207, 207, 207),
-                    onPressed: () {},
+                    onPressed: () {
+                      pindahkeSetReminder();
+                    },
                     child: Row(
                       children: [
                         Icon(Icons.timer),
@@ -77,11 +88,16 @@ class _OtherPageState extends State<OtherPage> {
                         Expanded(
                           child: Text('Atur Jam Pengingat Presensi'),
                         ),
-                        Icon(Icons.arrow_forward_ios, size: 15,)
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
                     padding: EdgeInsets.all(15),
                     shape: RoundedRectangleBorder(
@@ -97,11 +113,16 @@ class _OtherPageState extends State<OtherPage> {
                         Expanded(
                           child: Text('Syarat dan Ketentuan'),
                         ),
-                        Icon(Icons.arrow_forward_ios, size: 15,)
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
                     padding: EdgeInsets.all(15),
                     shape: RoundedRectangleBorder(
@@ -110,12 +131,19 @@ class _OtherPageState extends State<OtherPage> {
                     onPressed: () {},
                     child: Row(
                       children: [
-                        Icon(Icons.logout, color: Colors.red,),
+                        Icon(
+                          Icons.logout,
+                          color: Colors.red,
+                        ),
                         SizedBox(
                           width: 20,
                         ),
                         Expanded(
-                          child: Text('Keluar', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+                          child: Text(
+                            'Keluar',
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),
