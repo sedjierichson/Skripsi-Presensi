@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
+import 'package:aplikasi_presensi/Pages/login_screen.dart';
 import 'package:aplikasi_presensi/Pages/set_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -22,6 +23,12 @@ class _OtherPageState extends State<OtherPage> {
   void pindahkeSetReminder() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return const SetReminder();
+    }));
+  }
+
+  void pindahkeLogin() {
+    Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) {
+      return const LoginScreen();
     }));
   }
 
@@ -128,7 +135,9 @@ class _OtherPageState extends State<OtherPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     color: Color.fromARGB(255, 207, 207, 207),
-                    onPressed: () {},
+                    onPressed: () {
+                      pindahkeLogin();
+                    },
                     child: Row(
                       children: [
                         Icon(

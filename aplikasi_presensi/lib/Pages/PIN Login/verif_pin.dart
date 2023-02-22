@@ -28,13 +28,16 @@ class _VerifPinState extends State<VerifPin> {
   void successGantiPin() {
     if (VerifikasiPin == widget.pinLogin) {
       QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: 'PIN berhasil diganti',
-        confirmBtnText: 'OK',
-        confirmBtnColor: Colors.blueAccent,
-        autoCloseDuration: Duration(seconds: 5)
-      );
+          context: context,
+          type: QuickAlertType.success,
+          text: 'PIN berhasil diganti',
+          confirmBtnText: 'OK',
+          confirmBtnColor: Colors.blueAccent,
+          autoCloseDuration: Duration(seconds: 5));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return const OtherPage();
+      }));
     } else {
       QuickAlert.show(
         context: context,
@@ -99,10 +102,6 @@ class _VerifPinState extends State<VerifPin> {
                         color: Colors.cyan,
                         onPressed: () {
                           successGantiPin();
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) {
-                            return const OtherPage();
-                          }));
                         },
                         child: Text(
                           'ATUR PIN',
