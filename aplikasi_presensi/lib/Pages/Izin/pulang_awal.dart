@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, avoid_unnecessary_containers
 
+import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -15,8 +16,18 @@ class PulangLebihAwal extends StatefulWidget {
 class _PulangLebihAwalState extends State<PulangLebihAwal> {
   TextEditingController tfTanggalIzin = TextEditingController();
   TextEditingController tfJamIzin = TextEditingController();
+  TextEditingController tfAlasanLainnyaIzin = TextEditingController();
+  bool tampilkanTFLainnya = false;
   String? alasan;
   String jamPulangAwal = '';
+
+
+  void pindahKeMenuIzin(){
+    Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return const MenuIzin();
+      }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,22 +140,23 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
                   Text(
                     'Alasan',
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
                   Container(
                     child: Column(
                       children: [
                         SizedBox(
                           height: 40,
                           child: RadioListTile(
-                            title: Text("Sakit"),
+                            title: Text(
+                              "Sakit",
+                              style: TextStyle(fontSize: 15),
+                            ),
                             value: "Sakit",
                             groupValue: alasan,
                             onChanged: (value) {
                               setState(() {
                                 alasan = value.toString();
                                 print(alasan);
+                                tampilkanTFLainnya = false;
                               });
                             },
                           ),
@@ -152,13 +164,17 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
                         SizedBox(
                           height: 40,
                           child: RadioListTile(
-                            title: Text("Urusan Keluarga"),
+                            title: Text(
+                              "Urusan Keluarga",
+                              style: TextStyle(fontSize: 15),
+                            ),
                             value: "Urusan Keluarga",
                             groupValue: alasan,
                             onChanged: (value) {
                               setState(() {
                                 alasan = value.toString();
                                 print(alasan);
+                                tampilkanTFLainnya = false;
                               });
                             },
                           ),
@@ -166,13 +182,17 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
                         SizedBox(
                           height: 40,
                           child: RadioListTile(
-                            title: Text("Panggilan dari Instansi Pemerintah"),
+                            title: Text(
+                              "Panggilan dari Instansi Pemerintah",
+                              style: TextStyle(fontSize: 15),
+                            ),
                             value: "Panggilan dari Instansi Pemerintah",
                             groupValue: alasan,
                             onChanged: (value) {
                               setState(() {
                                 alasan = value.toString();
                                 print(alasan);
+                                tampilkanTFLainnya = false;
                               });
                             },
                           ),
@@ -180,17 +200,58 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
                         SizedBox(
                           height: 40,
                           child: RadioListTile(
-                            title: Text("Lainnya"),
+                            title: Text(
+                              "Lainnya",
+                              style: TextStyle(fontSize: 15),
+                            ),
                             value: "Lainnya",
                             groupValue: alasan,
                             onChanged: (value) {
                               setState(() {
                                 alasan = value.toString();
                                 print(alasan);
+                                tampilkanTFLainnya = true;
                               });
                             },
                           ),
                         ),
+                        SizedBox(height: 10,),
+                        // if (tampilkanTFLainnya == true)
+                        tampilkanTFLainnya ?
+                          TextField(
+                            controller: tfAlasanLainnyaIzin,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height / 20,
+                                  left: MediaQuery.of(context).size.width / 20),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              hintText: 'Isi Alasan',
+                              hintStyle: TextStyle(fontSize: 13),
+                            ),
+                          ) : SizedBox(height: 0,),
+                        Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 25),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 13,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        color: Colors.cyan,
+                        onPressed: () {
+                          pindahKeMenuIzin();
+                        },
+                        child: Text(
+                          'Ajukan',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
                       ],
                     ),
                   )
