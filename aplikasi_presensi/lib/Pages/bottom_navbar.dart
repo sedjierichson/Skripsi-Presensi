@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:aplikasi_presensi/Pages/other_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,7 +66,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           case 2:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: HomePage(),
+                child: MenuIzin(),
               );
             });
           case 3:
