@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/Izin/meninggalkan_sementara.dart';
 import 'package:aplikasi_presensi/Pages/Izin/pulang_awal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -18,6 +19,13 @@ class _MenuIzinState extends State<MenuIzin> {
     Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) {
         return const PulangLebihAwal();
+      }));
+  }
+
+  void pindahKeFormMeninggalkanSementara(){
+    Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) {
+        return const MeninggalkanSementara();
       }));
   }
 
@@ -55,15 +63,18 @@ class _MenuIzinState extends State<MenuIzin> {
                   SizedBox(
                     height: 5,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.greenAccent),
-                    height: MediaQuery.of(context).size.height / 4,
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('MENINGGALKAN KANTOR SEMENTARA'),
+                  InkWell(
+                    onTap: () => pindahKeFormMeninggalkanSementara(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.greenAccent),
+                      height: MediaQuery.of(context).size.height / 4,
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('MENINGGALKAN KANTOR SEMENTARA'),
+                      ),
                     ),
                   ),
                   SizedBox(

@@ -21,9 +21,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
-    super.initState();
   }
 
   void getTime() {

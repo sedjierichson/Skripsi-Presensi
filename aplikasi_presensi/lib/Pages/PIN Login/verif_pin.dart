@@ -19,11 +19,6 @@ class VerifPin extends StatefulWidget {
 class _VerifPinState extends State<VerifPin> {
   String VerifikasiPin = '';
 
-  @override
-  void initState() {
-    super.initState();
-    // print('aaaa' + widget.pinLogin);
-  }
 
   void successGantiPin() {
     if (VerifikasiPin == widget.pinLogin) {

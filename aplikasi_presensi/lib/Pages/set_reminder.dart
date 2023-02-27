@@ -21,12 +21,6 @@ class _SetReminderState extends State<SetReminder> {
   // NotificationAPI notificationAPI = NotificationAPI();
 
   @override
-  void initState() {
-    super.initState();
-    // notificationAPI.initializeNotification();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(

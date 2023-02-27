@@ -21,12 +21,10 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
   String? alasan;
   String jamPulangAwal = '';
 
-
-  void pindahKeMenuIzin(){
-    Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) {
-        return const MenuIzin();
-      }));
+  void pindahKeMenuIzin() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+      return const MenuIzin();
+    }));
   }
 
   @override
@@ -215,43 +213,51 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
                             },
                           ),
                         ),
-                        SizedBox(height: 10,),
-                        // if (tampilkanTFLainnya == true)
-                        tampilkanTFLainnya ?
-                          TextField(
-                            controller: tfAlasanLainnyaIzin,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height / 20,
-                                  left: MediaQuery.of(context).size.width / 20),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              hintText: 'Isi Alasan',
-                              hintStyle: TextStyle(fontSize: 13),
-                            ),
-                          ) : SizedBox(height: 0,),
-                        Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 25),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.height / 13,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        color: Colors.cyan,
-                        onPressed: () {
-                          pindahKeMenuIzin();
-                        },
-                        child: Text(
-                          'Ajukan',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                    ),
-                  ),
+                        // if (tampilkanTFLainnya == true)
+                        tampilkanTFLainnya
+                            ? TextField(
+                                controller: tfAlasanLainnyaIzin,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height /
+                                          20,
+                                      left: MediaQuery.of(context).size.width /
+                                          20),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  hintText: 'Isi Alasan',
+                                  hintStyle: TextStyle(fontSize: 13),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 0,
+                              ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 25),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: MediaQuery.of(context).size.height / 13,
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              color: Colors.cyan,
+                              onPressed: () {
+                                pindahKeMenuIzin();
+                              },
+                              child: Text(
+                                'Ajukan',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   )
