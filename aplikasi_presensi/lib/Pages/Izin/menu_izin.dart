@@ -2,6 +2,8 @@
 
 import 'package:aplikasi_presensi/Pages/Izin/meninggalkan_sementara.dart';
 import 'package:aplikasi_presensi/Pages/Izin/pulang_awal.dart';
+import 'package:aplikasi_presensi/Pages/Izin/surat_tugas.dart';
+import 'package:aplikasi_presensi/Pages/Izin/tidak_absen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -28,6 +30,19 @@ class _MenuIzinState extends State<MenuIzin> {
         return const MeninggalkanSementara();
       }));
   }
+  void pindahKeSuratTugas(){
+    Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) {
+        return const SuratTugas();
+      }));
+  }
+
+  void pindahKeLupaAbsen(){
+    Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) {
+        return const PemberitahuanTidakAbsen();
+      }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +53,8 @@ class _MenuIzinState extends State<MenuIzin> {
             child: Padding(
               padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'MENU IZIN',
@@ -49,10 +66,11 @@ class _MenuIzinState extends State<MenuIzin> {
                   InkWell(
                     onTap: () => pindahKeFormPulangAwal(),
                     child: Container(
+                      
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: Colors.greenAccent),
-                      height: MediaQuery.of(context).size.height / 4,
+                      height: MediaQuery.of(context).size.height / 6,
                       width: MediaQuery.of(context).size.width / 1.1,
                       child: Align(
                         alignment: Alignment.center,
@@ -69,7 +87,7 @@ class _MenuIzinState extends State<MenuIzin> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: Colors.greenAccent),
-                      height: MediaQuery.of(context).size.height / 4,
+                      height: MediaQuery.of(context).size.height / 6,
                       width: MediaQuery.of(context).size.width / 1.1,
                       child: Align(
                         alignment: Alignment.center,
@@ -80,15 +98,35 @@ class _MenuIzinState extends State<MenuIzin> {
                   SizedBox(
                     height: 5,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.greenAccent),
-                    height: MediaQuery.of(context).size.height / 4,
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('SURAT TUGAS'),
+                  InkWell(
+                    onTap: () => pindahKeSuratTugas(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.greenAccent),
+                      height: MediaQuery.of(context).size.height / 6,
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('SURAT TUGAS'),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  InkWell(
+                    onTap: () => pindahKeLupaAbsen(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.greenAccent),
+                      height: MediaQuery.of(context).size.height / 6,
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('PEMBERITAHUAN TIDAK \n MELAKUKAN PRESENSI'),
+                      ),
                     ),
                   ),
                 ],
