@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 DateTime scheduleTime = DateTime.now();
@@ -19,6 +20,12 @@ class SetReminder extends StatefulWidget {
 class _SetReminderState extends State<SetReminder> {
   String? jamKeluar;
   // NotificationAPI notificationAPI = NotificationAPI();
+
+  void initState(){
+    super.initState();
+    NotificationWidget.init();
+    tz.initializeTimeZones();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,9 +123,29 @@ class _SetReminderState extends State<SetReminder> {
                   MaterialButton(
                     onPressed: () {
                       // notificationAPI.sendNotification('Halo', "halo lagi");
-                      NotificationService().scheduleNotification(
-                          title: 'HALO',
-                          scheduledNotificationDateTime: scheduleTime);
+                      // NotificationService().scheduleNotification(
+                      //     title: 'Test Notifikasi',
+                      //     body: 'Test Notifikasi',
+                      //     scheduledNotificationDateTime: scheduleTime);
+                      NotificationWidget.showScheduleDailyotification(
+                         title: "Notifications",
+                        body: 'Test Notif'
+                      );
+                    },
+                    child: Text("NOTIF Schedule"),
+                    color: Colors.amberAccent,
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      // notificationAPI.sendNotification('Halo', "halo lagi");
+                      // NotificationService().showScheduleDailyotification(
+                      //     title: 'Test Notifikasi',
+                      //     body: 'Test Notifikasi',
+                      //     );
+                      NotificationWidget.showNotification(
+                        title: "Notifications",
+                        body: 'Test Notif'
+                      );
                     },
                     child: Text("NOTIF"),
                     color: Colors.amberAccent,

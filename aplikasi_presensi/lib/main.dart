@@ -7,8 +7,8 @@ import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().initNotification();
-  tz.initializeTimeZones();
+  // NotificationService().initNotification();
+  // tz.initializeTimeZones();
   
   runApp(const MyApp());
 }
