@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.greenAccent,
+                      color: HexColor('#13542D'),
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
                       ),
@@ -117,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                     //color: Colors.greenAccent,
                     child: Text(
                       'Absen Masuk',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                   SizedBox(

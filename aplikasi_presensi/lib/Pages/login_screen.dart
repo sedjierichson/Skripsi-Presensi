@@ -55,20 +55,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 15),
-                    width: MediaQuery.of(context).size.width / 3,
-                    height: MediaQuery.of(context).size.width / 3,
-                    decoration: const BoxDecoration(
-                        color: Colors.grey, shape: BoxShape.circle),
+                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 4,
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Image.asset(
+                      "assets/images/attendance.png",
+                      fit: BoxFit.contain,
+                    ),
                   ),
+                  SizedBox(height: 20,),
                   Container(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 15),
                     alignment: Alignment.center,
                     child: Text(
-                      "PRESENSI PT. X",
+                      "Aplikasi Presensi",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 23,

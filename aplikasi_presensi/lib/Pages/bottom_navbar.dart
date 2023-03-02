@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class BottomNavBar extends StatefulWidget {
   final int index;
@@ -22,6 +23,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+        backgroundColor: HexColor('#13542D'),
         onTap: (index) {
           _currentTabIndex = index;
         },
@@ -45,7 +47,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
         ],
         iconSize: 25,    
-        activeColor: Colors.greenAccent,    
+        activeColor: HexColor('#FFA133'),
+        inactiveColor: Colors.white,    
       ),
       
       tabBuilder: ((context, index) {

@@ -84,37 +84,72 @@ class NotificationWidget {
     await _notifications.initialize(settings);
   }
 
-  static Future showNotification(
-          {var id = 0, var title, var body, var payload}) async =>
-      _notifications.show(id, title, body, await notificationDetails());
+  static Future showNotification({
+    var id = 0,
+    var title,
+    var body,
+    var payload,
+  }) async =>
+      _notifications.show(
+        id,
+        title,
+        body,
+        await notificationDetails(),
+      );
 
-  static Future showScheduleDailyotification(
-          {var id = 0, var title, var body, var payload}) async =>
-      _notifications.zonedSchedule(id, title, body, scheduleDaily(Time(16,21)),
-          await notificationDetails(),
-          payload: payload,
-          androidAllowWhileIdle: true,
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime,
-          matchDateTimeComponents: DateTimeComponents.time);
+  static Future showScheduleDailyotificationJamKeluar({
+    var id = 0,
+    var title,
+    var body,
+    var payload,
+    var jamKeluar,
+    var menitKeluar,
+  }) async =>
+      _notifications.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduleDaily(
+          Time(
+            int.parse(jamKeluar),
+            int.parse(menitKeluar),
+          ),
+        ),
+        await notificationDetails(),
+        payload: payload,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
 
   static tz.TZDateTime scheduleDaily(Time time) {
     final now = tz.TZDateTime.now(tz.local);
     final scheduledDate = tz.TZDateTime(
-        tz.local, now.year, now.month, now.day, time.hour, time.minute, time.second);
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      time.hour,
+      time.minute,
+      time.second,
+    );
 
-      print ('now time $now');
-      print ('test schedule time $scheduledDate');
+    print('now time $now');
+    print('test schedule time $scheduledDate');
     return scheduledDate.isBefore(now)
-        ? scheduledDate.add(Duration(days: 1))
+        ? scheduledDate.add(
+            Duration(days: 1),
+          )
         : scheduledDate;
   }
 
   static notificationDetails() {
     return NotificationDetails(
-        android: AndroidNotificationDetails('channel id 9', 'channel name',
-            importance: Importance.max),
-        iOS: DarwinNotificationDetails());
+      android: AndroidNotificationDetails('channel id 9', 'channel name',
+          importance: Importance.max),
+      iOS: DarwinNotificationDetails(),
+    );
   }
 }
 
