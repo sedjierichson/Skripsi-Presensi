@@ -1,9 +1,13 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
+import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
+import 'package:aplikasi_presensi/api/dbservices_kantor.dart';
+import 'package:aplikasi_presensi/models/kantor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 
 class SuratTugas extends StatefulWidget {
@@ -14,15 +18,64 @@ class SuratTugas extends StatefulWidget {
 }
 
 class _SuratTugasState extends State<SuratTugas> {
+  FormIzinService db = FormIzinService();
+  KantorServices dbKantor = KantorServices();
   TextEditingController tfTanggalIzin = TextEditingController();
   TextEditingController tfTempatTujuan = TextEditingController();
   TextEditingController tfUraianTugas = TextEditingController();
   TextEditingController tfBonSementara = TextEditingController();
+  String? tanggal_awal;
+  String? tanggal_akhir;
+  String? valueChoose;
+  late List<Kantor> listKantor;
+  bool isLoading = true;
 
+  List<String> listitem = ["item1", "item2", "item3", "item4", "item5"];
   void pindahKeMenuIzin() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
       return const MenuIzin();
     }));
+  }
+
+  void getListKantor() async {
+    try {
+      listKantor = await dbKantor.getDataKantor();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print(e.toString());
+    }
+  }
+
+  void submitForm() async {
+    if (tfTanggalIzin.text != "" &&
+        valueChoose != "" &&
+        tfUraianTugas.text != "") {
+      try {
+        await db.insertFormSuratTugas(
+            1,
+            2,
+            tanggal_awal!.toString(),
+            tanggal_akhir!.toString(),
+            tfUraianTugas.text.toString(),
+            valueChoose!);
+        pindahKeMenuIzin();
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      print("IZIN FORM LENGKAP");
+    }
+  }
+
+  @override
+  void initState() {
+    getListKantor();
+    super.initState();
   }
 
   @override
@@ -65,16 +118,21 @@ class _SuratTugasState extends State<SuratTugas> {
                             context: context,
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2030));
-                        if (tanggal != null && tanggal!= null) {
+                        if (tanggal != null && tanggal != null) {
                           print(tanggal.start);
                           print(tanggal.end);
                           String formattedDate =
                               DateFormat('dd MMMM yyyy').format(tanggal.start);
-                              String formattedDate2 =
+                          String formattedDate2 =
                               DateFormat('dd MMMM yyyy').format(tanggal.end);
 
                           setState(() {
-                            tfTanggalIzin.text = '$formattedDate - $formattedDate2';
+                            tanggal_awal =
+                                DateFormat('yyyy-MM-dd').format(tanggal.start);
+                            tanggal_akhir =
+                                DateFormat('yyyy-MM-dd').format(tanggal.end);
+                            tfTanggalIzin.text =
+                                '$formattedDate - $formattedDate2';
                           });
                         }
                       },
@@ -95,25 +153,20 @@ class _SuratTugasState extends State<SuratTugas> {
                     height: 20,
                   ),
                   Text('Tempat Tujuan'),
-                  SizedBox(height:10),
-                  TextField(
-                    controller: tfTempatTujuan,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height / 20,
-                          left: MediaQuery.of(context).size.width / 20),
-                      border: OutlineInputBorder(
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    // height: 50,
+                    decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                      ),
-                      hintText: 'Masukkan Kantor Tujuan',
-                      hintStyle: TextStyle(fontSize: 13),
-                    ),
+                        border: Border.all(color: Colors.grey)),
+                    child: dropdownListKantor(),
                   ),
-                   SizedBox(
+                  SizedBox(
                     height: 20,
                   ),
                   Text('Uraian Tugas'),
-                  SizedBox(height:10),
+                  SizedBox(height: 10),
                   TextField(
                     controller: tfUraianTugas,
                     decoration: InputDecoration(
@@ -127,23 +180,8 @@ class _SuratTugasState extends State<SuratTugas> {
                       hintStyle: TextStyle(fontSize: 13),
                     ),
                   ),
-                   SizedBox(
-                    height: 20,
-                  ),
-                  Text('Bon Sementara'),
-                  SizedBox(height:10),
-                  TextField(
-                    controller: tfBonSementara,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height / 20,
-                          left: MediaQuery.of(context).size.width / 20),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      hintText: 'Masukkan Bon Sementara',
-                      hintStyle: TextStyle(fontSize: 13),
-                    ),
+                  SizedBox(
+                    height: 15,
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -156,14 +194,15 @@ class _SuratTugasState extends State<SuratTugas> {
                         child: MaterialButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
-                          color: Colors.cyan,
+                          color: HexColor("#13542D"),
                           onPressed: () {
-                            pindahKeMenuIzin();
+                            submitForm();
                           },
                           child: Text(
-                            'Ajukan',
+                            'AJUKAN',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -176,5 +215,35 @@ class _SuratTugasState extends State<SuratTugas> {
         ),
       ),
     );
+  }
+
+  Widget dropdownListKantor() {
+    if (isLoading == false) {
+      return DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          hint: Text('Pilih Kantor Tujuan'),
+          value: valueChoose,
+          icon: const Icon(Icons.arrow_downward),
+          elevation: 16,
+          style: const TextStyle(color: Colors.black),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              valueChoose = value!;
+              print(valueChoose);
+            });
+          },
+          items: listKantor.map((value) {
+            return DropdownMenuItem(
+              value: value.id.toString(),
+              child: Text(value.nama.toString()),
+            );
+          }).toList(),
+        ),
+      );
+    } else {
+      return SizedBox();
+    }
   }
 }

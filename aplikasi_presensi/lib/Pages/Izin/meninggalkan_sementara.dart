@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
+import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -17,12 +18,32 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
   TextEditingController tfTanggalIzin = TextEditingController();
   TextEditingController tfJamIzinPergi = TextEditingController();
   TextEditingController tfJamIzinPulang = TextEditingController();
-  String? keperluan;
+  String? alasan;
+  String? tanggal_izin;
+  String? jamPergi;
+  String? jamPulang;
+  FormIzinService db = FormIzinService();
 
   void pindahKeMenuIzin() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
       return const MenuIzin();
     }));
+  }
+
+  void submitForm() async {
+    if (tfTanggalIzin.text != "" &&
+        tfJamIzinPergi.text != "" &&
+        tfJamIzinPulang.text != "") {
+      try {
+        await db.insertFormMeninggalkanKantor(1, 2, tanggal_izin!.toString(),
+            jamPergi!.toString(), jamPulang!.toString(), alasan!.toString());
+        pindahKeMenuIzin();
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      print("IZIN FORM LENGKAP");
+    }
   }
 
   @override
@@ -66,9 +87,12 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
                         if (tanggal != null) {
                           String formattedDate =
                               DateFormat('EEEE, dd MMMM yyyy').format(tanggal);
-                        
+
                           setState(() {
                             tfTanggalIzin.text = formattedDate;
+                            tanggal_izin =
+                                DateFormat('yyyy-MM-dd').format(tanggal);
+                            print(tanggal_izin);
                           });
                         }
                       },
@@ -114,15 +138,13 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
 
                               setState(() {
                                 tfJamIzinPergi.text = formattedTime;
+                                jamPergi = formattedTime;
                               });
                             }
                             ;
                           },
                           controller: tfJamIzinPergi,
                           decoration: InputDecoration(
-                            // contentPadding: EdgeInsets.only(
-                            //     top: MediaQuery.of(context).size.height / 20,
-                            //     left: MediaQuery.of(context).size.width / 20),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -157,6 +179,7 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
 
                               setState(() {
                                 tfJamIzinPulang.text = formattedTime;
+                                jamPulang = formattedTime;
                               });
                             }
                             ;
@@ -196,11 +219,11 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
                               style: TextStyle(fontSize: 15),
                             ),
                             value: "Dinas",
-                            groupValue: keperluan,
+                            groupValue: alasan,
                             onChanged: (value) {
                               setState(() {
-                                keperluan = value.toString();
-                                print(keperluan);
+                                alasan = value.toString();
+                                print(alasan);
                               });
                             },
                           ),
@@ -213,11 +236,11 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
                               style: TextStyle(fontSize: 15),
                             ),
                             value: "Pribadi",
-                            groupValue: keperluan,
+                            groupValue: alasan,
                             onChanged: (value) {
                               setState(() {
-                                keperluan = value.toString();
-                                print(keperluan);
+                                alasan = value.toString();
+                                print(alasan);
                               });
                             },
                           ),
@@ -238,12 +261,14 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
                               borderRadius: BorderRadius.circular(15)),
                           color: Colors.cyan,
                           onPressed: () {
-                            pindahKeMenuIzin();
+                            submitForm();
+                            // pindahKeMenuIzin();
                           },
                           child: Text(
                             'Ajukan',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                         ),
                       ),
