@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
+import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -13,12 +16,14 @@ class PemberitahuanTidakAbsen extends StatefulWidget {
 }
 
 class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
+  FormIzinService db = FormIzinService();
   TextEditingController tfTanggalIzin = TextEditingController();
-  TextEditingController tfJamIzinPergi = TextEditingController();
-  TextEditingController tfJamIzinPulang = TextEditingController();
+  TextEditingController tfJamMasuk = TextEditingController();
+  TextEditingController tfJamKeluar = TextEditingController();
   TextEditingController tfAlasanLainnyaIzin = TextEditingController();
-  
+
   String? alasan;
+  String? tanggalIzin;
 
   bool tampilkanTFTugasKe = false;
   bool tampilkanTFLainnya = false;
@@ -27,6 +32,29 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
       return const MenuIzin();
     }));
+  }
+
+  void submitForm() async {
+    if (tampilkanTFLainnya == true) {
+      alasan = "Lainnya : " + tfAlasanLainnyaIzin.text.toString();
+    } else if (tampilkanTFTugasKe == true) {
+      alasan = "Tugas Ke : " + tfAlasanLainnyaIzin.text.toString();
+    }
+
+    if (tfTanggalIzin.text != "" &&
+        tfJamMasuk.text != "" &&
+        tfJamKeluar.text != "" &&
+        alasan != "") {
+      try {
+        await db.insertFormLupaAbsen(1, 2, tanggalIzin!.toString(),
+            tfJamMasuk.text.toString(), tfJamKeluar.text.toString(), alasan!);
+        pindahKeMenuIzin();
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      print("IZIN FORM LENGKAP");
+    }
   }
 
   @override
@@ -41,7 +69,7 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Form Izin Meninggalkan Kantor Sementara',
+                    'Form Izin Lupa Absen',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -73,6 +101,8 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
 
                           setState(() {
                             tfTanggalIzin.text = formattedDate;
+                            tanggalIzin =
+                                DateFormat('yyyy-MM-dd').format(tanggal);
                           });
                         }
                       },
@@ -117,12 +147,12 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
                                   DateFormat('HH:mm').format(parsedTime);
 
                               setState(() {
-                                tfJamIzinPergi.text = formattedTime;
+                                tfJamMasuk.text = formattedTime;
                               });
                             }
                             ;
                           },
-                          controller: tfJamIzinPergi,
+                          controller: tfJamMasuk,
                           decoration: InputDecoration(
                             // contentPadding: EdgeInsets.only(
                             //     top: MediaQuery.of(context).size.height / 20,
@@ -160,12 +190,12 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
                                   DateFormat('HH:mm').format(parsedTime);
 
                               setState(() {
-                                tfJamIzinPulang.text = formattedTime;
+                                tfJamKeluar.text = formattedTime;
                               });
                             }
                             ;
                           },
-                          controller: tfJamIzinPulang,
+                          controller: tfJamKeluar,
                           decoration: InputDecoration(
                             // contentPadding: EdgeInsets.only(
                             //     top: MediaQuery.of(context).size.height / 20,
@@ -252,7 +282,6 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
                             : SizedBox(
                                 height: 0,
                               ),
-
                         SizedBox(
                           height: 40,
                           child: RadioListTile(
@@ -310,7 +339,7 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
                               borderRadius: BorderRadius.circular(15)),
                           color: Colors.cyan,
                           onPressed: () {
-                            pindahKeMenuIzin();
+                            submitForm();
                           },
                           child: Text(
                             'Ajukan',

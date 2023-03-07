@@ -28,22 +28,85 @@ class FormIzinService {
   }
 
   Future<String> insertFormSuratTugas(
-      int nikPegawai,
-      int nikAtasan,
-      String tanggalAwal,
-      String tanggalAkhir,
-      String uraianTugas,
-      String tempatTujuan) async {
-    final response =
-        await http.post(Uri.parse("$apiUrl/detail_izin.php"), body: {
-      'nik_pegawai': nikPegawai.toString(),
-      'nik_atasan': nikAtasan.toString(),
-      'tanggal_awal': tanggalAwal,
-      'tanggal_akhir': tanggalAkhir,
-      'uraian_tugas': uraianTugas,
-      'tempat_tujuan': tempatTujuan
-    });
+    int nikPegawai,
+    int nikAtasan,
+    String tanggalAwal,
+    String tanggalAkhir,
+    String uraianTugas,
+    String tempatTujuan,
+  ) async {
+    final response = await http.post(
+      Uri.parse("$apiUrl/detail_izin.php"),
+      body: {
+        'nik_pegawai': nikPegawai.toString(),
+        'nik_atasan': nikAtasan.toString(),
+        'tanggal_awal': tanggalAwal,
+        'tanggal_akhir': tanggalAkhir,
+        'uraian_tugas': uraianTugas,
+        'tempat_tujuan': tempatTujuan,
+      },
+    );
 
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == 1) {
+        return "Berhasil";
+      } else {
+        throw jsonResponse['message'];
+      }
+    } else {
+      throw ("Gagal memperbarui data user");
+    }
+  }
+
+  Future<String> insertFormPulangAwal(
+    int nikPegawai,
+    int nikAtasan,
+    String tanggalIzin,
+    String jamIzinPulang,
+    String alasan,
+  ) async {
+    final response = await http.post(
+      Uri.parse("$apiUrl/detail_izin.php"),
+      body: {
+        'nik_pegawai': nikPegawai.toString(),
+        'nik_atasan': nikAtasan.toString(),
+        'tanggal_izin': tanggalIzin,
+        'jam_izin_pulang': jamIzinPulang,
+        'alasan': alasan,
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == 1) {
+        return "Berhasil";
+      } else {
+        throw jsonResponse['message'];
+      }
+    } else {
+      throw ("Gagal memperbarui data user");
+    }
+  }
+
+  Future<String> insertFormLupaAbsen(
+    int nikPegawai,
+    int nikAtasan,
+    String tanggalIzin,
+    String jamAwal,
+    String jamAkhir,
+    String alasan,
+  ) async {
+    final response = await http.post(
+      Uri.parse("$apiUrl/detail_izin.php"),
+      body: {
+        'nik_pegawai': nikPegawai.toString(),
+        'nik_atasan': nikAtasan.toString(),
+        'tanggal_lupa_absen': tanggalIzin,
+        'jam_awal': jamAwal,
+        'jam_akhir': jamAkhir,
+        'alasan': alasan,
+      },
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonResponse = json.decode(response.body);
       if (jsonResponse['status'] == 1) {
