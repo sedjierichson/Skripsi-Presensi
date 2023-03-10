@@ -17,9 +17,13 @@ class OtherPage extends StatefulWidget {
 class _OtherPageState extends State<OtherPage> {
   void pindahkeEnterPIN() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return const EnterPin();
+      return const EnterPin(
+        nik: "1",
+        mode: 'ganti_pin',
+      );
     }));
   }
+
   void pindahkeSetReminder() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return const SetReminder();
@@ -27,7 +31,8 @@ class _OtherPageState extends State<OtherPage> {
   }
 
   void pindahkeLogin() {
-    Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) {
+    Navigator.of(context, rootNavigator: true)
+        .pushReplacement(MaterialPageRoute(builder: (context) {
       return const LoginScreen();
     }));
   }

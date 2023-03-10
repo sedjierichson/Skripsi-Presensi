@@ -8,7 +8,9 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:quickalert/quickalert.dart';
 
 class EnterPin extends StatefulWidget {
-  const EnterPin({super.key});
+  final String nik;
+  final String mode;
+  const EnterPin({super.key, required this.nik, required this.mode});
 
   @override
   State<EnterPin> createState() => _EnterPinState();
@@ -17,20 +19,23 @@ class EnterPin extends StatefulWidget {
 class _EnterPinState extends State<EnterPin> {
   String pin_login = '';
 
-  void pindahkeVerifPIN() {
+  void pindahkeVerifPINPertamaLogin() {
     if (pin_login != '') {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return VerifPin(pinLogin: pin_login,);
+        return VerifPin(
+          pinLogin: pin_login,
+          nik: widget.nik,
+          mode: widget.mode,
+        );
       }));
     } else {
       QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        title: 'Oops...',
-        text: 'PIN tidak boleh kosong',
-        confirmBtnText: 'OK',
-        confirmBtnColor: Colors.blueAccent
-      );
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Oops...',
+          text: 'PIN tidak boleh kosong',
+          confirmBtnText: 'OK',
+          confirmBtnColor: Colors.blueAccent);
     }
   }
 
@@ -86,7 +91,7 @@ class _EnterPinState extends State<EnterPin> {
                             borderRadius: BorderRadius.circular(15)),
                         color: Colors.cyan,
                         onPressed: () {
-                          pindahkeVerifPIN();
+                          pindahkeVerifPINPertamaLogin();
                         },
                         child: Text(
                           'LANJUT',

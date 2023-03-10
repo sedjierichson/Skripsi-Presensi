@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/other_page.dart';
+import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -10,7 +12,13 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class VerifPin extends StatefulWidget {
   final String pinLogin;
-  const VerifPin({super.key, required this.pinLogin});
+  final String nik;
+  final String mode;
+  const VerifPin(
+      {super.key,
+      required this.pinLogin,
+      required this.nik,
+      required this.mode});
 
   @override
   State<VerifPin> createState() => _VerifPinState();
@@ -18,21 +26,48 @@ class VerifPin extends StatefulWidget {
 
 class _VerifPinState extends State<VerifPin> {
   String VerifikasiPin = '';
+  UserService db = UserService();
 
+  void pindahkeHomePage() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return BottomNavBar();
+        },
+      ),
+      (route) => false,
+    );
+  }
 
-  void successGantiPin() {
+  void tambahkanUser() async {
+    try {
+      await db.insertDataPertamaLogin(
+          widget.nik.toString(), VerifikasiPin.toString());
+      pindahkeHomePage();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void successGantiPin() async {
     if (VerifikasiPin == widget.pinLogin) {
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          text: 'PIN berhasil diganti',
-          confirmBtnText: 'OK',
-          confirmBtnColor: Colors.blueAccent,
-          autoCloseDuration: Duration(seconds: 5));
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) {
-        return const OtherPage();
-      }));
+      try {
+        await db.updateSecurityCodeLogin(widget.nik, VerifikasiPin);
+        QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            text: 'PIN berhasil diganti',
+            confirmBtnText: 'OK',
+            confirmBtnColor: Colors.blueAccent,
+            autoCloseDuration: Duration(seconds: 5));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) {
+          return const OtherPage();
+        }));
+      } catch (e) {
+        print(e.toString());
+      }
     } else {
       QuickAlert.show(
         context: context,
@@ -96,7 +131,11 @@ class _VerifPinState extends State<VerifPin> {
                             borderRadius: BorderRadius.circular(15)),
                         color: Colors.cyan,
                         onPressed: () {
-                          successGantiPin();
+                          if (widget.mode == 'pertama_login') {
+                            tambahkanUser();
+                          } else if (widget.mode == 'ganti_pin') {
+                            successGantiPin();
+                          }
                         },
                         child: Text(
                           'ATUR PIN',

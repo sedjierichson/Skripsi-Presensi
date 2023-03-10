@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
+import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:quickalert/quickalert.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,11 +19,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController tfLoginNIK = TextEditingController();
   TextEditingController tfLoginPassword = TextEditingController();
+  UserService db = UserService();
 
   void pindahkeHomePage() {
-    // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-    //   return const HomePage();
-    // }));
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
@@ -30,6 +31,59 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       (route) => false,
     );
+  }
+
+  void pertamaLogin() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return EnterPin(
+        nik: tfLoginNIK.text.toString(),
+        mode: 'pertama_login',
+      );
+    }));
+  }
+
+  void checkData() async {
+    if (tfLoginNIK.text.toString() == "" ||
+        tfLoginPassword.text.toString() == "") {
+      QuickAlert.show(
+          context: context,
+          type: QuickAlertType.warning,
+          title: 'Oops...',
+          text: 'NIK dan Password tidak boleh kosong',
+          confirmBtnText: 'OK',
+          confirmBtnColor: Colors.blueAccent);
+    } else {
+      try {
+        var res = await db.loginAPI(
+          nik: tfLoginNIK.text.toString(),
+          password: tfLoginPassword.text.toString(),
+        );
+        var res2 = await db.cekNIKSudahTerdaftar(
+          nik: tfLoginNIK.text.toString(),
+        );
+        if (res['status'] == 1 && res2['status'] == 1) {
+          //password benar & sudah pernah login
+          pindahkeHomePage();
+          print('pernah login');
+          // pindahkeHomePage();
+        } else if (res['status'] == 1 && res2['status'] == 0) {
+          //password benar & belum pernah login
+          pertamaLogin();
+          print('belum pernah login');
+        } else {
+          //password salah
+          QuickAlert.show(
+              context: context,
+              type: QuickAlertType.error,
+              title: 'Oops...',
+              text: 'NIK atau Password salah',
+              confirmBtnText: 'OK',
+              confirmBtnColor: Colors.blueAccent);
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    }
   }
 
   @override
@@ -55,7 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 4,
                     width: MediaQuery.of(context).size.width / 2,
@@ -64,7 +120,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       fit: BoxFit.contain,
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     alignment: Alignment.center,
                     child: Text(
@@ -77,7 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height/15),
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 15),
                     child: TextField(
                       controller: tfLoginNIK,
                       decoration: InputDecoration(
@@ -117,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(15)),
                         color: Colors.cyan,
                         onPressed: () {
-                          pindahkeHomePage();
+                          checkData();
                         },
                         child: Text(
                           'LOGIN',
