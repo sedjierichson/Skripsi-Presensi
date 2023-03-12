@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class MeninggalkanSementara extends StatefulWidget {
   const MeninggalkanSementara({super.key});
@@ -35,8 +36,13 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
         tfJamIzinPergi.text != "" &&
         tfJamIzinPulang.text != "") {
       try {
-        await db.insertFormMeninggalkanKantor(1, 2, tanggal_izin!.toString(),
-            jamPergi!.toString(), jamPulang!.toString(), alasan!.toString());
+        await db.insertFormMeninggalkanKantor(
+            int.parse(globals.currentPegawai.nik),
+            int.parse(globals.currentPegawai.nik_atasan),
+            tanggal_izin!.toString(),
+            jamPergi!.toString(),
+            jamPulang!.toString(),
+            alasan!.toString());
         pindahKeMenuIzin();
       } catch (e) {
         print(e.toString());

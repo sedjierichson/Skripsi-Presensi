@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class PemberitahuanTidakAbsen extends StatefulWidget {
   const PemberitahuanTidakAbsen({super.key});
@@ -46,8 +47,14 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
         tfJamKeluar.text != "" &&
         alasan != "") {
       try {
-        await db.insertFormLupaAbsen(1, 2, tanggalIzin!.toString(),
-            tfJamMasuk.text.toString(), tfJamKeluar.text.toString(), alasan!);
+        await db.insertFormLupaAbsen(
+          int.parse(globals.currentPegawai.nik),
+          int.parse(globals.currentPegawai.nik_atasan),
+          tanggalIzin!.toString(),
+          tfJamMasuk.text.toString(),
+          tfJamKeluar.text.toString(),
+          alasan!,
+        );
         pindahKeMenuIzin();
       } catch (e) {
         print(e.toString());

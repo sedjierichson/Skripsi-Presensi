@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class SuratTugas extends StatefulWidget {
   const SuratTugas({super.key});
@@ -57,8 +58,8 @@ class _SuratTugasState extends State<SuratTugas> {
         tfUraianTugas.text != "") {
       try {
         await db.insertFormSuratTugas(
-            1,
-            2,
+            int.parse(globals.currentPegawai.nik),
+            int.parse(globals.currentPegawai.nik_atasan),
             tanggal_awal!.toString(),
             tanggal_akhir!.toString(),
             tfUraianTugas.text.toString(),

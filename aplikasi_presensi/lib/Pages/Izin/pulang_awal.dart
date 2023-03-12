@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class PulangLebihAwal extends StatefulWidget {
   const PulangLebihAwal({super.key});
@@ -30,8 +31,8 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
     if (tfTanggalIzin.text != "" && tfJamIzin.text != "" && alasan != "") {
       try {
         await db.insertFormPulangAwal(
-          1,
-          2,
+          int.parse(globals.currentPegawai.nik),
+          int.parse(globals.currentPegawai.nik_atasan),
           tanggalIzin.toString(),
           tfJamIzin.text.toString(),
           alasan!,
