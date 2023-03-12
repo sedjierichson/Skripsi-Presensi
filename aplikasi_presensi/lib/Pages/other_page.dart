@@ -6,6 +6,7 @@ import 'package:aplikasi_presensi/Pages/set_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class OtherPage extends StatefulWidget {
   const OtherPage({super.key});
@@ -48,11 +49,11 @@ class _OtherPageState extends State<OtherPage> {
               child: Column(
                 children: [
                   Text(
-                    'Richson Sedjie',
+                    globals.currentPegawai.nama,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Text('NIK : 112233'),
-                  Text('Staff IT'),
+                  Text('NIK : ' + globals.currentPegawai.nik),
+                  Text(globals.currentPegawai.jabatan),
                   SizedBox(
                     height: 50,
                   ),

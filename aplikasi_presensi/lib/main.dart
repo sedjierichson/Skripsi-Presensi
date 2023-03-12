@@ -3,13 +3,15 @@
 import 'package:aplikasi_presensi/Pages/login_screen.dart';
 import 'package:aplikasi_presensi/api/notification_api.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
-void main() {
+void main() async {
+  await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   // NotificationService().initNotification();
   // tz.initializeTimeZones();
-  
+
   runApp(const MyApp());
 }
 

@@ -4,10 +4,12 @@ import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
+import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController tfLoginNIK = TextEditingController();
   TextEditingController tfLoginPassword = TextEditingController();
   UserService db = UserService();
+  late Pegawai p;
 
   void pindahkeHomePage() {
     Navigator.pushAndRemoveUntil(
@@ -40,6 +43,21 @@ class _LoginScreenState extends State<LoginScreen> {
         mode: 'pertama_login',
       );
     }));
+  }
+
+  void getCurrentUser() async {
+    try {
+      globals.currentPegawai =
+          await db.getCurrentUser(nik: tfLoginNIK.text.toString());
+      globals.pegawai.write('nik', globals.currentPegawai.nik);
+      globals.pegawai.write('nama', globals.currentPegawai.nama);
+      globals.pegawai.write('jabatan', globals.currentPegawai.jabatan);
+      globals.pegawai.write('nik_atasan', globals.currentPegawai.nik_atasan);
+      pindahkeHomePage();
+      // print(p.nama);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void checkData() async {
@@ -63,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         if (res['status'] == 1 && res2['status'] == 1) {
           //password benar & sudah pernah login
-          pindahkeHomePage();
+          getCurrentUser();
           print('pernah login');
           // pindahkeHomePage();
         } else if (res['status'] == 1 && res2['status'] == 0) {

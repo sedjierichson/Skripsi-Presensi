@@ -1,10 +1,46 @@
 import 'dart:convert';
 
 // import 'package:e_learning/model/user.dart';
+import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:http/http.dart' as http;
 import 'apidbconfig.dart';
 
 class UserService {
+  Future<Pegawai> getCurrentUser({String nik = ""}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+
+    String uri =
+        "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php?nik=$nik";
+
+    // if (nik != "") {
+    //   uri =
+    //       "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php?id=$nik";
+    // }
+
+    final response = await http.get(Uri.parse(uri), headers: requestHeaders);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        var data = map['data'];
+        Pegawai pegawai = Pegawai(
+          nama: data['nama'],
+          nik: data['nik'],
+          jabatan: data['jabatan'],
+          nik_atasan: data['nik_atasan'],
+        );
+        return pegawai;
+      }
+    } else {
+      throw ("Gagal mengambil data user");
+    }
+  }
+
   Future<Map<String, dynamic>> loginAPI({
     required String nik,
     required String password,

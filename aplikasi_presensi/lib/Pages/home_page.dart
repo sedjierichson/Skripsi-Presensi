@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Hi, Richson Sedjie',
+                      'Hi, ' + globals.currentPegawai.nama,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 17,
@@ -70,14 +71,14 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           Text(
-                            'NIK : 112233',
+                            'NIK : ' + globals.currentPegawai.nik,
                             style: TextStyle(
                               fontSize: 12,
                             ),
                           ),
                           Text(' | '),
                           Text(
-                            'Staff IT',
+                            globals.currentPegawai.jabatan,
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -118,11 +119,12 @@ class _HomePageState extends State<HomePage> {
                     //color: Colors.greenAccent,
                     child: Text(
                       'Absen Masuk',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height/8,
+                    height: MediaQuery.of(context).size.height / 8,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -138,7 +140,9 @@ class _HomePageState extends State<HomePage> {
                                 fit: BoxFit.fitWidth,
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
                               '09:00',
                               style: TextStyle(
@@ -156,7 +160,9 @@ class _HomePageState extends State<HomePage> {
                                 fit: BoxFit.fitWidth,
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
                               '09:00',
                               style: TextStyle(
@@ -168,14 +174,15 @@ class _HomePageState extends State<HomePage> {
                         Column(
                           children: [
                             SizedBox(
-                              
                               width: MediaQuery.of(context).size.width / 10,
                               child: Image.asset(
                                 "assets/images/working_time.png",
                                 fit: BoxFit.fitWidth,
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
                               '09:00',
                               style: TextStyle(
