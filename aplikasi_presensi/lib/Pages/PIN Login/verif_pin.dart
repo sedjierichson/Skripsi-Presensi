@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class VerifPin extends StatefulWidget {
   final String pinLogin;

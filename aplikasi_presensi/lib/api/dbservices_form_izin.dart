@@ -28,8 +28,8 @@ class FormIzinService {
   }
 
   Future<String> insertFormSuratTugas(
-    int nikPegawai,
-    int nikAtasan,
+    String nikPegawai,
+    String nikAtasan,
     String tanggalAwal,
     String tanggalAkhir,
     String uraianTugas,
@@ -60,12 +60,13 @@ class FormIzinService {
   }
 
   Future<String> insertFormPulangAwal(
-    int nikPegawai,
-    int nikAtasan,
+    String nikPegawai,
+    String nikAtasan,
     String tanggalIzin,
     String jamIzinPulang,
     String alasan,
   ) async {
+    print("aaa" + nikPegawai.toString());
     final response = await http.post(
       Uri.parse("$apiUrl/detail_izin.php"),
       body: {
@@ -89,8 +90,8 @@ class FormIzinService {
   }
 
   Future<String> insertFormLupaAbsen(
-    int nikPegawai,
-    int nikAtasan,
+    String nikPegawai,
+    String nikAtasan,
     String tanggalIzin,
     String jamAwal,
     String jamAkhir,

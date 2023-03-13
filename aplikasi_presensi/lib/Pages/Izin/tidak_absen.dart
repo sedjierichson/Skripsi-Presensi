@@ -48,8 +48,8 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
         alasan != "") {
       try {
         await db.insertFormLupaAbsen(
-          int.parse(globals.currentPegawai.nik),
-          int.parse(globals.currentPegawai.nik_atasan),
+          globals.currentPegawai.nik,
+          globals.currentPegawai.nik_atasan,
           tanggalIzin!.toString(),
           tfJamMasuk.text.toString(),
           tfJamKeluar.text.toString(),

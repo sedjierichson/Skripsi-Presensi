@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class EnterPin extends StatefulWidget {
   final String nik;
@@ -29,13 +30,8 @@ class _EnterPinState extends State<EnterPin> {
         );
       }));
     } else {
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          title: 'Oops...',
-          text: 'PIN tidak boleh kosong',
-          confirmBtnText: 'OK',
-          confirmBtnColor: Colors.blueAccent);
+      globals.showAlertError(
+          context: context, message: 'PIN tidak boleh kosong');
     }
   }
 

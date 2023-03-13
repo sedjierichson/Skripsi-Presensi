@@ -29,10 +29,11 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
       alasan = tfAlasanLainnyaIzin.text.toString();
     }
     if (tfTanggalIzin.text != "" && tfJamIzin.text != "" && alasan != "") {
+      // print(globals.currentPegawai.nik);
       try {
         await db.insertFormPulangAwal(
-          int.parse(globals.currentPegawai.nik),
-          int.parse(globals.currentPegawai.nik_atasan),
+          globals.currentPegawai.nik,
+          globals.currentPegawai.nik_atasan,
           tanggalIzin.toString(),
           tfJamIzin.text.toString(),
           alasan!,

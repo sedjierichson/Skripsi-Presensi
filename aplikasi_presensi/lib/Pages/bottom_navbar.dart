@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/Izin/list_izin.dart';
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:aplikasi_presensi/Pages/other_page.dart';
@@ -46,11 +47,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Lainnya',
           ),
         ],
-        iconSize: 25,    
+        iconSize: 25,
         activeColor: HexColor('#FFA133'),
-        inactiveColor: Colors.white,    
+        inactiveColor: Colors.white,
       ),
-      
       tabBuilder: ((context, index) {
         switch (index) {
           case 0:
@@ -69,7 +69,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           case 2:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: MenuIzin(),
+                child: ListIzin(),
               );
             });
           case 3:

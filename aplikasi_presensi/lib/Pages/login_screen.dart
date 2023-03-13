@@ -63,13 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void checkData() async {
     if (tfLoginNIK.text.toString() == "" ||
         tfLoginPassword.text.toString() == "") {
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.warning,
-          title: 'Oops...',
-          text: 'NIK dan Password tidak boleh kosong',
-          confirmBtnText: 'OK',
-          confirmBtnColor: Colors.blueAccent);
+      globals.showAlertWarning(
+          context: context, message: 'NIK dan Password tidak boleh kosong');
     } else {
       try {
         var res = await db.loginAPI(
@@ -90,16 +85,11 @@ class _LoginScreenState extends State<LoginScreen> {
           print('belum pernah login');
         } else {
           //password salah
-          QuickAlert.show(
-              context: context,
-              type: QuickAlertType.error,
-              title: 'Oops...',
-              text: 'NIK atau Password salah',
-              confirmBtnText: 'OK',
-              confirmBtnColor: Colors.blueAccent);
+          globals.showAlertError(
+              context: context, message: 'NIK atau Password Salah');
         }
       } catch (e) {
-        print(e.toString());
+        globals.showAlertError(context: context, message: e.toString());
       }
     }
   }
