@@ -3,8 +3,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class FormIzinService {
-  Future<String> insertFormMeninggalkanKantor(int nikPegawai, int nikAtasan,
-      String tanggal, String jamAwal, String jamAkhir, String alasan) async {
+  Future<String> insertFormMeninggalkanKantor(
+    int nikPegawai,
+    int nikAtasan,
+    String tanggal,
+    String jamAwal,
+    String jamAkhir,
+    String alasan,
+    String tanggal_pengajuan,
+  ) async {
+    print("aaaa" + tanggal_pengajuan);
     final response =
         await http.post(Uri.parse("$apiUrl/detail_izin.php"), body: {
       'nik_pegawai': nikPegawai.toString(),
@@ -12,7 +20,8 @@ class FormIzinService {
       'tanggal_izin': tanggal,
       'jam_awal': jamAwal,
       'jam_akhir': jamAkhir,
-      'alasan': alasan
+      'alasan': alasan,
+      'tanggal_pengajuan': tanggal_pengajuan
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -28,13 +37,13 @@ class FormIzinService {
   }
 
   Future<String> insertFormSuratTugas(
-    String nikPegawai,
-    String nikAtasan,
-    String tanggalAwal,
-    String tanggalAkhir,
-    String uraianTugas,
-    String tempatTujuan,
-  ) async {
+      String nikPegawai,
+      String nikAtasan,
+      String tanggalAwal,
+      String tanggalAkhir,
+      String uraianTugas,
+      String tempatTujuan,
+      String tanggal_pengajuan) async {
     final response = await http.post(
       Uri.parse("$apiUrl/detail_izin.php"),
       body: {
@@ -44,6 +53,7 @@ class FormIzinService {
         'tanggal_akhir': tanggalAkhir,
         'uraian_tugas': uraianTugas,
         'tempat_tujuan': tempatTujuan,
+        'tanggal_pengajuan': tanggal_pengajuan,
       },
     );
 
@@ -65,6 +75,7 @@ class FormIzinService {
     String tanggalIzin,
     String jamIzinPulang,
     String alasan,
+    String tanggal_pengajuan,
   ) async {
     print("aaa" + nikPegawai.toString());
     final response = await http.post(
@@ -75,6 +86,7 @@ class FormIzinService {
         'tanggal_izin': tanggalIzin,
         'jam_izin_pulang': jamIzinPulang,
         'alasan': alasan,
+        'tanggal_pengajuan': tanggal_pengajuan,
       },
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -96,6 +108,7 @@ class FormIzinService {
     String jamAwal,
     String jamAkhir,
     String alasan,
+    String tanggal_pengajuan,
   ) async {
     final response = await http.post(
       Uri.parse("$apiUrl/detail_izin.php"),
@@ -106,6 +119,7 @@ class FormIzinService {
         'jam_awal': jamAwal,
         'jam_akhir': jamAkhir,
         'alasan': alasan,
+        'tanggal_pengajuan': tanggal_pengajuan,
       },
     );
     if (response.statusCode == 200 || response.statusCode == 201) {

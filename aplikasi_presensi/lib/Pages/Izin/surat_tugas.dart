@@ -30,6 +30,7 @@ class _SuratTugasState extends State<SuratTugas> {
   String? valueChoose;
   late List<Kantor> listKantor;
   bool isLoading = true;
+  String tanggal_pengajuan = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   List<String> listitem = ["item1", "item2", "item3", "item4", "item5"];
   void pindahKeMenuIzin() {
@@ -58,12 +59,14 @@ class _SuratTugasState extends State<SuratTugas> {
         tfUraianTugas.text != "") {
       try {
         await db.insertFormSuratTugas(
-            globals.currentPegawai.nik,
-            globals.currentPegawai.nik_atasan,
-            tanggal_awal!.toString(),
-            tanggal_akhir!.toString(),
-            tfUraianTugas.text.toString(),
-            valueChoose!);
+          globals.currentPegawai.nik,
+          globals.currentPegawai.nik_atasan,
+          tanggal_awal!.toString(),
+          tanggal_akhir!.toString(),
+          tfUraianTugas.text.toString(),
+          valueChoose!,
+          tanggal_pengajuan.toString(),
+        );
         pindahKeMenuIzin();
       } catch (e) {
         print(e.toString());

@@ -34,6 +34,7 @@ class UserService {
           jabatan: data['jabatan'],
           nik_atasan: data['nik_atasan'],
         );
+        print(pegawai.nik_atasan);
         return pegawai;
       }
     } else {

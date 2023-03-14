@@ -23,7 +23,7 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
   bool tampilkanTFLainnya = false;
   String? alasan;
   String? tanggalIzin;
-
+  String tanggal_pengajuan = DateFormat('yyyy-MM-dd').format(DateTime.now());
   void submitForm() async {
     if (tfAlasanLainnyaIzin.text != "") {
       alasan = tfAlasanLainnyaIzin.text.toString();
@@ -37,6 +37,7 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
           tanggalIzin.toString(),
           tfJamIzin.text.toString(),
           alasan!,
+          tanggal_pengajuan.toString(),
         );
         pindahKeMenuIzin();
       } catch (e) {

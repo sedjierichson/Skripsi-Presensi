@@ -23,6 +23,7 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
   String? tanggal_izin;
   String? jamPergi;
   String? jamPulang;
+  String tanggal_pengajuan = DateFormat('yyyy-MM-dd').format(DateTime.now());
   FormIzinService db = FormIzinService();
 
   void pindahKeMenuIzin() {
@@ -36,13 +37,16 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
         tfJamIzinPergi.text != "" &&
         tfJamIzinPulang.text != "") {
       try {
+        print('aaaaa' + globals.currentPegawai.nik_atasan);
         await db.insertFormMeninggalkanKantor(
-            int.parse(globals.currentPegawai.nik),
-            int.parse(globals.currentPegawai.nik_atasan),
-            tanggal_izin!.toString(),
-            jamPergi!.toString(),
-            jamPulang!.toString(),
-            alasan!.toString());
+          int.parse(globals.currentPegawai.nik),
+          int.parse(globals.currentPegawai.nik_atasan),
+          tanggal_izin!.toString(),
+          jamPergi!.toString(),
+          jamPulang!.toString(),
+          alasan!.toString(),
+          tanggal_pengajuan.toString(),
+        );
         pindahKeMenuIzin();
       } catch (e) {
         print(e.toString());

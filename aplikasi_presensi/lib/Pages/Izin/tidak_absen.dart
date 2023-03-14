@@ -22,6 +22,7 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
   TextEditingController tfJamMasuk = TextEditingController();
   TextEditingController tfJamKeluar = TextEditingController();
   TextEditingController tfAlasanLainnyaIzin = TextEditingController();
+  String tanggal_pengajuan = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   String? alasan;
   String? tanggalIzin;
@@ -54,6 +55,7 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
           tfJamMasuk.text.toString(),
           tfJamKeluar.text.toString(),
           alasan!,
+          tanggal_pengajuan.toString(),
         );
         pindahKeMenuIzin();
       } catch (e) {
