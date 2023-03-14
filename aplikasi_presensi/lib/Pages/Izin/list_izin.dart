@@ -1,10 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
+import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
+import 'package:aplikasi_presensi/models/izin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:intl/intl.dart';
 
 class ListIzin extends StatefulWidget {
   const ListIzin({super.key});
@@ -14,10 +19,63 @@ class ListIzin extends StatefulWidget {
 }
 
 class _ListIzinState extends State<ListIzin> {
+  FormIzinService db = FormIzinService();
+  List<dynamic> daftarIzin = [];
+  bool isLoadingAll = true;
+  bool isErrorAll = false;
+  int jumlahPulangLebihAwal = 0;
+  int jumlahSuratTugas = 0;
+  int julahMeninggalkanKantor = 0;
+  int jumlahTidakAbsen = 0;
+
   void pindahKePilihTipeIzin() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return const MenuIzin();
     }));
+  }
+
+  void getJumlah() {
+    for (int i = 0; i < daftarIzin.length; i++) {
+      if (daftarIzin[i]['id_jenis_izin'] == '1') {
+        jumlahPulangLebihAwal += 1;
+      } else if (daftarIzin[i]['id_jenis_izin'] == '2') {
+        julahMeninggalkanKantor += 1;
+      } else if (daftarIzin[i]['id_jenis_izin'] == '3') {
+        jumlahSuratTugas += 1;
+      } else {
+        jumlahTidakAbsen += 1;
+      }
+    }
+  }
+
+  void getSemuaMateri() async {
+    print("terpanggil");
+    // setState(() {
+    //   isLoadingAll = true;
+    //   isErrorAll = false;
+    // });
+    try {
+      daftarIzin = await db.getIzin(globals.currentPegawai.nik.toString());
+      // print("a" + daftarIzin[0].alasan);
+      print(daftarIzin);
+      getJumlah();
+      setState(() {
+        isLoadingAll = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingAll = false;
+        isErrorAll = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // isLoadingAll = false;
+    // isErrorAll = false;
+    getSemuaMateri();
+    super.initState();
   }
 
   @override
@@ -53,7 +111,7 @@ class _ListIzinState extends State<ListIzin> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '05',
+                            jumlahPulangLebihAwal.toString(),
                             style: TextStyle(fontSize: 25),
                           ),
                         ),
@@ -80,7 +138,7 @@ class _ListIzinState extends State<ListIzin> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '05',
+                            jumlahSuratTugas.toString(),
                             style: TextStyle(fontSize: 25),
                           ),
                         ),
@@ -107,7 +165,7 @@ class _ListIzinState extends State<ListIzin> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '05',
+                            julahMeninggalkanKantor.toString(),
                             style: TextStyle(fontSize: 25),
                           ),
                         ),
@@ -134,7 +192,7 @@ class _ListIzinState extends State<ListIzin> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '05',
+                            jumlahTidakAbsen.toString(),
                             style: TextStyle(fontSize: 25),
                           ),
                         ),
@@ -173,9 +231,153 @@ class _ListIzinState extends State<ListIzin> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(child: cardIzin())
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget cardIzin() {
+    if (isLoadingAll == false && isErrorAll == false) {
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: daftarIzin.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 5),
+            padding: EdgeInsets.all(5),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                daftarIzin[index]['status'] == '1'
+                    ? textPending()
+                    : daftarIzin[index]['status'] == '2'
+                        ? textDiterima()
+                        : textDitolak(),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  daftarIzin[index]['tipe_izin'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  DateFormat('dd MMMM yyyy').format(
+                    DateTime.parse(
+                      daftarIzin[index]['tanggal_pengajuan'],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    } else if (isLoadingAll == true) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return Center(
+          child: Column(
+        children: [
+          Text("Unknown Error"),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                daftarIzin.clear();
+                getSemuaMateri();
+              });
+            },
+            child: Text("Tap to refresh"),
+          ),
+        ],
+      ));
+    }
+  }
+
+  Widget textPending() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          alignment: Alignment.center,
+          height: 30,
+          width: 90,
+          decoration: BoxDecoration(
+            color: Colors.orange,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            'PENDING',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            print("Dihapus");
+          },
+          icon: Icon(
+            FontAwesomeIcons.trash,
+            size: 17,
+          ),
+          color: Colors.red,
+        )
+      ],
+    );
+  }
+
+  Widget textDiterima() {
+    return Container(
+      alignment: Alignment.center,
+      height: 30,
+      width: 90,
+      decoration: BoxDecoration(
+        color: HexColor('#C3CF0A'),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        'DITERIMA',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget textDitolak() {
+    return Container(
+      alignment: Alignment.center,
+      height: 30,
+      width: 90,
+      decoration: BoxDecoration(
+        color: HexColor('#DF2E38'),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        'DITOLAK',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
       ),
     );

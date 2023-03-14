@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/Izin/list_izin.dart';
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
 
   void pindahKeMenuIzin() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-      return const MenuIzin();
+      return const ListIzin();
     }));
   }
 

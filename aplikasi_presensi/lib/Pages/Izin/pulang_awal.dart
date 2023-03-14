@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, avoid_unnecessary_containers
 
+import 'package:aplikasi_presensi/Pages/Izin/list_izin.dart';
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
 
   void pindahKeMenuIzin() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-      return const MenuIzin();
+      return const ListIzin();
     }));
   }
 

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
+import 'package:aplikasi_presensi/Pages/Izin/list_izin.dart';
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:aplikasi_presensi/api/dbservices_kantor.dart';
@@ -35,7 +36,7 @@ class _SuratTugasState extends State<SuratTugas> {
   List<String> listitem = ["item1", "item2", "item3", "item4", "item5"];
   void pindahKeMenuIzin() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-      return const MenuIzin();
+      return const ListIzin();
     }));
   }
 
