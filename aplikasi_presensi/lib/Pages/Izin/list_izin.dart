@@ -107,7 +107,7 @@ class _ListIzinState extends State<ListIzin> {
                           width: MediaQuery.of(context).size.width / 5,
                           height: MediaQuery.of(context).size.width / 5,
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            border: Border.all(width: 2),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -134,8 +134,8 @@ class _ListIzinState extends State<ListIzin> {
                           width: MediaQuery.of(context).size.width / 5,
                           height: MediaQuery.of(context).size.width / 5,
                           decoration: BoxDecoration(
-                            color: Colors.red,
                             borderRadius: BorderRadius.circular(10),
+                            border: Border.all(width: 2),
                           ),
                           child: Text(
                             jumlahSuratTugas.toString(),
@@ -161,7 +161,7 @@ class _ListIzinState extends State<ListIzin> {
                           width: MediaQuery.of(context).size.width / 5,
                           height: MediaQuery.of(context).size.width / 5,
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            border: Border.all(width: 2),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -188,7 +188,7 @@ class _ListIzinState extends State<ListIzin> {
                           width: MediaQuery.of(context).size.width / 5,
                           height: MediaQuery.of(context).size.width / 5,
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            border: Border.all(width: 2),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(

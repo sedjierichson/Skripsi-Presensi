@@ -32,6 +32,7 @@ class _OtherPageState extends State<OtherPage> {
   }
 
   void pindahkeLogin() {
+    globals.pegawai.erase();
     Navigator.of(context, rootNavigator: true)
         .pushReplacement(MaterialPageRoute(builder: (context) {
       return const LoginScreen();

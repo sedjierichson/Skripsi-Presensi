@@ -31,9 +31,11 @@ class _HomePageState extends State<HomePage> {
   void getTime() {
     final DateTime now = DateTime.now();
     final String formatted = _format(now);
-    setState(() {
-      jamSekarang = formatted;
-    });
+    if (this.mounted) {
+      setState(() {
+        jamSekarang = formatted;
+      });
+    }
   }
 
   String _format(DateTime dateTime) {
