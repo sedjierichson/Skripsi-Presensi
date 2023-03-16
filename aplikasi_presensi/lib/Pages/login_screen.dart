@@ -49,10 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       globals.currentPegawai =
           await db.getCurrentUser(nik: tfLoginNIK.text.toString());
+      globals.currentHpPegawai =
+          await db.getDataHPPegawai(nik: tfLoginNIK.text.toString());
       globals.pegawai.write('nik', globals.currentPegawai.nik);
       globals.pegawai.write('nama', globals.currentPegawai.nama);
       globals.pegawai.write('jabatan', globals.currentPegawai.jabatan);
       globals.pegawai.write('nik_atasan', globals.currentPegawai.nik_atasan);
+      globals.pegawai.write('imei', globals.currentHpPegawai.imei);
       pindahkeHomePage();
       // print(p.nama);
     } catch (e) {

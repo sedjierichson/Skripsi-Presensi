@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:quickalert/quickalert.dart';
 
 late Pegawai currentPegawai;
+late DataHpPegawai currentHpPegawai;
 final pegawai = GetStorage();
 
 void showAlertWarning({

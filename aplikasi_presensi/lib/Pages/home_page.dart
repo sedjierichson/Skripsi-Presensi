@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:aplikasi_presensi/api/dbservices_user.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -20,12 +23,78 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //Fungsi Untuk Get Jam secara Live
   String jamSekarang = '';
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  UserService db = UserService();
+  String imeiBaru = "";
+  String imeiHP = "";
 
   @override
   void initState() {
+    print("Imei terdaftar " + globals.currentHpPegawai.imei.toString());
+    if (globals.currentHpPegawai.imei == null) {
+      getImeiBaru();
+    } else {
+      cocokkanIMEI();
+    }
     super.initState();
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
+  }
+
+  void daftarkanImei(String imeix) async {
+    try {
+      await db.updateIMEI(
+          globals.currentPegawai.nik.toString(), imeix.toString());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void cocokkanIMEI() async {
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      setState(() {
+        imeiBaru = androidInfo.serialNumber.toString();
+      });
+      if (globals.currentHpPegawai.imei != imeiBaru) {
+        print('LOGOUTTTT');
+      } else {
+        print('cocok');
+      }
+      print("imei : " + imeiBaru);
+      print("Platform" + androidInfo.device);
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      setState(() {
+        imeiBaru = iosInfo.identifierForVendor!.toString();
+      });
+      if (globals.currentHpPegawai.imei != imeiBaru) {
+        print('LOGOUTTTT');
+      } else {
+        print('cocok');
+      }
+      print("imei : " + imeiBaru);
+      print(iosInfo.name);
+    }
+  }
+
+  void getImeiBaru() async {
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      setState(() {
+        imeiBaru = androidInfo.serialNumber.toString();
+      });
+      daftarkanImei(imeiBaru);
+      print("imei : " + imeiBaru);
+      print(androidInfo.model);
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      setState(() {
+        imeiBaru = iosInfo.identifierForVendor!.toString();
+      });
+      daftarkanImei(imeiBaru);
+      print("imei : " + imeiBaru);
+    }
   }
 
   void getTime() {

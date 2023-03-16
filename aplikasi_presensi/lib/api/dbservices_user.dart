@@ -34,8 +34,42 @@ class UserService {
           jabatan: data['jabatan'],
           nik_atasan: data['nik_atasan'],
         );
-        print(pegawai.nik_atasan);
+        // print(pegawai.imei);
         return pegawai;
+      }
+    } else {
+      throw ("Gagal mengambil data user");
+    }
+  }
+
+  Future<DataHpPegawai> getDataHPPegawai({String nik = ""}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+
+    String uri = "$apiUrl/pegawai.php?nik=$nik";
+
+    // if (nik != "") {
+    //   uri =
+    //       "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php?id=$nik";
+    // }
+
+    final response = await http.get(Uri.parse(uri), headers: requestHeaders);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        var data = map['data'];
+        DataHpPegawai hppegawai = DataHpPegawai(
+          nik: data['nik'],
+          imei: data['imei'],
+          securityCode: data['security_code'],
+        );
+        // print(pegawai.imei);
+        return hppegawai;
       }
     } else {
       throw ("Gagal mengambil data user");
@@ -126,6 +160,28 @@ class UserService {
       }
     } else {
       throw ("Gagal insert data user");
+    }
+  }
+
+  Future<String> updateIMEI(String nik, String imei) async {
+    final response = await http.put(
+      Uri.parse("$apiUrl/pegawai.php"),
+      body: json.encode(
+        {
+          "nik": nik,
+          "imei": imei,
+        },
+      ),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == 1) {
+        return "Berhasil";
+      } else {
+        throw jsonResponse['message'];
+      }
+    } else {
+      throw ("Gagal update IMEI");
     }
   }
 }
