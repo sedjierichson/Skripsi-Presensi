@@ -4,11 +4,13 @@ class Pegawai {
   String jabatan;
   String? imei;
   String nik_atasan;
+  int? idPresensi;
 
   Pegawai(
       {required this.nik,
       required this.nama,
       required this.jabatan,
+      this.idPresensi,
       required this.nik_atasan});
 }
 

@@ -4,11 +4,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
@@ -21,15 +23,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //Fungsi Untuk Get Jam secara Live
+  String formatter = DateFormat('d ' + 'MMMM ' + 'y').format(DateTime.now());
   String jamSekarang = '';
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   UserService db = UserService();
+  PresensiService dbPresensi = PresensiService();
   String imeiBaru = "";
   String imeiHP = "";
+  String tanggalAbsen = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  bool sudahAbsenMasuk = true;
+  int? idPresensi;
 
   @override
   void initState() {
+    setState(() {
+      sudahAbsenMasuk = false;
+    });
+    cekSudahAbsen();
+    // print(sudahAbsenMasuk);
     print("Imei terdaftar " + globals.currentHpPegawai.imei.toString());
     if (globals.currentHpPegawai.imei == null) {
       getImeiBaru();
@@ -78,6 +89,36 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void updateJamKeluar() async {
+    try {
+      await dbPresensi.updateJamKeluar(idPresensi.toString(), jamSekarang);
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
+  void cekSudahAbsen() async {
+    try {
+      var res = await dbPresensi.cekSudahAbsen(
+          nik: globals.currentPegawai.nik, tanggal: tanggalAbsen);
+      if (res['status'] == 1) {
+        print('sudah absen');
+        // print(res['message']);
+        setState(() {
+          sudahAbsenMasuk = true;
+          idPresensi = res['message'];
+        });
+      } else {
+        print('belum absen');
+        setState(() {
+          sudahAbsenMasuk = false;
+        });
+      }
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
   void getImeiBaru() async {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -97,6 +138,29 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void insertAbsenMasuk() async {
+    try {
+      var res = await dbPresensi.insertAbsenMasuk(
+        globals.currentPegawai.nik.toString(),
+        1,
+        tanggalAbsen.toString(),
+        jamSekarang,
+        "a",
+      );
+      if (res['status'] == 1) {
+        globals.showAlertBerhasil(
+            context: context, message: 'Berhasil absen masuk');
+      }
+      print(res['status']);
+    } catch (e) {
+      globals.showAlertError(
+        context: context,
+        message: e.toString(),
+      );
+    }
+  }
+
+  //Fungsi Untuk Get Jam secara Live
   void getTime() {
     final DateTime now = DateTime.now();
     final String formatted = _format(now);
@@ -113,7 +177,6 @@ class _HomePageState extends State<HomePage> {
 
   //-----
   //final tanggal = DateTime.now();
-  String formatter = DateFormat('d ' + 'MMMM ' + 'y').format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -177,23 +240,9 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 20,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#13542D'),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.height / 3.5,
-                    height: MediaQuery.of(context).size.height / 3.5,
-                    //color: Colors.greenAccent,
-                    child: Text(
-                      'Absen Masuk',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
+                  sudahAbsenMasuk == false
+                      ? buttonCardAbsenMasuk()
+                      : buttonCardAbsenKeluar(),
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 8,
                   ),
@@ -269,6 +318,52 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget buttonCardAbsenMasuk() {
+    return GestureDetector(
+      onTap: () {
+        insertAbsenMasuk();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: HexColor('#13542D'),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.height / 3.5,
+        height: MediaQuery.of(context).size.height / 3.5,
+        child: Text(
+          'Absen Masuk',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget buttonCardAbsenKeluar() {
+    return GestureDetector(
+      onTap: () {
+        updateJamKeluar();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: HexColor('#DF2E38'),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.height / 3.5,
+        height: MediaQuery.of(context).size.height / 3.5,
+        child: Text(
+          'Absen Keluar',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
     );
