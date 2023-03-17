@@ -32,7 +32,9 @@ class _HomePageState extends State<HomePage> {
   String imeiHP = "";
   String tanggalAbsen = DateFormat('yyyy-MM-dd').format(DateTime.now());
   bool sudahAbsenMasuk = true;
-  int? idPresensi;
+  String? idPresensi;
+  String jamMasuk = "--:--";
+  String jamKeluar = "--:--";
 
   @override
   void initState() {
@@ -72,9 +74,9 @@ class _HomePageState extends State<HomePage> {
       } else {
         print('cocok');
       }
-      print("imei : " + imeiBaru);
+      // print("imei : " + imeiBaru);
       print("Platform" + androidInfo.device);
-    } else if (Platform.isIOS) {
+      // } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       setState(() {
         imeiBaru = iosInfo.identifierForVendor!.toString();
@@ -84,16 +86,8 @@ class _HomePageState extends State<HomePage> {
       } else {
         print('cocok');
       }
-      print("imei : " + imeiBaru);
-      print(iosInfo.name);
-    }
-  }
-
-  void updateJamKeluar() async {
-    try {
-      await dbPresensi.updateJamKeluar(idPresensi.toString(), jamSekarang);
-    } catch (e) {
-      globals.showAlertError(context: context, message: e.toString());
+      // print("imei : " + imeiBaru);
+      // print(iosInfo.name);
     }
   }
 
@@ -101,18 +95,38 @@ class _HomePageState extends State<HomePage> {
     try {
       var res = await dbPresensi.cekSudahAbsen(
           nik: globals.currentPegawai.nik, tanggal: tanggalAbsen);
-      if (res['status'] == 1) {
-        print('sudah absen');
-        // print(res['message']);
-        setState(() {
-          sudahAbsenMasuk = true;
-          idPresensi = res['message'];
-        });
+      if (res['jam_keluar'] == null) {
+        print('absen belum lengkap');
+        if (res['status'] == 1) {
+          // print('sudah absen');
+          // print(res['message']);
+          setState(() {
+            sudahAbsenMasuk = true;
+            idPresensi = res['id'].toString();
+            jamMasuk = res['jam_masuk'].toString();
+            jamKeluar = res['jam_keluar'].toString();
+          });
+        } else {
+          // print('belum absen');
+          setState(() {
+            sudahAbsenMasuk = false;
+          });
+        }
       } else {
-        print('belum absen');
-        setState(() {
-          sudahAbsenMasuk = false;
-        });
+        print('absen ulang');
+        if (res['status'] == 1) {
+          // print('sudah absen');
+          // print(res['message']);
+          setState(() {
+            sudahAbsenMasuk = false;
+            idPresensi = res['message'];
+          });
+        } else {
+          print('belum absen');
+          setState(() {
+            sudahAbsenMasuk = true;
+          });
+        }
       }
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
@@ -126,15 +140,15 @@ class _HomePageState extends State<HomePage> {
         imeiBaru = androidInfo.serialNumber.toString();
       });
       daftarkanImei(imeiBaru);
-      print("imei : " + imeiBaru);
-      print(androidInfo.model);
+      // print("imei : " + imeiBaru);
+      // print(androidInfo.model);
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       setState(() {
         imeiBaru = iosInfo.identifierForVendor!.toString();
       });
       daftarkanImei(imeiBaru);
-      print("imei : " + imeiBaru);
+      // print("imei : " + imeiBaru);
     }
   }
 
@@ -150,6 +164,8 @@ class _HomePageState extends State<HomePage> {
       if (res['status'] == 1) {
         globals.showAlertBerhasil(
             context: context, message: 'Berhasil absen masuk');
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => super.widget));
       }
       print(res['status']);
     } catch (e) {
@@ -157,6 +173,18 @@ class _HomePageState extends State<HomePage> {
         context: context,
         message: e.toString(),
       );
+    }
+  }
+
+  void updateJamKeluar() async {
+    try {
+      await dbPresensi.updateJamKeluar(idPresensi.toString(), jamSekarang);
+      globals.showAlertBerhasil(
+          context: context, message: 'Absen keluar berhasil');
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
     }
   }
 
@@ -264,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                               height: 10,
                             ),
                             Text(
-                              '09:00',
+                              jamMasuk,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
@@ -284,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                               height: 10,
                             ),
                             Text(
-                              '09:00',
+                              jamKeluar,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),

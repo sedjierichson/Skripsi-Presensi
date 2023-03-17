@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class PresensiService {
   Future<Map<String, dynamic>> cekSudahAbsen(
-      {required String nik, required String tanggal}) async {
+      {required String nik, required String tanggal, String? mode}) async {
     Map<String, String> requestHeaders = {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*"
@@ -21,10 +21,12 @@ class PresensiService {
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
-      print("aaa" + jsonResponse['data']['status'].toString());
+      // print("aaa" + jsonResponse['data']['jam_keluar'].toString());
       return {
-        'status': jsonResponse['data']['status'],
-        'message': jsonResponse['data']['message']
+        'status': jsonResponse['status'],
+        'id': jsonResponse['data']['id'],
+        'jam_masuk': jsonResponse['data']['jam_masuk'],
+        'jam_keluar': jsonResponse['data']['jam_keluar'],
       };
     } else {
       throw ("Gagal melakukan cek data api user");
@@ -62,6 +64,8 @@ class PresensiService {
   }
 
   Future<String> updateJamKeluar(String id_presensi, String jamKeluar) async {
+    print("id" + id_presensi);
+    print("jam" + jamKeluar);
     final response = await http.put(
       Uri.parse("$apiUrl/presensi.php"),
       body: json.encode(
