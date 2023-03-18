@@ -21,7 +21,7 @@ class PresensiService {
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
-      // print("aaa" + jsonResponse['data']['jam_keluar'].toString());
+      print("aaa" + jsonResponse['data']['id'].toString());
       return {
         'status': jsonResponse['status'],
         'id': jsonResponse['data']['id'],

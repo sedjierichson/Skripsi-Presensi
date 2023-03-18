@@ -12,8 +12,7 @@ class UserService {
       "Access-Control_Allow_Origin": "*"
     };
 
-    String uri =
-        "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php?nik=$nik";
+    String uri = "$apiRUTAN/pegawai.php?nik=$nik";
 
     // if (nik != "") {
     //   uri =
@@ -80,13 +79,10 @@ class UserService {
     required String nik,
     required String password,
   }) async {
-    final response = await http.post(
-        Uri.parse(
-            "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php"),
-        body: {
-          "nik": nik,
-          "password": password,
-        });
+    final response = await http.post(Uri.parse("$apiRUTAN/pegawai.php"), body: {
+      "nik": nik,
+      "password": password,
+    });
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);

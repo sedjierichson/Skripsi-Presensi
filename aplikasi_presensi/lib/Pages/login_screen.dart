@@ -3,6 +3,7 @@
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
+import 'package:aplikasi_presensi/api/apidbconfig.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:flutter/material.dart';
@@ -188,6 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.cyan,
                         onPressed: () {
                           checkData();
+                          print(apiUrl);
                         },
                         child: Text(
                           'LOGIN',

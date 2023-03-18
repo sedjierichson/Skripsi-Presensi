@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:aplikasi_presensi/Pages/ambil_foto.dart';
 import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -14,6 +15,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as mymodal;
+// import 'package:modal_bottom_sheet/src/bottom_sheet_route.dart' as mymodal;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,6 +38,12 @@ class _HomePageState extends State<HomePage> {
   String? idPresensi;
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
+
+  void pindahAmbilFoto() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return AmbilFoto();
+    }));
+  }
 
   @override
   void initState() {
@@ -102,7 +111,7 @@ class _HomePageState extends State<HomePage> {
           // print(res['message']);
           setState(() {
             sudahAbsenMasuk = true;
-            idPresensi = res['id'].toString();
+            idPresensi = res['id']?.toString();
             jamMasuk = res['jam_masuk'].toString();
             jamKeluar = res['jam_keluar'].toString();
           });
@@ -187,6 +196,22 @@ class _HomePageState extends State<HomePage> {
       globals.showAlertError(context: context, message: e.toString());
     }
   }
+
+  // void showModalBottom() {
+  //   mymodal.showCupertinoModalBottomSheet(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Container(
+  //           height: MediaQuery.of(context).size.height / 1.1,
+  //           child: Column(
+  //             children: [
+  //               Text('Hi'),
+  //               Button
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 
   //Fungsi Untuk Get Jam secara Live
   void getTime() {
@@ -354,7 +379,9 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        insertAbsenMasuk();
+        // insertAbsenMasuk();
+        // showModalBottom();
+        pindahAmbilFoto();
       },
       child: Container(
         decoration: BoxDecoration(

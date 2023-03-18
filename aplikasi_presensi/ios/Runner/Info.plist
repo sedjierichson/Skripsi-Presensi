@@ -47,5 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Untuk keperluan presensi</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Untuk keperluan presensi</string>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
 </dict>
 </plist>

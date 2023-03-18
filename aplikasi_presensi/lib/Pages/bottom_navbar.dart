@@ -3,6 +3,7 @@
 import 'package:aplikasi_presensi/Pages/Izin/list_izin.dart';
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
+import 'package:aplikasi_presensi/Pages/kehadiran_page.dart';
 import 'package:aplikasi_presensi/Pages/other_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           case 1:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: HomePage(),
+                child: PageKehadiran(),
               );
             });
 
