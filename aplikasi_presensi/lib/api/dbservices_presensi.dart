@@ -34,18 +34,19 @@ class PresensiService {
   }
 
   Future<Map<String, dynamic>> insertAbsenMasuk(
-    String nikPegawai,
-    int idKantor,
-    String tanggal,
-    String jamMasuk,
-    String foto,
-  ) async {
+      String nikPegawai,
+      int idKantor,
+      String tanggal,
+      String jamMasuk,
+      String base64Image,
+      String fileName) async {
     final response = await http.post(Uri.parse("$apiUrl/presensi.php"), body: {
       'nik': nikPegawai.toString(),
       'id_kantor': idKantor.toString(),
       'tanggal': tanggal,
       'jam_masuk': jamMasuk,
-      'foto': foto,
+      'image': base64Image,
+      'img_name': fileName
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {

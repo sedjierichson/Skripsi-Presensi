@@ -1,14 +1,17 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
+import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
 import 'package:intl/intl.dart';
@@ -38,26 +41,39 @@ class _AmbilFotoState extends State<AmbilFoto> {
   }
 
   void insertAbsenMasuk() async {
-    try {
-      var res = await dbPresensi.insertAbsenMasuk(
-        globals.currentPegawai.nik.toString(),
-        1,
-        tanggalAbsen.toString(),
-        jamSekarang,
-        base64Image.toString(),
-      );
-      if (res['status'] == 1) {
-        globals.showAlertBerhasil(
-            context: context, message: 'Berhasil absen masuk');
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => super.widget));
-      }
-      print(res['status']);
-    } catch (e) {
+    if (base64Image == null) {
       globals.showAlertError(
-        context: context,
-        message: e.toString(),
-      );
+          context: context,
+          message: "Ambil foto selfie untuk melengkapi presensi");
+    } else {
+      try {
+        var res = await dbPresensi.insertAbsenMasuk(
+            globals.currentPegawai.nik.toString(),
+            1,
+            tanggalAbsen.toString(),
+            jamSekarang,
+            base64Image!,
+            getRandomString(10) + "_" + image!.path.split('/').last);
+        if (res['status'] == 1) {
+          globals.showAlertBerhasil(
+              context: context, message: 'Berhasil absen masuk');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return BottomNavBar();
+              },
+            ),
+            (route) => false,
+          );
+        }
+        print(res['status']);
+      } catch (e) {
+        globals.showAlertError(
+          context: context,
+          message: e.toString(),
+        );
+      }
     }
   }
 
@@ -116,9 +132,12 @@ class _AmbilFotoState extends State<AmbilFoto> {
                   height: 20,
                 ),
                 Container(
+                  alignment: Alignment.center,
                   height: MediaQuery.of(context).size.width / 1.5,
                   width: MediaQuery.of(context).size.width / 1.5,
-                  color: Colors.red,
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(10)),
                   child: image == null
                       ? Text('Belum ambil foto')
                       : Image.file(
@@ -128,9 +147,33 @@ class _AmbilFotoState extends State<AmbilFoto> {
                           fit: BoxFit.cover,
                         ),
                 ),
-                ElevatedButton(
-                  onPressed: getImage,
-                  child: Icon(Icons.camera_alt),
+                SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () => getImage(),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: HexColor('#13542D'),
+                        borderRadius: BorderRadius.circular(10)),
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 40,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Buka Kamera',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: insertAbsenMasuk,

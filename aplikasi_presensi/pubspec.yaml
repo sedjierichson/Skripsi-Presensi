@@ -41,7 +41,6 @@ dependencies:
   image_picker: ^0.8.7
   intl: ^0.18.0
   modal_bottom_sheet: ^3.0.0-pre
-  month_picker_dialog: ^1.0.0
   quickalert: ^1.0.1
   timezone: ^0.9.1
 

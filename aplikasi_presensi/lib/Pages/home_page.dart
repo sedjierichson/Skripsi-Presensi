@@ -40,7 +40,8 @@ class _HomePageState extends State<HomePage> {
   String jamKeluar = "--:--";
 
   void pindahAmbilFoto() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+    Navigator.of(context, rootNavigator: true)
+        .push(MaterialPageRoute(builder: (context) {
       return AmbilFoto();
     }));
   }
@@ -161,29 +162,29 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void insertAbsenMasuk() async {
-    try {
-      var res = await dbPresensi.insertAbsenMasuk(
-        globals.currentPegawai.nik.toString(),
-        1,
-        tanggalAbsen.toString(),
-        jamSekarang,
-        "a",
-      );
-      if (res['status'] == 1) {
-        globals.showAlertBerhasil(
-            context: context, message: 'Berhasil absen masuk');
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => super.widget));
-      }
-      print(res['status']);
-    } catch (e) {
-      globals.showAlertError(
-        context: context,
-        message: e.toString(),
-      );
-    }
-  }
+  // void insertAbsenMasuk() async {
+  //   try {
+  //     var res = await dbPresensi.insertAbsenMasuk(
+  //       globals.currentPegawai.nik.toString(),
+  //       1,
+  //       tanggalAbsen.toString(),
+  //       jamSekarang,
+  //       "a",
+  //     );
+  //     if (res['status'] == 1) {
+  //       globals.showAlertBerhasil(
+  //           context: context, message: 'Berhasil absen masuk');
+  //       Navigator.pushReplacement(context,
+  //           MaterialPageRoute(builder: (BuildContext context) => super.widget));
+  //     }
+  //     print(res['status']);
+  //   } catch (e) {
+  //     globals.showAlertError(
+  //       context: context,
+  //       message: e.toString(),
+  //     );
+  //   }
+  // }
 
   void updateJamKeluar() async {
     try {
