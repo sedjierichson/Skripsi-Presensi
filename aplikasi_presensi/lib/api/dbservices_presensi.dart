@@ -1,8 +1,54 @@
+import 'package:aplikasi_presensi/models/presensi.dart';
+
 import 'apidbconfig.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PresensiService {
+  Future<List<Presensi>> getDataPresensi(
+      {String nik = "", String bulan = "", String tahun = ""}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+    String uri;
+    if (nik != '') {
+      uri = "$apiUrl/presensi.php?nik=$nik";
+    } else {
+      uri = "$apiUrl/presensi.php";
+    }
+    final response = await http.get(
+      Uri.parse(uri),
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        List<dynamic> data = map['data'];
+        List<Presensi> listPresensi = [];
+        for (int i = 0; i < data.length; i++) {
+          Presensi presensi = Presensi(
+              id: data[i]['id'],
+              nik: data[i]['nik'].toString(),
+              idKantor: data[i]['id_kantor'].toString(),
+              tanggal: data[i]['tanggal'],
+              jamMasuk: data[i]['jam_masuk'],
+              jamKeluar: data[i]['jam_keluar'],
+              foto: data[i]['foto'],
+              status: data[i]['status']);
+          listPresensi.add(presensi);
+        }
+        // print(listPresensi);
+        return listPresensi;
+      }
+    } else {
+      throw ("Gagal mengambil data sub-materi");
+    }
+  }
+
   Future<Map<String, dynamic>> cekSudahAbsen(
       {required String nik, required String tanggal, String? mode}) async {
     Map<String, String> requestHeaders = {

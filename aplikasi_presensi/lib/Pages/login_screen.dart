@@ -9,6 +9,7 @@ import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
 
@@ -163,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 10),
+                    margin: EdgeInsets.only(top: 5),
                     child: TextField(
                       controller: tfLoginPassword,
                       decoration: InputDecoration(
