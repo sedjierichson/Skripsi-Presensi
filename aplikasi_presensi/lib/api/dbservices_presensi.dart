@@ -12,8 +12,12 @@ class PresensiService {
       "Access-Control_Allow_Origin": "*"
     };
     String uri;
+    // print(nik);
+    print(tahun);
     if (nik != '') {
       uri = "$apiUrl/presensi.php?nik=$nik";
+    } else if (nik != '' && bulan != '' && tahun != '') {
+      uri = "$apiUrl/presensi.php?nikk=$nik&tahun=$tahun&bulan=$bulan";
     } else {
       uri = "$apiUrl/presensi.php";
     }
@@ -34,6 +38,7 @@ class PresensiService {
               id: data[i]['id'],
               nik: data[i]['nik'].toString(),
               idKantor: data[i]['id_kantor'].toString(),
+              lokasi: data[i]['lokasi'].toString(),
               tanggal: data[i]['tanggal'],
               jamMasuk: data[i]['jam_masuk'],
               jamKeluar: data[i]['jam_keluar'],
@@ -41,7 +46,6 @@ class PresensiService {
               status: data[i]['status']);
           listPresensi.add(presensi);
         }
-        // print(listPresensi);
         return listPresensi;
       }
     } else {

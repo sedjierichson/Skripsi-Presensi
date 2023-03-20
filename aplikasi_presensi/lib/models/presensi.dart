@@ -2,6 +2,7 @@ class Presensi {
   String id;
   String nik;
   String idKantor;
+  String? lokasi;
   String tanggal;
   String? jamMasuk;
   String? jamKeluar;
@@ -12,6 +13,7 @@ class Presensi {
     required this.id,
     required this.nik,
     required this.idKantor,
+    this.lokasi,
     required this.tanggal,
     this.jamMasuk,
     this.jamKeluar,

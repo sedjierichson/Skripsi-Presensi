@@ -25,3 +25,15 @@ class DataHpPegawai {
     required this.securityCode,
   });
 }
+
+class apiRutanPegawai {
+  String nik;
+  String nama;
+  String jabatan;
+
+  apiRutanPegawai({
+    required this.nik,
+    required this.nama,
+    required this.jabatan,
+  });
+}

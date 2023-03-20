@@ -24,11 +24,33 @@ class _PageKehadiranState extends State<PageKehadiran> {
   List<Presensi> kehadiran = [];
   bool isLoadingAll = true;
   bool isErrorAll = false;
+  String tahunFilter = "";
+  String bulanFilter = "";
 
   void getDataPresensi() async {
     try {
       kehadiran = await db.getDataPresensi(
         nik: globals.currentPegawai.nik.toString(),
+      );
+      // print(kehadiran[0].tanggal);
+      setState(() {
+        isLoadingAll = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingAll = false;
+        isErrorAll = true;
+      });
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
+  void getDataPresensiFilter() async {
+    try {
+      kehadiran = await db.getDataPresensi(
+        nik: globals.currentPegawai.nik.toString(),
+        tahun: tahunFilter,
+        bulan: bulanFilter,
       );
       setState(() {
         isLoadingAll = false;
@@ -48,17 +70,6 @@ class _PageKehadiranState extends State<PageKehadiran> {
     super.initState();
   }
 
-  // List<Presensi> kehadiran = [
-  //   Presensi(
-  //       id: 1,
-  //       nik: 1,
-  //       idKantor: 1,
-  //       tanggal: '2023-06-05',
-  //       foto: 'a',
-  //       status: 1,
-  //       jamMasuk: '09:00',
-  //       jamKeluar: '15:00')
-  // ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,9 +106,13 @@ class _PageKehadiranState extends State<PageKehadiran> {
                           maxTime: DateTime.now(),
                         ), onConfirm: (val) {
                       setState(() {
+                        isLoadingAll = true;
                         textTanggal = DateFormat('MMMM yyyy').format(val);
+                        tahunFilter = DateFormat('yyyy').format(val);
+                        bulanFilter = DateFormat('MM').format(val);
+                        kehadiran.clear();
+                        getDataPresensiFilter();
                       });
-                      print(val);
                     });
                   },
                   child: Row(
@@ -129,79 +144,114 @@ class _PageKehadiranState extends State<PageKehadiran> {
                   fontSize: 18,
                 ),
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    SingleChildScrollView(
-                      child: DataTable(
-                        columnSpacing: 10,
-                        columns: [
-                          DataColumn(
-                              label: Container(
-                            width: 90,
-                            child: Text(
-                              'Tanggal',
-                              textAlign: TextAlign.center,
-                            ),
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Status',
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Jam Masuk',
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Jam Keluar',
-                            textAlign: TextAlign.center,
-                          )),
-                        ],
-                        rows: kehadiran.map((e) {
-                          return DataRow(cells: [
-                            DataCell(Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                e.tanggal,
-                                textAlign: TextAlign.center,
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                e.status.toString(),
-                                textAlign: TextAlign.center,
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                e.jamMasuk.toString(),
-                                textAlign: TextAlign.center,
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                e.jamKeluar.toString(),
-                                textAlign: TextAlign.center,
-                              ),
-                            )),
-                          ]);
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              tablePresensi()
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget tablePresensi() {
+    if (isLoadingAll == false && isErrorAll == false) {
+      return Expanded(
+        child: SingleChildScrollView(
+          child: DataTable(
+            columnSpacing: 30,
+            columns: [
+              DataColumn(
+                  label: Container(
+                width: 90,
+                child: Text(
+                  'Tanggal',
+                  textAlign: TextAlign.center,
+                ),
+              )),
+              // DataColumn(
+              //     label: Text(
+              //   'Status',
+              //   textAlign: TextAlign.center,
+              // )),
+              DataColumn(
+                  label: Text(
+                'Jam Masuk',
+                textAlign: TextAlign.center,
+              )),
+              DataColumn(
+                  label: Text(
+                'Jam Keluar',
+                textAlign: TextAlign.center,
+              )),
+            ],
+            rows: kehadiran.map((e) {
+              return DataRow(cells: [
+                DataCell(Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    e.tanggal,
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+                // DataCell(Container(
+                //   alignment: Alignment.center,
+                //   child: Text(
+                //     e.status.toString(),
+                //     textAlign: TextAlign.center,
+                //   ),
+                // )),
+                DataCell(Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    e.jamMasuk.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+                DataCell(Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    e.jamKeluar.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+              ]);
+            }).toList(),
+          ),
+        ),
+      );
+    } else if (isLoadingAll == false && isErrorAll == true) {
+      return Center(
+        child: Column(
+          children: [
+            Text('Error'),
+            MaterialButton(
+              color: HexColor('#ffa133'),
+              onPressed: () {
+                getDataPresensi();
+              },
+              child: Text("REFRESH"),
+            ),
+          ],
+        ),
+      );
+    } else if (isLoadingAll == true) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return Center(
+        child: Column(
+          children: [
+            Text("Unknown Error"),
+            ElevatedButton(
+              onPressed: () {
+                getDataPresensi();
+              },
+              child: Text("Refresh"),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 

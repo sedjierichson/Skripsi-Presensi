@@ -13,12 +13,6 @@ class UserService {
     };
 
     String uri = "$apiRUTAN/pegawai.php?nik=$nik";
-
-    // if (nik != "") {
-    //   uri =
-    //       "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php?id=$nik";
-    // }
-
     final response = await http.get(Uri.parse(uri), headers: requestHeaders);
 
     if (response.statusCode == 200) {
@@ -35,6 +29,38 @@ class UserService {
         );
         // print(pegawai.imei);
         return pegawai;
+      }
+    } else {
+      throw ("Gagal mengambil data user");
+    }
+  }
+
+  Future<List<apiRutanPegawai>> getBawahanUser({String nik = ""}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+
+    String uri = "$apiRUTAN/pegawai.php?nik_atasan=$nik";
+    final response = await http.get(Uri.parse(uri), headers: requestHeaders);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        List<dynamic> data = map['data'];
+        // print(data);
+        List<apiRutanPegawai> listBawahan = [];
+        for (int i = 0; i < data.length; i++) {
+          apiRutanPegawai pegawai = apiRutanPegawai(
+            nik: data[i]['nik'].toString(),
+            nama: data[i]['nama'].toString(),
+            jabatan: data[i]['jabatan'].toString(),
+          );
+          listBawahan.add(pegawai);
+        }
+        return listBawahan;
       }
     } else {
       throw ("Gagal mengambil data user");
