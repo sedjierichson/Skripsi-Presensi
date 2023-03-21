@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/Lainnya/detail_izin_bawahan.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:aplikasi_presensi/models/izin.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,14 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
       });
       print(e.toString());
     }
+  }
+
+  void pindahkeDetailIzin(Izin detail) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return detailIzinBawahan(
+        detail: detail,
+      );
+    }));
   }
 
   @override
@@ -83,43 +92,51 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
         scrollDirection: Axis.vertical,
         itemCount: daftarIzin.length,
         itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.only(
-              bottom: 5,
-            ),
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      daftarIzin[index].nama + " - " + daftarIzin[index].nik,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Text(
-                      daftarIzin[index].jenis,
-                      style: TextStyle(fontSize: 15),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      daftarIzin[index].tanggalPengajuan.toString(),
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 15,
-                )
-              ],
+          return GestureDetector(
+            onTap: () => pindahkeDetailIzin(daftarIzin[index]),
+            child: Container(
+              margin: EdgeInsets.only(
+                bottom: 5,
+              ),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        daftarIzin[index].nama + " - " + daftarIzin[index].nik,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      Text(
+                        daftarIzin[index].jenis,
+                        style: TextStyle(fontSize: 15),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        daftarIzin[index].tanggalPengajuan.toString(),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      daftarIzin[index].status == '1'
+                          ? Text('Status : Pending')
+                          : daftarIzin[index].status.toString() == '2'
+                              ? Text('Status : Diterima')
+                              : Text('Status : Ditolak')
+                    ],
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  )
+                ],
+              ),
             ),
           );
         },
