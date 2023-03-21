@@ -126,20 +126,21 @@ class _TeamSayaState extends State<TeamSaya> {
       );
     } else {
       return Center(
-          child: Column(
-        children: [
-          Text("Unknown Error"),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                // daftarIzin.clear();
-                // getSemuaMateri();
-              });
-            },
-            child: Text("Tap to refresh"),
-          ),
-        ],
-      ));
+        child: Column(
+          children: [
+            Text("Unknown Error"),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  // daftarIzin.clear();
+                  // getSemuaMateri();
+                });
+              },
+              child: Text("Tap to refresh"),
+            ),
+          ],
+        ),
+      );
     }
   }
 }

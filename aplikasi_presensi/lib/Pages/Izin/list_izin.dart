@@ -20,7 +20,7 @@ class ListIzin extends StatefulWidget {
 
 class _ListIzinState extends State<ListIzin> {
   FormIzinService db = FormIzinService();
-  List<dynamic> daftarIzin = [];
+  List<Izin> daftarIzin = [];
   bool isLoadingAll = true;
   bool isErrorAll = false;
   int jumlahPulangLebihAwal = 0;
@@ -36,11 +36,11 @@ class _ListIzinState extends State<ListIzin> {
 
   void getJumlah() {
     for (int i = 0; i < daftarIzin.length; i++) {
-      if (daftarIzin[i]['id_jenis_izin'] == '1') {
+      if (daftarIzin[i].idJenisIzin.toString() == '1') {
         jumlahPulangLebihAwal += 1;
-      } else if (daftarIzin[i]['id_jenis_izin'] == '2') {
+      } else if (daftarIzin[i].idJenisIzin.toString() == '2') {
         julahMeninggalkanKantor += 1;
-      } else if (daftarIzin[i]['id_jenis_izin'] == '3') {
+      } else if (daftarIzin[i].idJenisIzin.toString() == '3') {
         jumlahSuratTugas += 1;
       } else {
         jumlahTidakAbsen += 1;
@@ -48,16 +48,15 @@ class _ListIzinState extends State<ListIzin> {
     }
   }
 
-  void getSemuaMateri() async {
-    print("terpanggil");
-    // setState(() {
-    //   isLoadingAll = true;
-    //   isErrorAll = false;
-    // });
+  void getDaftarIzin() async {
+    // print("terpanggil");
+    setState(() {
+      isLoadingAll = true;
+      isErrorAll = false;
+    });
     try {
-      daftarIzin = await db.getIzin(globals.currentPegawai.nik.toString());
-      // print("a" + daftarIzin[0].alasan);
-      print(daftarIzin);
+      daftarIzin =
+          await db.getIzin(nikUser: globals.currentPegawai.nik.toString());
       getJumlah();
       setState(() {
         isLoadingAll = false;
@@ -72,9 +71,7 @@ class _ListIzinState extends State<ListIzin> {
 
   @override
   void initState() {
-    // isLoadingAll = false;
-    // isErrorAll = false;
-    getSemuaMateri();
+    getDaftarIzin();
     super.initState();
   }
 
@@ -261,16 +258,16 @@ class _ListIzinState extends State<ListIzin> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                daftarIzin[index]['status'] == '1'
+                daftarIzin[index].status.toString() == '1'
                     ? textPending()
-                    : daftarIzin[index]['status'] == '2'
+                    : daftarIzin[index].status.toString() == '2'
                         ? textDiterima()
                         : textDitolak(),
                 SizedBox(
                   height: 5,
                 ),
                 Text(
-                  daftarIzin[index]['tipe_izin'],
+                  daftarIzin[index].jenis,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -279,7 +276,7 @@ class _ListIzinState extends State<ListIzin> {
                 Text(
                   DateFormat('dd MMMM yyyy').format(
                     DateTime.parse(
-                      daftarIzin[index]['tanggal_pengajuan'],
+                      daftarIzin[index].tanggalPengajuan.toString(),
                     ),
                   ),
                 ),
@@ -301,7 +298,7 @@ class _ListIzinState extends State<ListIzin> {
             onPressed: () {
               setState(() {
                 daftarIzin.clear();
-                getSemuaMateri();
+                getDaftarIzin();
               });
             },
             child: Text("Tap to refresh"),

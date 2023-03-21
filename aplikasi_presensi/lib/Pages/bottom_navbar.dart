@@ -2,9 +2,9 @@
 
 import 'package:aplikasi_presensi/Pages/Izin/list_izin.dart';
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
+import 'package:aplikasi_presensi/Pages/Lainnya/other_page.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:aplikasi_presensi/Pages/kehadiran_page.dart';
-import 'package:aplikasi_presensi/Pages/other_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';

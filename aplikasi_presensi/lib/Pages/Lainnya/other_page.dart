@@ -1,15 +1,17 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:aplikasi_presensi/Pages/Lainnya/izin_bawahan.dart';
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:aplikasi_presensi/Pages/login_screen.dart';
-import 'package:aplikasi_presensi/Pages/set_reminder.dart';
-import 'package:aplikasi_presensi/Pages/team_saya.dart';
+import 'set_reminder.dart';
+import 'team_saya.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OtherPage extends StatefulWidget {
   const OtherPage({super.key});
@@ -73,6 +75,12 @@ class _OtherPageState extends State<OtherPage> {
     }));
   }
 
+  void pindahkeIzinBawahan() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return const IzinBawahanPage();
+    }));
+  }
+
   void pindahkeLogin() {
     globals.pegawai.erase();
     Navigator.of(context, rootNavigator: true)
@@ -121,6 +129,36 @@ class _OtherPageState extends State<OtherPage> {
                                     ),
                                     Expanded(
                                       child: Text('Team Saya'),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 15,
+                                    )
+                                  ],
+                                ),
+                              )
+                            : SizedBox(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        adaBawahan == true
+                            ? MaterialButton(
+                                padding: EdgeInsets.all(15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                color: Color.fromARGB(255, 207, 207, 207),
+                                onPressed: () {
+                                  pindahkeIzinBawahan();
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(FontAwesomeIcons.listCheck),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      child: Text('Daftar Izin Team Saya'),
                                     ),
                                     Icon(
                                       Icons.arrow_forward_ios,

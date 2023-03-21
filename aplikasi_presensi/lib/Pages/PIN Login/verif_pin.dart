@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'package:aplikasi_presensi/Pages/Lainnya/other_page.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
-import 'package:aplikasi_presensi/Pages/other_page.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';

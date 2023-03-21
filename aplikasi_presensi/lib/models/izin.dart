@@ -1,9 +1,10 @@
 class Izin {
-  int id;
-  int idJenisIzin;
+  String id;
+  String idJenisIzin;
   String jenis;
-  int nik;
-  int nikAtasan;
+  String nik;
+  String nama;
+  String nikAtasan;
   String? tanggalAwal;
   String? tanggalAkhir;
   String? jamAwal;
@@ -13,13 +14,14 @@ class Izin {
   String? uraianTugas;
   String? tanggalPengajuan;
   String? tanggalRespon;
-  int status;
+  String status;
 
   Izin(
       {required this.id,
       required this.idJenisIzin,
       required this.jenis,
       required this.nik,
+      required this.nama,
       required this.nikAtasan,
       this.tanggalAwal,
       this.tanggalAkhir,

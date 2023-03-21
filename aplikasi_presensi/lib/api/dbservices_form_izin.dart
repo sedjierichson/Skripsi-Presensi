@@ -5,18 +5,20 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class FormIzinService {
-  Future<List<dynamic>> getIzin(String nikUser) async {
+  Future<List<Izin>> getIzin({String? nikUser, String? nikAtasan}) async {
     Map<String, String> requestHeaders = {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*"
     };
     String uri;
-    if (nikUser != "") {
+    if (nikUser != null) {
       uri = "$apiUrl/detail_izin.php?nik_pegawai=$nikUser";
+    } else if (nikAtasan != null) {
+      uri = "$apiUrl/detail_izin.php?nik_atasan=$nikAtasan";
     } else {
       uri = "$apiUrl/detail_izin.php?";
     }
-    // print(uri);
+    print(uri);
     final response = await http.get(
       Uri.parse(uri),
       headers: requestHeaders,
@@ -29,33 +31,30 @@ class FormIzinService {
         throw (map['message']);
       } else {
         List<dynamic> data = map['data'];
-        // List<Izin> listIzin = [];
-        // print(data.length);
         // print(data);
-        // for (int i = 0; i < data.length; i++) {
-        //   Izin izin = Izin(
-        //     id: int.parse(data[i]['id']),
-        //     idJenisIzin: data[i]['id_jenis_izin'],
-        //     jenis: data[i]['tipe_izin'],
-        //     nik: data[i]['nik_pegawai'],
-        //     nikAtasan: data[i]['nik_atasan'],
-        //     // tanggalAwal: data[i]['tanggal_awal'].toString(),
-        //     // tanggalAkhir: data[i]['tanggal_akhir'].toString(),
-        //     // jamAwal: data[i]['jam_awal'].toString(),
-        //     // jamAkhir: data[i]['jam_akhir'].toString(),
-        //     // alasan: data[i]['alasan'].toString(),
-        //     // tempatTujuan: data[i]['tempat_tujuan'].toString(),
-        //     // uraianTugas: data[i]['uraian_tugas'].toString(),
-        //     // tanggalPengajuan: data[i]['tanggal_pengajuan'].toString(),
-        //     // tanggalRespon: data[i]['tanggal_respon'].toString(),
-        //     status: data[i]['status'],
-        //   );
-        //   // print(izin.nik);
-        //   listIzin.add(izin);
-        // }
-        // // print(listIzin[0]);
-        // print(data);
-        return data;
+        List<Izin> listIzin = [];
+        for (int i = 0; i < data.length; i++) {
+          Izin izin = Izin(
+            id: data[i]['id'],
+            idJenisIzin: data[i]['id_jenis_izin'],
+            jenis: data[i]['tipe_izin'],
+            nik: data[i]['nik_pegawai'],
+            nama: data[i]['nama'],
+            nikAtasan: data[i]['nik_atasan'],
+            tanggalAwal: data[i]['tanggal_awal'],
+            tanggalAkhir: data[i]['tanggal_akhir'],
+            jamAwal: data[i]['jam_awal'],
+            jamAkhir: data[i]['jam_akhir'],
+            alasan: data[i]['alasan'],
+            tempatTujuan: data[i]['tempat_tujuan'],
+            uraianTugas: data[i]['uraian_tugas'],
+            tanggalPengajuan: data[i]['tanggal_pengajuan'],
+            tanggalRespon: data[i]['tanggal_respon'],
+            status: data[i]['status'],
+          );
+          listIzin.add(izin);
+        }
+        return listIzin;
       }
     } else {
       throw ("Gagal mengambil data materi");
