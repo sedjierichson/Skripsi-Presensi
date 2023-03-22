@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:aplikasi_presensi/Pages/ambil_foto.dart';
+import 'package:aplikasi_presensi/Pages/scan_beacon.dart';
 import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -38,16 +39,16 @@ class _HomePageState extends State<HomePage> {
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
 
-  List<String> beacon = [];
-  List<String> uuidScanAdaSama = [
-    '32a66425-26d2-4693-859a-4ffaf50af319',
-    '32a66425-26d2-4693-8a-4ffaf50af319'
-  ];
-  List<String> uuidScanTidakAdaSama = [
-    '32a65-26d2-4693-859a-4ffaf50af319',
-    '32a65-26d2-4693-8a-4ffaf50af319',
-    '02129fd8-e302-479c-84e1-6255f610d509'
-  ];
+  // List<String> beacon = [];
+  // List<String> uuidScanAdaSama = [
+  //   '32a66425-26d2-4693-859a-4ffaf50af319',
+  //   '32a66425-26d2-4693-8a-4ffaf50af319'
+  // ];
+  // List<String> uuidScanTidakAdaSama = [
+  //   '32a65-26d2-4693-859a-4ffaf50af319',
+  //   '32a65-26d2-4693-8a-4ffaf50af319',
+  //   '02129fd8-e302-479c-84e1-6255f610d509'
+  // ];
 
   void pindahAmbilFoto() {
     Navigator.of(context, rootNavigator: true)
@@ -56,31 +57,38 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
-  void getBeacon() async {
-    try {
-      beacon = await dbPresensi.getBeaconPresensi();
-      // Function eq = const ListEquality().equals;
-      // print(beacon);
-      // print(eq(beacon, uuidScanTidakAdaSama));
-      for (int i = 0; i < uuidScanAdaSama.length; i++) {
-        if (uuidScanAdaSama[i] == beacon[i]) {
-          print('ada sama');
-          break;
-        } else {
-          print('Tidak ada sama');
-        }
-      }
-    } catch (e) {
-      print(e.toString());
-    }
+  void pindahScanBeacon() {
+    Navigator.of(context, rootNavigator: true)
+        .push(MaterialPageRoute(builder: (context) {
+      return scanBeaconPage();
+    }));
   }
+
+  // void getBeacon() async {
+  //   try {
+  //     beacon = await dbPresensi.getBeaconPresensi();
+  //     // Function eq = const ListEquality().equals;
+  //     // print(beacon);
+  //     // print(eq(beacon, uuidScanTidakAdaSama));
+  //     for (int i = 0; i < uuidScanAdaSama.length; i++) {
+  //       if (uuidScanAdaSama[i] == beacon[i]) {
+  //         print('ada sama');
+  //         break;
+  //       } else {
+  //         print('Tidak ada sama');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   @override
   void initState() {
     setState(() {
       sudahAbsenMasuk = false;
     });
-    getBeacon();
+    // getBeacon();
     cekSudahAbsen();
     // print(sudahAbsenMasuk);
     print("Imei terdaftar " + globals.currentHpPegawai.imei.toString());
@@ -227,22 +235,6 @@ class _HomePageState extends State<HomePage> {
       globals.showAlertError(context: context, message: e.toString());
     }
   }
-
-  // void showModalBottom() {
-  //   mymodal.showCupertinoModalBottomSheet(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return Container(
-  //           height: MediaQuery.of(context).size.height / 1.1,
-  //           child: Column(
-  //             children: [
-  //               Text('Hi'),
-  //               Button
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
 
   //Fungsi Untuk Get Jam secara Live
   void getTime() {
@@ -411,8 +403,8 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () {
         // insertAbsenMasuk();
-        // showModalBottom();
-        pindahAmbilFoto();
+        // pindahAmbilFoto();
+        pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

@@ -40,6 +40,7 @@ dependencies:
   http: ^0.13.5
   image_picker: ^0.8.7
   intl: ^0.18.0
+  loading_animation_widget: ^1.2.0+4
   quickalert: ^1.0.1
   timezone: ^0.9.1
 
