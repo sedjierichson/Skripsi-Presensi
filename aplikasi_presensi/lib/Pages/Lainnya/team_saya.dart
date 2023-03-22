@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:hexcolor/hexcolor.dart';
 
 class TeamSaya extends StatefulWidget {
   const TeamSaya({super.key});
@@ -88,8 +89,9 @@ class _TeamSayaState extends State<TeamSaya> {
             alignment: Alignment.centerLeft,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 1)),
+              borderRadius: BorderRadius.circular(10),
+              color: HexColor('#FFA133'),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -99,15 +101,15 @@ class _TeamSayaState extends State<TeamSaya> {
                     Text(
                       bawahan[index].nama.toString(),
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     Text(
-                      bawahan[index].nik.toString(),
-                      style: TextStyle(fontSize: 16),
+                      'NIK : ' + bawahan[index].nik.toString(),
+                      style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      bawahan[index].jabatan.toString(),
-                      style: TextStyle(fontSize: 16),
+                      'Posisi : ' + bawahan[index].jabatan.toString(),
+                      style: TextStyle(fontSize: 15),
                     ),
                   ],
                 ),

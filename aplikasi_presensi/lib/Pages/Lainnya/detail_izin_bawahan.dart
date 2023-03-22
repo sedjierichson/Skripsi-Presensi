@@ -1,11 +1,15 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
+import 'package:aplikasi_presensi/Pages/Lainnya/izin_bawahan.dart';
+import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:aplikasi_presensi/models/izin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:quickalert/quickalert.dart';
 
 class detailIzinBawahan extends StatefulWidget {
   final Izin detail;
@@ -16,6 +20,22 @@ class detailIzinBawahan extends StatefulWidget {
 }
 
 class _detailIzinBawahanState extends State<detailIzinBawahan> {
+  FormIzinService db = FormIzinService();
+
+  void terimaTolakIzin(String id, String mode) async {
+    try {
+      await db.terimaTolakIzin(id, mode);
+      Navigator.pop(context);
+      // Navigator.of(context)
+      //     .pushReplacement(MaterialPageRoute(builder: (context) {
+      //   return const IzinBawahanPage();
+      // }));
+      globals.showAlertBerhasil(context: context, message: 'Izin di$mode');
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -485,7 +505,21 @@ class _detailIzinBawahanState extends State<detailIzinBawahan> {
           Expanded(
             child: MaterialButton(
               color: HexColor('#C3CF0A'),
-              onPressed: () {},
+              onPressed: () {
+                QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.confirm,
+                  text: 'Apakah anda yakin ?',
+                  confirmBtnText: 'Ya',
+                  cancelBtnText: 'Tidak',
+                  onConfirmBtnTap: () {
+                    terimaTolakIzin(widget.detail.id, "terima");
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  onCancelBtnTap: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                );
+              },
               child: Text(
                 'TERIMA',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -498,7 +532,21 @@ class _detailIzinBawahanState extends State<detailIzinBawahan> {
           Expanded(
             child: MaterialButton(
               color: HexColor('#DF2E38'),
-              onPressed: () {},
+              onPressed: () {
+                QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.confirm,
+                  text: 'Apakah anda yakin ?',
+                  confirmBtnText: 'Ya',
+                  cancelBtnText: 'Tidak',
+                  onConfirmBtnTap: () {
+                    terimaTolakIzin(widget.detail.id, "tolak");
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  onCancelBtnTap: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                );
+              },
               child: Text(
                 'TOLAK',
                 style:

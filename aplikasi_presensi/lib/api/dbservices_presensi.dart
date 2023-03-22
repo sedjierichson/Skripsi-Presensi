@@ -5,6 +5,34 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PresensiService {
+  Future<List<String>> getBeaconPresensi() async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+    final response = await http.get(
+      Uri.parse('$apiUrl/beacon.php'),
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        List<dynamic> data = map['data'];
+        List<String> listBeacon = [];
+        for (int i = 0; i < data.length; i++) {
+          listBeacon.add(data[i]['uuid']);
+        }
+        print(listBeacon[0]);
+        return listBeacon;
+      }
+    } else {
+      throw ("Gagal mengambil data sub-materi");
+    }
+  }
+
   Future<List<Presensi>> getDataPresensi(
       {String nik = "", String bulan = "", String tahun = ""}) async {
     Map<String, String> requestHeaders = {

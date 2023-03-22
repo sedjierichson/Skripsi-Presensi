@@ -191,4 +191,26 @@ class FormIzinService {
       throw ("Gagal memperbarui data user");
     }
   }
+
+  Future<String> terimaTolakIzin(String id, String mode) async {
+    final response = await http.put(
+      Uri.parse("$apiUrl/detail_izin.php"),
+      body: json.encode(
+        {
+          "id": id.toString(),
+          "mode": mode,
+        },
+      ),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == 1) {
+        return "Berhasil";
+      } else {
+        throw jsonResponse['message'];
+      }
+    } else {
+      throw ("Gagal update status izin keluar");
+    }
+  }
 }

@@ -15,7 +15,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as mymodal;
 // import 'package:modal_bottom_sheet/src/bottom_sheet_route.dart' as mymodal;
 
 class HomePage extends StatefulWidget {
@@ -39,6 +38,17 @@ class _HomePageState extends State<HomePage> {
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
 
+  List<String> beacon = [];
+  List<String> uuidScanAdaSama = [
+    '32a66425-26d2-4693-859a-4ffaf50af319',
+    '32a66425-26d2-4693-8a-4ffaf50af319'
+  ];
+  List<String> uuidScanTidakAdaSama = [
+    '32a65-26d2-4693-859a-4ffaf50af319',
+    '32a65-26d2-4693-8a-4ffaf50af319',
+    '02129fd8-e302-479c-84e1-6255f610d509'
+  ];
+
   void pindahAmbilFoto() {
     Navigator.of(context, rootNavigator: true)
         .push(MaterialPageRoute(builder: (context) {
@@ -46,11 +56,31 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
+  void getBeacon() async {
+    try {
+      beacon = await dbPresensi.getBeaconPresensi();
+      // Function eq = const ListEquality().equals;
+      // print(beacon);
+      // print(eq(beacon, uuidScanTidakAdaSama));
+      for (int i = 0; i < uuidScanAdaSama.length; i++) {
+        if (uuidScanAdaSama[i] == beacon[i]) {
+          print('ada sama');
+          break;
+        } else {
+          print('Tidak ada sama');
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   void initState() {
     setState(() {
       sudahAbsenMasuk = false;
     });
+    getBeacon();
     cekSudahAbsen();
     // print(sudahAbsenMasuk);
     print("Imei terdaftar " + globals.currentHpPegawai.imei.toString());
