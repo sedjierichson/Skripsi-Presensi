@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:aplikasi_presensi/Pages/Lainnya/data_bawahan/menu_detail_bawahan.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,14 @@ class _TeamSayaState extends State<TeamSaya> {
     }
   }
 
+  void pindahkeMenuDetail(apiRutanPegawai detail) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return menuDetailBawahan(
+        bawahan: detail,
+      );
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,41 +92,47 @@ class _TeamSayaState extends State<TeamSaya> {
         scrollDirection: Axis.vertical,
         itemCount: bawahan.length,
         itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 5),
-            padding: EdgeInsets.only(top: 10, left: 20, bottom: 10, right: 10),
-            alignment: Alignment.centerLeft,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: HexColor('#FFA133'),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      bawahan[index].nama.toString(),
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Text(
-                      'NIK : ' + bawahan[index].nik.toString(),
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text(
-                      'Posisi : ' + bawahan[index].jabatan.toString(),
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 15,
-                )
-              ],
+          return GestureDetector(
+            onTap: () {
+              pindahkeMenuDetail(bawahan[index]);
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 5),
+              padding:
+                  EdgeInsets.only(top: 10, left: 20, bottom: 10, right: 10),
+              alignment: Alignment.centerLeft,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: HexColor('#FFA133'),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        bawahan[index].nama.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      Text(
+                        'NIK : ' + bawahan[index].nik.toString(),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      Text(
+                        'Posisi : ' + bawahan[index].jabatan.toString(),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  )
+                ],
+              ),
             ),
           );
         },

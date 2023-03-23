@@ -6,6 +6,7 @@ import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
 
@@ -270,10 +271,19 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
                         child: MaterialButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
-                          color: Colors.cyan,
+                          color: HexColor('#13542D'),
                           onPressed: () {
-                            submitForm();
-                            // pindahKeMenuIzin();
+                            if (tfJamIzinPergi.text.toString() != "" &&
+                                tfJamIzinPulang.text.toString() != "" &&
+                                tfTanggalIzin.text.toString() != "" &&
+                                alasan != "") {
+                              submitForm();
+                            } else {
+                              globals.showAlertError(
+                                  context: context,
+                                  message:
+                                      'Harap mengisi form dengan lengkap!');
+                            }
                           },
                           child: Text(
                             'Ajukan',

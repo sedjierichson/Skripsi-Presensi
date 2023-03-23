@@ -201,7 +201,16 @@ class _SuratTugasState extends State<SuratTugas> {
                               borderRadius: BorderRadius.circular(15)),
                           color: HexColor("#13542D"),
                           onPressed: () {
-                            submitForm();
+                            if (tfTanggalIzin.text.toString() != "" &&
+                                tfTempatTujuan.text.toString() != "" &&
+                                tfUraianTugas.text.toString() != "") {
+                              submitForm();
+                            } else {
+                              globals.showAlertError(
+                                  context: context,
+                                  message:
+                                      'Harap mengisi form dengan lengkap!');
+                            }
                           },
                           child: Text(
                             'AJUKAN',
