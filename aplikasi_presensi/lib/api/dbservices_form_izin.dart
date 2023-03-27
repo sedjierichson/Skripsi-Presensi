@@ -213,4 +213,20 @@ class FormIzinService {
       throw ("Gagal update status izin keluar");
     }
   }
+
+  Future<String> deleteRequestMateri(String id) async {
+    final response = await http.delete(Uri.parse("$apiUrl/detail_izin.php"),
+        body: json.encode({"id": id}));
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == 1) {
+        return "Berhasil";
+      } else {
+        throw (jsonResponse['message']);
+      }
+    } else {
+      throw ("Gagal menghapus permintaan materi");
+    }
+  }
 }

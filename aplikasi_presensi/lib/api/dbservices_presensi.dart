@@ -25,7 +25,7 @@ class PresensiService {
         for (int i = 0; i < data.length; i++) {
           listBeacon.add(data[i]['uuid']);
         }
-        print(listBeacon[0]);
+        // print(listBeacon[0]);
         return listBeacon;
       }
     } else {

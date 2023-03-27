@@ -2,6 +2,7 @@
 
 import 'package:aplikasi_presensi/Pages/Lainnya/izin_bawahan.dart';
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
+import 'package:aplikasi_presensi/Pages/custom_clipper.dart';
 import 'package:aplikasi_presensi/Pages/login_screen.dart';
 import 'set_reminder.dart';
 import 'team_saya.dart';

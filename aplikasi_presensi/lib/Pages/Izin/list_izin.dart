@@ -69,6 +69,23 @@ class _ListIzinState extends State<ListIzin> {
     }
   }
 
+  void deleteIzin(String id) async {
+    try {
+      await db.deleteRequestMateri(id.toString());
+      globals.showAlertBerhasil(context: context, message: "Izin dihapus");
+      setState(() {
+        jumlahPulangLebihAwal = 0;
+        jumlahSuratTugas = 0;
+        jumlahTidakAbsen = 0;
+        julahMeninggalkanKantor = 0;
+        getDaftarIzin();
+        // getJumlah();
+      });
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
   @override
   void initState() {
     getDaftarIzin();
@@ -259,7 +276,7 @@ class _ListIzinState extends State<ListIzin> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 daftarIzin[index].status.toString() == '1'
-                    ? textPending()
+                    ? textPending(daftarIzin[index].id)
                     : daftarIzin[index].status.toString() == '2'
                         ? textDiterima()
                         : textDitolak(),
@@ -308,7 +325,7 @@ class _ListIzinState extends State<ListIzin> {
     }
   }
 
-  Widget textPending() {
+  Widget textPending(String id) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -330,7 +347,7 @@ class _ListIzinState extends State<ListIzin> {
         ),
         IconButton(
           onPressed: () {
-            print("Dihapus");
+            deleteIzin(id);
           },
           icon: Icon(
             FontAwesomeIcons.trash,

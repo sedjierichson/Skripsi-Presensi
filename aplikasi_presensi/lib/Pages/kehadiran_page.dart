@@ -244,7 +244,9 @@ class _PageKehadiranState extends State<PageKehadiran> {
             Text("Unknown Error"),
             ElevatedButton(
               onPressed: () {
-                getDataPresensi();
+                setState(() {
+                  getDataPresensi();
+                });
               },
               child: Text("Refresh"),
             ),
