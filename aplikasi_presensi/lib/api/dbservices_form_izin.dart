@@ -192,12 +192,14 @@ class FormIzinService {
     }
   }
 
-  Future<String> terimaTolakIzin(String id, String mode) async {
+  Future<String> terimaTolakIzin(
+      String id, String tanggal_respon, String mode) async {
     final response = await http.put(
       Uri.parse("$apiUrl/detail_izin.php"),
       body: json.encode(
         {
           "id": id.toString(),
+          "tanggal_respon": tanggal_respon.toString(),
           "mode": mode,
         },
       ),

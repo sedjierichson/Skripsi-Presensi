@@ -22,14 +22,14 @@ class detailIzinBawahan extends StatefulWidget {
 class _detailIzinBawahanState extends State<detailIzinBawahan> {
   FormIzinService db = FormIzinService();
 
-  void terimaTolakIzin(String id, String mode) async {
+  void terimaTolakIzin(String id, String tanggal, String mode) async {
     try {
-      await db.terimaTolakIzin(id, mode);
+      await db.terimaTolakIzin(id, tanggal, mode);
       Navigator.pop(context);
-      // Navigator.of(context)
-      //     .pushReplacement(MaterialPageRoute(builder: (context) {
-      //   return const IzinBawahanPage();
-      // }));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return const IzinBawahanPage();
+      }));
       globals.showAlertBerhasil(context: context, message: 'Izin di$mode');
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
@@ -513,7 +513,12 @@ class _detailIzinBawahanState extends State<detailIzinBawahan> {
                   confirmBtnText: 'Ya',
                   cancelBtnText: 'Tidak',
                   onConfirmBtnTap: () {
-                    terimaTolakIzin(widget.detail.id, "terima");
+                    terimaTolakIzin(
+                        widget.detail.id,
+                        DateFormat('yyyy-MM-dd')
+                            .format(DateTime.now())
+                            .toString(),
+                        "terima");
                     Navigator.of(context, rootNavigator: true).pop();
                   },
                   onCancelBtnTap: () =>
@@ -540,7 +545,12 @@ class _detailIzinBawahanState extends State<detailIzinBawahan> {
                   confirmBtnText: 'Ya',
                   cancelBtnText: 'Tidak',
                   onConfirmBtnTap: () {
-                    terimaTolakIzin(widget.detail.id, "tolak");
+                    terimaTolakIzin(
+                        widget.detail.id,
+                        DateFormat('yyyy-MM-dd')
+                            .format(DateTime.now())
+                            .toString(),
+                        "tolak");
                     Navigator.of(context, rootNavigator: true).pop();
                   },
                   onCancelBtnTap: () =>
