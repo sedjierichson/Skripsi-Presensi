@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:aplikasi_presensi/api/apidbconfig.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/models/pegawai.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,6 +26,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController tfLoginNIK = TextEditingController();
   TextEditingController tfLoginPassword = TextEditingController();
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  String imeiHPSekarang = '';
   UserService db = UserService();
   late Pegawai p;
 
@@ -38,13 +43,24 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void pertamaLogin() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return EnterPin(
-        nik: tfLoginNIK.text.toString(),
-        mode: 'pertama_login',
-      );
-    }));
+  void pertamaLogin() async {
+    try {
+      globals.currentPegawai =
+          await db.getCurrentUser(nik: tfLoginNIK.text.toString());
+      globals.pegawai.write('nik', globals.currentPegawai.nik);
+      globals.pegawai.write('nama', globals.currentPegawai.nama);
+      globals.pegawai.write('jabatan', globals.currentPegawai.jabatan);
+      globals.pegawai.write('nik_atasan', globals.currentPegawai.nik_atasan);
+      // globals.pegawai.write('imei', null);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return EnterPin(
+          nik: tfLoginNIK.text.toString(),
+          mode: 'pertama_login',
+        );
+      }));
+    } catch (e) {
+      print(e);
+    }
   }
 
   void getCurrentUser() async {
@@ -58,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
       globals.pegawai.write('jabatan', globals.currentPegawai.jabatan);
       globals.pegawai.write('nik_atasan', globals.currentPegawai.nik_atasan);
       globals.pegawai.write('imei', globals.currentHpPegawai.imei);
-      pindahkeHomePage();
+      cocokkanIMEI();
+      // pindahkeHomePage();
       // print(p.nama);
     } catch (e) {
       print(e);
@@ -83,7 +100,6 @@ class _LoginScreenState extends State<LoginScreen> {
           //password benar & sudah pernah login
           getCurrentUser();
           print('pernah login');
-          // pindahkeHomePage();
         } else if (res['status'] == 1 && res2['status'] == 0) {
           //password benar & belum pernah login
           pertamaLogin();
@@ -95,6 +111,42 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } catch (e) {
         globals.showAlertError(context: context, message: e.toString());
+      }
+    }
+  }
+
+  void cocokkanIMEI() async {
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      setState(() {
+        imeiHPSekarang = androidInfo.serialNumber.toString();
+      });
+      if (globals.currentHpPegawai.imei != imeiHPSekarang) {
+        print('LOGOUTTTT');
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return EnterPin(
+            nik: tfLoginNIK.text.toString(),
+            mode: 'sudah_login',
+          );
+        }));
+        print('cocok');
+      }
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      setState(() {
+        imeiHPSekarang = iosInfo.identifierForVendor!.toString();
+      });
+      if (globals.currentHpPegawai.imei != imeiHPSekarang) {
+        print('LOGOUTTTT');
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return EnterPin(
+            nik: tfLoginNIK.text.toString(),
+            mode: 'sudah_login',
+          );
+        }));
+        print('cocok');
       }
     }
   }

@@ -64,39 +64,19 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
-  // void getBeacon() async {
-  //   try {
-  //     beacon = await dbPresensi.getBeaconPresensi();
-  //     // Function eq = const ListEquality().equals;
-  //     // print(beacon);
-  //     // print(eq(beacon, uuidScanTidakAdaSama));
-  //     for (int i = 0; i < uuidScanAdaSama.length; i++) {
-  //       if (uuidScanAdaSama[i] == beacon[i]) {
-  //         print('ada sama');
-  //         break;
-  //       } else {
-  //         print('Tidak ada sama');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
-
   @override
   void initState() {
     setState(() {
       sudahAbsenMasuk = false;
     });
-    // getBeacon();
     cekSudahAbsen();
     // print(sudahAbsenMasuk);
-    print("Imei terdaftar " + globals.currentHpPegawai.imei.toString());
-    if (globals.currentHpPegawai.imei == null) {
-      getImeiBaru();
-    } else {
-      cocokkanIMEI();
-    }
+    // print("Imei terdaftar " + globals.currentHpPegawai.imei.toString());
+    // if (globals.currentHpPegawai.imei == null) {
+    //   getImeiBaru();
+    // } else {
+    // cocokkanIMEI();
+    // }
     super.initState();
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
@@ -122,9 +102,7 @@ class _HomePageState extends State<HomePage> {
       } else {
         print('cocok');
       }
-      // print("imei : " + imeiBaru);
-      print("Platform" + androidInfo.device);
-      // } else if (Platform.isIOS) {
+    } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       setState(() {
         imeiBaru = iosInfo.identifierForVendor!.toString();
@@ -134,8 +112,6 @@ class _HomePageState extends State<HomePage> {
       } else {
         print('cocok');
       }
-      // print("imei : " + imeiBaru);
-      // print(iosInfo.name);
     }
   }
 
@@ -177,7 +153,8 @@ class _HomePageState extends State<HomePage> {
         }
       }
     } catch (e) {
-      globals.showAlertError(context: context, message: e.toString());
+      print(e.toString());
+      // globals.showAlertError(context: context, message: e.toString());
     }
   }
 
@@ -188,41 +165,14 @@ class _HomePageState extends State<HomePage> {
         imeiBaru = androidInfo.serialNumber.toString();
       });
       daftarkanImei(imeiBaru);
-      // print("imei : " + imeiBaru);
-      // print(androidInfo.model);
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       setState(() {
         imeiBaru = iosInfo.identifierForVendor!.toString();
       });
       daftarkanImei(imeiBaru);
-      // print("imei : " + imeiBaru);
     }
   }
-
-  // void insertAbsenMasuk() async {
-  //   try {
-  //     var res = await dbPresensi.insertAbsenMasuk(
-  //       globals.currentPegawai.nik.toString(),
-  //       1,
-  //       tanggalAbsen.toString(),
-  //       jamSekarang,
-  //       "a",
-  //     );
-  //     if (res['status'] == 1) {
-  //       globals.showAlertBerhasil(
-  //           context: context, message: 'Berhasil absen masuk');
-  //       Navigator.pushReplacement(context,
-  //           MaterialPageRoute(builder: (BuildContext context) => super.widget));
-  //     }
-  //     print(res['status']);
-  //   } catch (e) {
-  //     globals.showAlertError(
-  //       context: context,
-  //       message: e.toString(),
-  //     );
-  //   }
-  // }
 
   void updateJamKeluar() async {
     try {

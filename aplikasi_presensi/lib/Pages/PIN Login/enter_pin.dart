@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:aplikasi_presensi/Pages/PIN%20Login/verif_pin.dart';
+import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
+import 'package:aplikasi_presensi/api/dbservices_user.dart';
+import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -19,6 +22,40 @@ class EnterPin extends StatefulWidget {
 
 class _EnterPinState extends State<EnterPin> {
   String pin_login = '';
+  String pinTerdaftar = '';
+  UserService db = UserService();
+  List<Pegawai> p = [];
+
+  void getPIN() async {
+    try {
+      var res = await db.cekNIKSudahTerdaftar(nik: widget.nik.toString());
+      pinTerdaftar = res['message']['security_code'].toString();
+      print("pin = " + res['message']['security_code'].toString());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void cekPinSudahSamaDenganYangTerdaftar() {
+    if (pin_login != '') {
+      if (pin_login == pinTerdaftar) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return BottomNavBar();
+            },
+          ),
+          (route) => false,
+        );
+      } else {
+        globals.showAlertError(context: context, message: 'PIN salah');
+      }
+    } else {
+      globals.showAlertError(
+          context: context, message: 'PIN tidak boleh kosong');
+    }
+  }
 
   void pindahkeVerifPINPertamaLogin() {
     if (pin_login != '') {
@@ -33,6 +70,14 @@ class _EnterPinState extends State<EnterPin> {
       globals.showAlertError(
           context: context, message: 'PIN tidak boleh kosong');
     }
+  }
+
+  @override
+  void initState() {
+    if (widget.mode.toString() == 'sudah_login') {
+      getPIN();
+    }
+    super.initState();
   }
 
   @override
@@ -68,7 +113,7 @@ class _EnterPinState extends State<EnterPin> {
                       keyboardType: TextInputType.number,
                       underlineUnfocusedColor: Colors.black,
                       onCompleted: (value) {
-                        print("AAAA" + value);
+                        // print("AAAA" + value);
                         setState(() {
                           pin_login = value;
                         });
@@ -87,7 +132,11 @@ class _EnterPinState extends State<EnterPin> {
                             borderRadius: BorderRadius.circular(15)),
                         color: Colors.cyan,
                         onPressed: () {
-                          pindahkeVerifPINPertamaLogin();
+                          if (widget.mode.toString() == "pertama_login") {
+                            pindahkeVerifPINPertamaLogin();
+                          } else {
+                            cekPinSudahSamaDenganYangTerdaftar();
+                          }
                         },
                         child: Text(
                           'LANJUT',

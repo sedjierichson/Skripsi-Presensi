@@ -130,7 +130,7 @@ class UserService {
       var jsonResponse = json.decode(response.body);
       return {
         'status': jsonResponse['status'],
-        'message': jsonResponse['message']
+        'message': jsonResponse['data']
       };
     } else {
       throw ("Gagal melakukan cek data user");

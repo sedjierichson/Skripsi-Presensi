@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:aplikasi_presensi/Pages/Lainnya/other_page.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -28,6 +31,8 @@ class VerifPin extends StatefulWidget {
 class _VerifPinState extends State<VerifPin> {
   String VerifikasiPin = '';
   UserService db = UserService();
+  String imeiBaru = "";
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   void pindahkeHomePage() {
     Navigator.pushAndRemoveUntil(
@@ -45,9 +50,37 @@ class _VerifPinState extends State<VerifPin> {
     try {
       await db.insertDataPertamaLogin(
           widget.nik.toString(), VerifikasiPin.toString());
+      daftarkanImei(imeiBaru);
       pindahkeHomePage();
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  void daftarkanImei(String imeix) async {
+    try {
+      await db.updateIMEI(widget.nik.toString(), imeix.toString());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void getImeiBaru() async {
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      setState(() {
+        imeiBaru = androidInfo.serialNumber.toString();
+      });
+      // daftarkanImei(imeiBaru);
+      // print("imei : " + imeiBaru);
+      // print(androidInfo.model);
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      setState(() {
+        imeiBaru = iosInfo.identifierForVendor!.toString();
+      });
+      // daftarkanImei(imeiBaru);
+      // print("imei : " + imeiBaru);
     }
   }
 
@@ -78,6 +111,12 @@ class _VerifPinState extends State<VerifPin> {
         confirmBtnColor: Colors.blueAccent,
       );
     }
+  }
+
+  @override
+  void initState() {
+    getImeiBaru();
+    super.initState();
   }
 
   @override
