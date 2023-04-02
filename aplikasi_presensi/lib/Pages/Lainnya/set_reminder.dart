@@ -26,7 +26,7 @@ class _SetReminderState extends State<SetReminder> {
   void initState() {
     super.initState();
     NotificationWidget.init();
-    tz.initializeTimeZones();
+    // tz.initializeTimeZones();
   }
 
   @override
@@ -62,8 +62,9 @@ class _SetReminderState extends State<SetReminder> {
                     //     body: 'Test Notifikasi',
                     //     scheduledNotificationDateTime: scheduleTime);
                     NotificationWidget.showScheduleDailyotificationJamKeluar(
-                      title: "Notifications",
-                      body: 'Test Notif',
+                      title: "PRESENSI PT X",
+                      body:
+                          'Sudah jam pulang kerja, saatnya melakukan absen pulang!',
                       jamKeluar: jamKeluar.toString().substring(0, 2),
                       menitKeluar: jamKeluar.toString().substring(3, 5),
                     );
@@ -209,17 +210,8 @@ class _SetReminderState extends State<SetReminder> {
               if (newTime != null) {
                 setState(() {
                   jamKeluar = newTime.toString().substring(10, 15);
-                  print(jamKeluar);
-                  print(jamKeluar.toString().substring(0, 2));
-                  print(jamKeluar.toString().substring(3, 5));
                 });
               }
-              // var tempJamKeluar = await showTimePicker(
-              //   context,
-              //   showTitleActions: true,
-              //   onChanged: (date) => scheduleTime = date,
-              //   onConfirm: (date) => print(date),
-              // );
             },
             child: FaIcon(
               FontAwesomeIcons.solidClock,

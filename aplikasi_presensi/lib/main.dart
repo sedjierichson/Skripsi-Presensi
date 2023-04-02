@@ -10,7 +10,7 @@ void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   // NotificationService().initNotification();
-  // tz.initializeTimeZones();
+  tz.initializeTimeZones();
 
   runApp(const MyApp());
 }

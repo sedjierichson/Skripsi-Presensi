@@ -111,7 +111,7 @@ class NotificationWidget {
         body,
         scheduleDaily(
           Time(
-            int.parse(jamKeluar),
+            int.parse(jamKeluar) - 7,
             int.parse(menitKeluar),
           ),
         ),
@@ -124,7 +124,10 @@ class NotificationWidget {
       );
 
   static tz.TZDateTime scheduleDaily(Time time) {
+    DateTime x = DateTime.now();
     final now = tz.TZDateTime.now(tz.local);
+    // final now =
+    //     tz.TZDateTime.utc(x.year, x.month, x.day, x.hour, x.minute, x.second);
     final scheduledDate = tz.TZDateTime(
       tz.local,
       now.year,
@@ -136,7 +139,7 @@ class NotificationWidget {
     );
 
     print('now time $now');
-    print('test schedule time $scheduledDate');
+    print('schedule time $scheduledDate');
     return scheduledDate.isBefore(now)
         ? scheduledDate.add(
             Duration(days: 1),
