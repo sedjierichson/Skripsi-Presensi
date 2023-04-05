@@ -36,18 +36,27 @@ class _EnterPinState extends State<EnterPin> {
     }
   }
 
-  void cekPinSudahSamaDenganYangTerdaftar() {
+  void cekPINLogin() {
     if (pin_login != '') {
       if (pin_login == pinTerdaftar) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return BottomNavBar();
-            },
-          ),
-          (route) => false,
-        );
+        if (widget.mode.toString() == "sudah_login") {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return BottomNavBar();
+              },
+            ),
+            (route) => false,
+          );
+        } else if (widget.mode.toString() == "ganti_pin") {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return EnterPin(
+              nik: globals.currentPegawai.nik.toString(),
+              mode: 'ganti_pin2',
+            );
+          }));
+        }
       } else {
         globals.showAlertError(context: context, message: 'PIN salah');
       }
@@ -74,7 +83,8 @@ class _EnterPinState extends State<EnterPin> {
 
   @override
   void initState() {
-    if (widget.mode.toString() == 'sudah_login') {
+    if (widget.mode.toString() == 'sudah_login' ||
+        widget.mode.toString() == 'ganti_pin') {
       getPIN();
     }
     super.initState();
@@ -94,14 +104,33 @@ class _EnterPinState extends State<EnterPin> {
                     padding: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height / 30),
                     alignment: Alignment.center,
-                    child: Text(
-                      "Masukkan PIN Login",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                    child: widget.mode.toString() == 'sudah_login' ||
+                            widget.mode.toString() == 'ganti_pin'
+                        ? Text(
+                            "Masukkan PIN Login",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        : widget.mode.toString() == 'pertama_login'
+                            ? Text(
+                                "Daftar PIN Login",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                                textAlign: TextAlign.center,
+                              )
+                            : Text(
+                                "Masukkan PIN Login Baru",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -132,10 +161,11 @@ class _EnterPinState extends State<EnterPin> {
                             borderRadius: BorderRadius.circular(15)),
                         color: Colors.cyan,
                         onPressed: () {
-                          if (widget.mode.toString() == "pertama_login") {
+                          if (widget.mode.toString() == "pertama_login" ||
+                              widget.mode.toString() == "ganti_pin2") {
                             pindahkeVerifPINPertamaLogin();
                           } else {
-                            cekPinSudahSamaDenganYangTerdaftar();
+                            cekPINLogin();
                           }
                         },
                         child: Text(

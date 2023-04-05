@@ -71,6 +71,7 @@ class PresensiService {
               jamMasuk: data[i]['jam_masuk'],
               jamKeluar: data[i]['jam_keluar'],
               foto: data[i]['foto'],
+              kategori: data[i]['kategori'],
               status: data[i]['status']);
           listPresensi.add(presensi);
         }
@@ -112,19 +113,22 @@ class PresensiService {
   }
 
   Future<Map<String, dynamic>> insertAbsenMasuk(
-      String nikPegawai,
-      int idKantor,
-      String tanggal,
-      String jamMasuk,
-      String base64Image,
-      String fileName) async {
+    String nikPegawai,
+    int idKantor,
+    String tanggal,
+    String jamMasuk,
+    String base64Image,
+    String fileName,
+    String kategori,
+  ) async {
     final response = await http.post(Uri.parse("$apiUrl/presensi.php"), body: {
       'nik': nikPegawai.toString(),
       'id_kantor': idKantor.toString(),
       'tanggal': tanggal,
       'jam_masuk': jamMasuk,
       'image': base64Image,
-      'img_name': fileName
+      'img_name': fileName,
+      'kategori': kategori
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -163,6 +167,27 @@ class PresensiService {
       }
     } else {
       throw ("Gagal update jam keluar");
+    }
+  }
+
+  Future<Map<String, dynamic>> getJamKerja({required String hari}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+
+    String uri = "$apiUrl/jamkerja.php?hari=$hari";
+    final response = await http.get(Uri.parse(uri), headers: requestHeaders);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      return {
+        'hari': jsonResponse['data']['hari'],
+        'jam_masuk': jsonResponse['data']['jam_masuk'],
+        'jam_pulang': jsonResponse['data']['jam_keluar'],
+      };
+    } else {
+      throw ("Gagal melakukan cek data api user");
     }
   }
 }

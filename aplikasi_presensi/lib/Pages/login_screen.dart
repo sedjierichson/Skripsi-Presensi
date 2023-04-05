@@ -121,33 +121,25 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         imeiHPSekarang = androidInfo.serialNumber.toString();
       });
-      if (globals.currentHpPegawai.imei != imeiHPSekarang) {
-        print('LOGOUTTTT');
-      } else {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return EnterPin(
-            nik: tfLoginNIK.text.toString(),
-            mode: 'sudah_login',
-          );
-        }));
-        print('cocok');
-      }
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       setState(() {
         imeiHPSekarang = iosInfo.identifierForVendor!.toString();
       });
-      if (globals.currentHpPegawai.imei != imeiHPSekarang) {
-        print('LOGOUTTTT');
-      } else {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return EnterPin(
-            nik: tfLoginNIK.text.toString(),
-            mode: 'sudah_login',
-          );
-        }));
-        print('cocok');
-      }
+    }
+
+    if (globals.currentHpPegawai.imei != imeiHPSekarang) {
+      globals.showAlertError(
+          context: context,
+          message:
+              'IMEI perangkat tidak sama. Silahkan login menggunakan perangkat yang sudah terdaftar sebelumnya.');
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return EnterPin(
+          nik: tfLoginNIK.text.toString(),
+          mode: 'sudah_login',
+        );
+      }));
     }
   }
 

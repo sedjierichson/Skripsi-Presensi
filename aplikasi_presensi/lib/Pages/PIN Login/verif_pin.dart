@@ -71,16 +71,11 @@ class _VerifPinState extends State<VerifPin> {
       setState(() {
         imeiBaru = androidInfo.serialNumber.toString();
       });
-      // daftarkanImei(imeiBaru);
-      // print("imei : " + imeiBaru);
-      // print(androidInfo.model);
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       setState(() {
         imeiBaru = iosInfo.identifierForVendor!.toString();
       });
-      // daftarkanImei(imeiBaru);
-      // print("imei : " + imeiBaru);
     }
   }
 
@@ -152,7 +147,6 @@ class _VerifPinState extends State<VerifPin> {
                       keyboardType: TextInputType.number,
                       underlineUnfocusedColor: Colors.black,
                       onCompleted: (value) {
-                        print("AAAAB" + value);
                         setState(() {
                           VerifikasiPin = value;
                         });
@@ -173,7 +167,7 @@ class _VerifPinState extends State<VerifPin> {
                         onPressed: () {
                           if (widget.mode == 'pertama_login') {
                             tambahkanUser();
-                          } else if (widget.mode == 'ganti_pin') {
+                          } else if (widget.mode == 'ganti_pin2') {
                             successGantiPin();
                           }
                         },

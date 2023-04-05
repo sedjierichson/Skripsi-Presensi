@@ -39,17 +39,6 @@ class _HomePageState extends State<HomePage> {
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
 
-  // List<String> beacon = [];
-  // List<String> uuidScanAdaSama = [
-  //   '32a66425-26d2-4693-859a-4ffaf50af319',
-  //   '32a66425-26d2-4693-8a-4ffaf50af319'
-  // ];
-  // List<String> uuidScanTidakAdaSama = [
-  //   '32a65-26d2-4693-859a-4ffaf50af319',
-  //   '32a65-26d2-4693-8a-4ffaf50af319',
-  //   '02129fd8-e302-479c-84e1-6255f610d509'
-  // ];
-
   void pindahAmbilFoto() {
     Navigator.of(context, rootNavigator: true)
         .push(MaterialPageRoute(builder: (context) {
@@ -70,16 +59,29 @@ class _HomePageState extends State<HomePage> {
       sudahAbsenMasuk = false;
     });
     cekSudahAbsen();
-    // print(sudahAbsenMasuk);
-    // print("Imei terdaftar " + globals.currentHpPegawai.imei.toString());
-    // if (globals.currentHpPegawai.imei == null) {
-    //   getImeiBaru();
-    // } else {
-    // cocokkanIMEI();
-    // }
     super.initState();
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
+  }
+
+  void getJamKerja() async {
+    String hari = DateFormat('EEEE').format(DateTime.now());
+    try {
+      var jam = "09:01:00";
+      var res = await dbPresensi.getJamKerja(hari: hari);
+      print(res['jam_masuk']);
+      // print(jamSekarang);
+      var kategori = jam.compareTo(res['jam_masuk'].toString());
+      if (kategori < 0) {
+        print('Belum lewat jam masuk');
+      } else if (kategori > 0) {
+        print('lewat jam masuk');
+      } else {
+        print('sama');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   void daftarkanImei(String imeix) async {
@@ -198,7 +200,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   String _format(DateTime dateTime) {
-    return DateFormat("HH:mm").format(dateTime);
+    return DateFormat("HH:mm:ss").format(dateTime);
   }
 
   //-----
@@ -352,9 +354,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        // insertAbsenMasuk();
-        // pindahAmbilFoto();
-        pindahScanBeacon();
+        getJamKerja();
+        // pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

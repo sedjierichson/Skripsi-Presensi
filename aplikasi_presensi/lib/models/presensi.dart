@@ -7,6 +7,7 @@ class Presensi {
   String? jamMasuk;
   String? jamKeluar;
   String foto;
+  String? kategori;
   String status;
 
   Presensi({
@@ -18,6 +19,7 @@ class Presensi {
     this.jamMasuk,
     this.jamKeluar,
     required this.foto,
+    this.kategori,
     required this.status,
   });
 }

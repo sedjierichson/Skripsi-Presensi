@@ -57,8 +57,8 @@ class _OtherPageState extends State<OtherPage> {
 
   void pindahkeEnterPIN() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return const EnterPin(
-        nik: "1",
+      return EnterPin(
+        nik: globals.currentPegawai.nik.toString(),
         mode: 'ganti_pin',
       );
     }));

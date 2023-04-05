@@ -133,7 +133,7 @@ class UserService {
         'message': jsonResponse['data']
       };
     } else {
-      throw ("Gagal melakukan cek data user");
+      throw ("Gagal melakukan cek data userr");
     }
   }
 

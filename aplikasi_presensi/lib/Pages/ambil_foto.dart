@@ -53,7 +53,8 @@ class _AmbilFotoState extends State<AmbilFoto> {
             tanggalAbsen.toString(),
             jamSekarang,
             base64Image!,
-            getRandomString(10) + "_" + image!.path.split('/').last);
+            getRandomString(10) + "_" + image!.path.split('/').last,
+            "A");
         if (res['status'] == 1) {
           globals.showAlertBerhasil(
               context: context, message: 'Berhasil absen masuk');
@@ -88,7 +89,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
   }
 
   String _format(DateTime dateTime) {
-    return DateFormat("HH:mm").format(dateTime);
+    return DateFormat("HH:mm:ss").format(dateTime);
   }
 
   static const _chars =
