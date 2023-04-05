@@ -12,6 +12,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
@@ -38,6 +39,9 @@ class _HomePageState extends State<HomePage> {
   String? idPresensi;
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
+  String tempKategori = "";
+  late final BluetoothDevice device;
+  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
 
   void pindahAmbilFoto() {
     Navigator.of(context, rootNavigator: true)
@@ -59,26 +63,49 @@ class _HomePageState extends State<HomePage> {
       sudahAbsenMasuk = false;
     });
     cekSudahAbsen();
+    // toggleState();
     super.initState();
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
   }
 
-  void getJamKerja() async {
+  void getJamMasukKerja() async {
     String hari = DateFormat('EEEE').format(DateTime.now());
     try {
-      var jam = "09:01:00";
+      var jam = "09:00:00";
       var res = await dbPresensi.getJamKerja(hari: hari);
       print(res['jam_masuk']);
       // print(jamSekarang);
-      var kategori = jam.compareTo(res['jam_masuk'].toString());
-      if (kategori < 0) {
-        print('Belum lewat jam masuk');
-      } else if (kategori > 0) {
-        print('lewat jam masuk');
+      var temp = jamSekarang.compareTo(res['jam_masuk'].toString());
+      if (temp < 0) {
+        insertAbsenMasuk(kategori: "A");
+      } else if (temp > 0) {
+        insertAbsenMasuk(kategori: "B");
       } else {
-        print('sama');
+        insertAbsenMasuk(kategori: "A");
       }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void insertAbsenMasuk({required String kategori}) async {
+    try {
+      var res = await dbPresensi.insertAbsenMasuk(
+          globals.currentPegawai.nik.toString(),
+          1,
+          tanggalAbsen.toString(),
+          jamSekarang,
+          "tempImage",
+          "tempImage",
+          kategori);
+      if (res['status'] == 1) {
+        globals.showAlertBerhasil(
+            context: context, message: 'Berhasil absen masuk');
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => super.widget));
+      }
+      print(res['status']);
     } catch (e) {
       print(e.toString());
     }
@@ -124,16 +151,14 @@ class _HomePageState extends State<HomePage> {
       if (res['jam_keluar'] == null) {
         print('absen belum lengkap');
         if (res['status'] == 1) {
-          // print('sudah absen');
-          // print(res['message']);
           setState(() {
             sudahAbsenMasuk = true;
             idPresensi = res['id']?.toString();
             jamMasuk = res['jam_masuk'].toString();
             jamKeluar = res['jam_keluar'].toString();
+            tempKategori = res['kategori'].toString();
           });
         } else {
-          // print('belum absen');
           setState(() {
             sudahAbsenMasuk = false;
           });
@@ -176,6 +201,19 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void updateKategori(String kategori) async {
+    // cekSudahAbsen();
+    try {
+      await dbPresensi.updateKategori(idPresensi.toString(), kategori);
+      globals.showAlertBerhasil(
+          context: context, message: 'Absen keluar berhasil');
+      // Navigator.pushReplacement(context,
+      //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
   void updateJamKeluar() async {
     try {
       await dbPresensi.updateJamKeluar(idPresensi.toString(), jamSekarang);
@@ -185,6 +223,52 @@ class _HomePageState extends State<HomePage> {
           MaterialPageRoute(builder: (BuildContext context) => super.widget));
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
+  void getJamPulangKerja() async {
+    String hari = DateFormat('EEEE').format(DateTime.now());
+    try {
+      var jam = "17:00:00";
+      var res = await dbPresensi.getJamKerja(hari: hari);
+      print(res['jam_pulang']);
+      // print(jamSekarang)
+      var temp = jamSekarang.compareTo(res['jam_pulang'].toString());
+      //Masuk (A atau C) Pulang ok
+      //Masuk (B dan D) & pulang ok
+      //Masuk (A atau C) pulang not ok
+      //Masuk (B atau D) pulang not ok
+      if (temp < 0) {
+        print('Lebih Cepat not ok');
+        if (tempKategori == "A") {
+          //Kategori C
+          updateKategori('C');
+        } else if (tempKategori == "B") {
+          //Kategori D
+          updateKategori('D');
+        }
+      } else if (temp > 0) {
+        print('Lewat jam pulang ok');
+        if (tempKategori == "A") {
+          //Kategori A
+          // updateKategori('A');
+        } else if (tempKategori == "B") {
+          //Kategori B
+          updateKategori('B');
+        }
+        // insertAbsenMasuk(kategori: "B");
+      } else {
+        print('Jam pulang ok');
+        if (tempKategori == "A") {
+          //Kategori A
+          // updateKategori('C');
+        } else if (tempKategori == "B") {
+          //Kategori B
+          updateKategori('B');
+        }
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -205,6 +289,49 @@ class _HomePageState extends State<HomePage> {
 
   //-----
   //final tanggal = DateTime.now();
+
+  //BEACON
+  String Caa = "";
+  void turn() async {
+    List<BluetoothService> s = await device.discoverServices();
+    s.forEach((element) async {
+      Caa = element.uuid.toString();
+    });
+  }
+
+  void toggleState() {
+    print('scanning nyala');
+
+    // if (isScanning) {
+    flutterBlue.startScan(scanMode: ScanMode(0), allowDuplicates: true);
+    scan();
+    turn();
+    // }
+    Future.delayed(const Duration(seconds: 4), () {
+      flutterBlue.stopScan();
+      // isLoading = false;
+      // print(scanResultList.length);
+    });
+
+    setState(() {});
+  }
+
+  void scan() async {
+    // if (isScanning) {
+    flutterBlue.scan();
+    // Listen to scan results
+    // flutterBlue.startScan(withDevices: g);
+    // flutterBlue.scanResults.listen((results) {
+    //   // print('masuk');
+    //   // do something with scan results
+    //   scanResultList = results;
+    //   // print(scanResultList.length);
+
+    //   // update state
+    //   setState(() {});
+    // });
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -354,7 +481,7 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        getJamKerja();
+        getJamMasukKerja();
         // pindahScanBeacon();
       },
       child: Container(
@@ -378,6 +505,7 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenKeluar() {
     return GestureDetector(
       onTap: () {
+        getJamPulangKerja();
         updateJamKeluar();
       },
       child: Container(

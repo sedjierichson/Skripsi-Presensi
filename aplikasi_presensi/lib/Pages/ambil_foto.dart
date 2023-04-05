@@ -32,7 +32,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
   String jamSekarang = '';
 
   Future getImage() async {
-    final imageTmp = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final imageTmp = await ImagePicker().pickImage(source: ImageSource.camera);
     if (imageTmp == null) return;
     setState(() {
       image = File(imageTmp.path);

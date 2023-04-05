@@ -51,14 +51,6 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
 
   void toggleState() {
     print('scanning nyala');
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => super.widget,
-    //       ));
-    // });
-    // isScanning = !isScanning;
 
     // if (isScanning) {
     flutterBlue.startScan(scanMode: ScanMode(scan_mode), allowDuplicates: true);

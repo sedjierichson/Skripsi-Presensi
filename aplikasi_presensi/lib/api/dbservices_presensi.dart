@@ -91,11 +91,6 @@ class PresensiService {
 
     String uri = "$apiUrl/presensi.php?nik_pegawai=$nik&tanggal_absen=$tanggal";
 
-    // if (nik != "") {
-    //   uri =
-    //       "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php?id=$nik";
-    // }
-
     final response = await http.get(Uri.parse(uri), headers: requestHeaders);
 
     if (response.statusCode == 200) {
@@ -106,6 +101,7 @@ class PresensiService {
         'id': jsonResponse['data']['id'],
         'jam_masuk': jsonResponse['data']['jam_masuk'],
         'jam_keluar': jsonResponse['data']['jam_keluar'],
+        'kategori': jsonResponse['data']['kategori'],
       };
     } else {
       throw ("Gagal melakukan cek data api user");
@@ -147,14 +143,34 @@ class PresensiService {
   }
 
   Future<String> updateJamKeluar(String id_presensi, String jamKeluar) async {
-    print("id" + id_presensi);
-    print("jam" + jamKeluar);
     final response = await http.put(
       Uri.parse("$apiUrl/presensi.php"),
       body: json.encode(
         {
           "id_presensi": id_presensi.toString(),
           "jam_keluar": jamKeluar,
+        },
+      ),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == 1) {
+        return "Berhasil";
+      } else {
+        throw jsonResponse['message'];
+      }
+    } else {
+      throw ("Gagal update jam keluar");
+    }
+  }
+
+  Future<String> updateKategori(String id_presensi, String kategori) async {
+    final response = await http.put(
+      Uri.parse("$apiUrl/presensi.php"),
+      body: json.encode(
+        {
+          "id_presensi": id_presensi.toString(),
+          "kategori": kategori,
         },
       ),
     );
@@ -184,7 +200,7 @@ class PresensiService {
       return {
         'hari': jsonResponse['data']['hari'],
         'jam_masuk': jsonResponse['data']['jam_masuk'],
-        'jam_pulang': jsonResponse['data']['jam_keluar'],
+        'jam_pulang': jsonResponse['data']['jam_pulang'],
       };
     } else {
       throw ("Gagal melakukan cek data api user");
