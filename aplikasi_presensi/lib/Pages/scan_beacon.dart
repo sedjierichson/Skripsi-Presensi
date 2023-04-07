@@ -7,6 +7,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:quickalert/quickalert.dart';
 
 class scanBeaconPage extends StatefulWidget {
   const scanBeaconPage({super.key});
@@ -112,12 +113,6 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     print(hasilbeacon[0]);
     try {
       beacon = await dbPresensi.getBeaconPresensi();
-      // for (int i = 0; i < hasilbeacon.length; i++) {
-      //   if (beacon[i].toString() == hasilbeacon[i].toString()) {
-      //     print('sama');
-      //   } else {
-      //     print('tidak sama');
-      //   }
       for (int i = 0; i < beacon.length; i++) {
         var hasil = hasilbeacon.contains(beacon[i].toString());
         print(hasil);
@@ -133,7 +128,9 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
             hasilScanAdaSama = false;
             isLoading = false;
           });
+          Navigator.pop(context);
           globals.showAlertError(context: context, message: 'Tidak ada Beacon');
+
           break;
         }
       }

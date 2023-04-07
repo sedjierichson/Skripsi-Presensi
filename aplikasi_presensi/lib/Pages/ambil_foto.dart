@@ -40,7 +40,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
     base64Image = base64Encode(image!.readAsBytesSync());
   }
 
-  void insertAbsenMasuk() async {
+  void insertAbsenMasuk({required String kategori}) async {
     if (base64Image == null) {
       globals.showAlertError(
           context: context,
@@ -54,7 +54,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
             jamSekarang,
             base64Image!,
             getRandomString(10) + "_" + image!.path.split('/').last,
-            "A");
+            kategori);
         if (res['status'] == 1) {
           globals.showAlertBerhasil(
               context: context, message: 'Berhasil absen masuk');
@@ -75,6 +75,26 @@ class _AmbilFotoState extends State<AmbilFoto> {
           message: e.toString(),
         );
       }
+    }
+  }
+
+  void getJamMasukKerja() async {
+    String hari = DateFormat('EEEE').format(DateTime.now());
+    try {
+      var jam = "09:00:00";
+      var res = await dbPresensi.getJamKerja(hari: hari);
+      print(res['jam_masuk']);
+      // print(jamSekarang);
+      var temp = jamSekarang.compareTo(res['jam_masuk'].toString());
+      if (temp < 0) {
+        insertAbsenMasuk(kategori: "A");
+      } else if (temp > 0) {
+        insertAbsenMasuk(kategori: "B");
+      } else {
+        insertAbsenMasuk(kategori: "A");
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -177,7 +197,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: insertAbsenMasuk,
+                  onPressed: getJamMasukKerja,
                   child: Text('Lanjut'),
                 ),
               ],

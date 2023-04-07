@@ -166,8 +166,6 @@ class _HomePageState extends State<HomePage> {
       } else {
         print('absen ulang');
         if (res['status'] == 1) {
-          // print('sudah absen');
-          // print(res['message']);
           setState(() {
             sudahAbsenMasuk = false;
             idPresensi = res['message'];
@@ -205,8 +203,8 @@ class _HomePageState extends State<HomePage> {
     // cekSudahAbsen();
     try {
       await dbPresensi.updateKategori(idPresensi.toString(), kategori);
-      globals.showAlertBerhasil(
-          context: context, message: 'Absen keluar berhasil');
+      // globals.showAlertBerhasil(
+      //     context: context, message: 'Absen keluar berhasil');
       // Navigator.pushReplacement(context,
       //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
     } catch (e) {
@@ -481,8 +479,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        getJamMasukKerja();
-        // pindahScanBeacon();
+        // getJamMasukKerja();
+        pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
