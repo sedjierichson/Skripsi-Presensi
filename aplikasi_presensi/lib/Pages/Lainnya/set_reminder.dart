@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -54,34 +55,49 @@ class _SetReminderState extends State<SetReminder> {
                 Expanded(
                   child: cardJamKeluar(),
                 ),
-                MaterialButton(
-                  onPressed: () {
-                    // notificationAPI.sendNotification('Halo', "halo lagi");
-                    // NotificationService().scheduleNotification(
-                    //     title: 'Test Notifikasi',
-                    //     body: 'Test Notifikasi',
-                    //     scheduledNotificationDateTime: scheduleTime);
-                    NotificationWidget.showScheduleDailyotificationJamKeluar(
-                      title: "PRESENSI PT X",
-                      body:
-                          'Sudah jam pulang kerja, saatnya melakukan absen pulang!',
-                      jamKeluar: jamKeluar.toString().substring(0, 2),
-                      menitKeluar: jamKeluar.toString().substring(3, 5),
-                    );
-                  },
-                  child: Text("NOTIF Schedule"),
-                  color: Colors.amberAccent,
+                SizedBox(
+                  height: 15,
                 ),
-                MaterialButton(
-                  onPressed: () {
-                    NotificationWidget.showNotification(
-                      title: "Notifications",
-                      body: 'Test Notif',
-                    );
-                  },
-                  child: Text("NOTIF"),
-                  color: Colors.amberAccent,
-                )
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    onPressed: () {
+                      NotificationWidget.showScheduleDailyotificationJamKeluar(
+                        title: "PRESENSI PT X",
+                        body:
+                            'Sudah jam pulang kerja, saatnya melakukan absen pulang!',
+                        jamKeluar: jamKeluar.toString().substring(0, 2),
+                        menitKeluar: jamKeluar.toString().substring(3, 5),
+                      );
+                      NotificationWidget.showScheduleDailyotificationJamMasuk(
+                        title: "PRESENSI PT X",
+                        body:
+                            'Sudah jam masuk kerja, saatnya melakukan absen masuk!',
+                        jamKeluar: jamMasuk.toString().substring(0, 2),
+                        menitKeluar: jamMasuk.toString().substring(3, 5),
+                      );
+                    },
+                    child: Text(
+                      "SIMPAN",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: HexColor('#FFA133'),
+                  ),
+                ),
+                // MaterialButton(
+                //   onPressed: () {
+                //     NotificationWidget.showNotification(
+                //       title: "Notifications",
+                //       body: 'Test Notif',
+                //     );
+                //   },
+                //   child: Text("NOTIF"),
+                //   color: Colors.amberAccent,
+                // )
               ],
             ),
           ),
@@ -126,7 +142,7 @@ class _SetReminderState extends State<SetReminder> {
                 height: 10,
               ),
               Text(
-                '$jamKeluar',
+                '$jamMasuk',
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -142,9 +158,6 @@ class _SetReminderState extends State<SetReminder> {
               if (newTime != null) {
                 setState(() {
                   jamMasuk = newTime.toString().substring(10, 15);
-                  print(jamMasuk);
-                  print(jamMasuk.toString().substring(0, 2));
-                  print(jamMasuk.toString().substring(3, 5));
                 });
               }
             },
