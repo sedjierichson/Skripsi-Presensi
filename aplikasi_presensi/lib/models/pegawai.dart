@@ -4,14 +4,17 @@ class Pegawai {
   String jabatan;
   String? imei;
   String nik_atasan;
+  String? email;
   int? idPresensi;
 
-  Pegawai(
-      {required this.nik,
-      required this.nama,
-      required this.jabatan,
-      this.idPresensi,
-      required this.nik_atasan});
+  Pegawai({
+    required this.nik,
+    required this.nama,
+    required this.jabatan,
+    this.idPresensi,
+    required this.nik_atasan,
+    this.email,
+  });
 }
 
 class DataHpPegawai {
@@ -30,10 +33,11 @@ class apiRutanPegawai {
   String nik;
   String nama;
   String jabatan;
+  String email;
 
-  apiRutanPegawai({
-    required this.nik,
-    required this.nama,
-    required this.jabatan,
-  });
+  apiRutanPegawai(
+      {required this.nik,
+      required this.nama,
+      required this.jabatan,
+      required this.email});
 }

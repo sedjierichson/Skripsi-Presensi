@@ -26,6 +26,7 @@ class UserService {
           nik: data['nik'],
           jabatan: data['jabatan'],
           nik_atasan: data['nik_atasan'],
+          email: data['email'],
         );
         // print(pegawai.imei);
         return pegawai;
@@ -54,10 +55,10 @@ class UserService {
         List<apiRutanPegawai> listBawahan = [];
         for (int i = 0; i < data.length; i++) {
           apiRutanPegawai pegawai = apiRutanPegawai(
-            nik: data[i]['nik'].toString(),
-            nama: data[i]['nama'].toString(),
-            jabatan: data[i]['jabatan'].toString(),
-          );
+              nik: data[i]['nik'].toString(),
+              nama: data[i]['nama'].toString(),
+              jabatan: data[i]['jabatan'].toString(),
+              email: data[i]['email'].toString());
           listBawahan.add(pegawai);
         }
         return listBawahan;

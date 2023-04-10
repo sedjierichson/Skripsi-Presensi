@@ -10,7 +10,8 @@ import 'package:aplikasi_presensi/globals.dart' as globals;
 import 'package:hexcolor/hexcolor.dart';
 
 class TeamSaya extends StatefulWidget {
-  const TeamSaya({super.key});
+  final String jabatan;
+  const TeamSaya({super.key, required this.jabatan});
 
   @override
   State<TeamSaya> createState() => _TeamSayaState();
@@ -35,9 +36,15 @@ class _TeamSayaState extends State<TeamSaya> {
       isError = false;
     });
     try {
-      bawahan = await db.getBawahanUser(
-        nik: globals.currentPegawai.nik.toString(),
-      );
+      if (widget.jabatan == "manajer") {
+        bawahan = await db.getBawahanUser(
+          nik: globals.currentPegawai.nik.toString(),
+        );
+      } else {
+        bawahan = await db.getBawahanUser(
+          nik: globals.currentPegawai.nik_atasan.toString(),
+        );
+      }
       setState(() {
         isLoading = false;
         adaBawahan = true;
@@ -50,10 +57,12 @@ class _TeamSayaState extends State<TeamSaya> {
     }
   }
 
-  void pindahkeMenuDetail(apiRutanPegawai detail) {
+  void pindahkeMenuDetail(
+      {required apiRutanPegawai detail, required String jabatan}) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return menuDetailBawahan(
         bawahan: detail,
+        jabatan: jabatan,
       );
     }));
   }
@@ -94,7 +103,8 @@ class _TeamSayaState extends State<TeamSaya> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              pindahkeMenuDetail(bawahan[index]);
+              pindahkeMenuDetail(
+                  detail: bawahan[index], jabatan: widget.jabatan);
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 5),

@@ -64,9 +64,11 @@ class _OtherPageState extends State<OtherPage> {
     }));
   }
 
-  void pindahkeTeamSaya() {
+  void pindahkeTeamSaya({required String mode}) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return const TeamSaya();
+      return TeamSaya(
+        jabatan: mode.toString(),
+      );
     }));
   }
 
@@ -112,33 +114,60 @@ class _OtherPageState extends State<OtherPage> {
                         SizedBox(
                           height: 40,
                         ),
-                        adaBawahan == true
-                            ? MaterialButton(
-                                padding: EdgeInsets.all(15),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                color: Color.fromARGB(255, 207, 207, 207),
-                                onPressed: () {
-                                  pindahkeTeamSaya();
-                                },
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.group),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Expanded(
-                                      child: Text('Team Saya'),
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                    )
-                                  ],
-                                ),
+                        // adaBawahan == true
+                        //     ? MaterialButton(
+                        //         padding: EdgeInsets.all(15),
+                        //         shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(15),
+                        //         ),
+                        //         color: Color.fromARGB(255, 207, 207, 207),
+                        //         onPressed: () {
+                        //           pindahkeTeamSaya();
+                        //         },
+                        //         child: Row(
+                        //           children: [
+                        //             Icon(Icons.group),
+                        //             SizedBox(
+                        //               width: 20,
+                        //             ),
+                        //             Expanded(
+                        //               child: Text('Team Saya'),
+                        //             ),
+                        //             Icon(
+                        //               Icons.arrow_forward_ios,
+                        //               size: 15,
+                        //             )
+                        //           ],
+                        //         ),
+                        //       )
+                        //     : SizedBox(),
+                        MaterialButton(
+                          padding: EdgeInsets.all(15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          color: Color.fromARGB(255, 207, 207, 207),
+                          onPressed: () {
+                            adaBawahan == true
+                                ? pindahkeTeamSaya(mode: "manajer")
+                                : pindahkeTeamSaya(mode: "other");
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.group),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Expanded(
+                                child: Text('Team Saya'),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 15,
                               )
-                            : SizedBox(),
+                            ],
+                          ),
+                        ),
                         SizedBox(
                           height: 10,
                         ),

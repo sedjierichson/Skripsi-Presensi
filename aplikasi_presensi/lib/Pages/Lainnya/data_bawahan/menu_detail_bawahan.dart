@@ -16,7 +16,9 @@ import 'package:intl/intl.dart';
 
 class menuDetailBawahan extends StatefulWidget {
   final apiRutanPegawai bawahan;
-  const menuDetailBawahan({super.key, required this.bawahan});
+  final String jabatan;
+  const menuDetailBawahan(
+      {super.key, required this.bawahan, required this.jabatan});
 
   @override
   State<menuDetailBawahan> createState() => _menuDetailBawahanState();
@@ -85,56 +87,159 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  Text(
-                    widget.bawahan.nama,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    widget.bawahan.nik + " - " + widget.bawahan.jabatan,
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: HexColor(
-                        '#13542D',
-                      ),
-                      borderRadius: BorderRadius.circular(10),
+    if (widget.jabatan == 'manajer') {
+      return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          body: SafeArea(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.bawahan.nama,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TabBar(
-                        indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: HexColor('FFA133'),
+                    Text(
+                      widget.bawahan.nik + " - " + widget.bawahan.jabatan,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: HexColor(
+                          '#13542D',
                         ),
-                        tabs: [
-                          Tab(text: 'Presensi'),
-                          Tab(text: 'Izin'),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TabBar(
+                          indicator: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            color: HexColor('FFA133'),
+                          ),
+                          tabs: [
+                            Tab(text: 'Presensi'),
+                            Tab(text: 'Izin'),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          tablePresensi(),
+                          cardIzin(),
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.bawahan.nama.toUpperCase(),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 8,
                   ),
-                  Expanded(
-                    child: TabBarView(
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        tablePresensi(),
-                        cardIzin(),
+                        Text(
+                          "NIK",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          widget.bawahan.nik,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Jabatan",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          widget.bawahan.jabatan,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Email",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          widget.bawahan.email,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                   ),
@@ -143,8 +248,8 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget cardIzin() {
