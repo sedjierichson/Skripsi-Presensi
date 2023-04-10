@@ -103,9 +103,11 @@ class _TeamSayaState extends State<TeamSaya> {
               alignment: Alignment.centerLeft,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: HexColor('#FFA133'),
-              ),
+                  borderRadius: BorderRadius.circular(10),
+                  color:
+                      index % 2 == 0 ? HexColor('#FFA133') : HexColor('#C3CF0A')
+                  // HexColor('#FFA133'),
+                  ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

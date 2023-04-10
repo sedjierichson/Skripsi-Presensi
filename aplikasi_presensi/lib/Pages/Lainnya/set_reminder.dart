@@ -20,8 +20,8 @@ class SetReminder extends StatefulWidget {
 }
 
 class _SetReminderState extends State<SetReminder> {
-  String? jamKeluar;
-  String? jamMasuk;
+  String? jamKeluar = "18:00";
+  String? jamMasuk = "09:00";
   // NotificationAPI notificationAPI = NotificationAPI();
 
   void initState() {

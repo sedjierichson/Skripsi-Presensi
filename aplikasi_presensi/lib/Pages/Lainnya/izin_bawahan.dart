@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:hexcolor/hexcolor.dart';
 
 class IzinBawahanPage extends StatefulWidget {
   const IzinBawahanPage({super.key});
@@ -100,9 +101,10 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
               ),
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                border: Border.all(width: 1),
-                borderRadius: BorderRadius.circular(10),
-              ),
+                  borderRadius: BorderRadius.circular(10),
+                  color: index % 2 == 0
+                      ? HexColor('#FFA133')
+                      : HexColor('#C3CF0A')),
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -127,6 +127,9 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Expanded(
                     child: TabBarView(
                       children: [
