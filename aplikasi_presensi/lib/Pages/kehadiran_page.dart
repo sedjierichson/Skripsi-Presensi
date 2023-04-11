@@ -80,58 +80,51 @@ class _PageKehadiranState extends State<PageKehadiran> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                'Kehadiran',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 13,
-                child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  color: HexColor('#13542D'),
-                  onPressed: () {
-                    DatePicker.showPicker(context,
-                        pickerModel: CustomMonthPicker(
-                          currentTime: DateTime.now(),
-                          minTime: DateTime(2020, 1, 1),
-                          maxTime: DateTime.now(),
-                        ), onConfirm: (val) {
-                      setState(() {
-                        isLoadingAll = true;
-                        textTanggal = DateFormat('MMMM yyyy').format(val);
-                        tahunFilter = DateFormat('yyyy').format(val);
-                        bulanFilter = DateFormat('MM').format(val);
-                        kehadiran.clear();
-                        getDataPresensiFilter();
-                      });
-                    });
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Pilih Bulan',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      autofocus: true,
+                      onTap: () {
+                        setState(() {
+                          textTanggal = "";
+                          getDataPresensi();
+                        });
+                      },
+                      child: Icon(Icons.refresh),
+                    ),
+                    Text(
+                      'Kehadiran',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Icon(
-                        FontAwesomeIcons.calendar,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        DatePicker.showPicker(context,
+                            pickerModel: CustomMonthPicker(
+                              currentTime: DateTime.now(),
+                              minTime: DateTime(2020, 1, 1),
+                              maxTime: DateTime.now(),
+                            ), onConfirm: (val) {
+                          setState(() {
+                            textTanggal = DateFormat('MMMM yyyy').format(val);
+                            tahunFilter = DateFormat('yyyy').format(val);
+                            bulanFilter = DateFormat('MM').format(val);
+                            kehadiran.retainWhere((element) => element.tanggal
+                                .contains(
+                                    '$tahunFilter' + '-' + '$bulanFilter'));
+                          });
+                        });
+                      },
+                      child: Icon(FontAwesomeIcons.calendar),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(
@@ -143,6 +136,9 @@ class _PageKehadiranState extends State<PageKehadiran> {
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
+              ),
+              SizedBox(
+                height: 15,
               ),
               tablePresensi()
             ],
