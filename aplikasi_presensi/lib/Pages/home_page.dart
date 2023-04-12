@@ -479,8 +479,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        // getJamMasukKerja();
-        pindahScanBeacon();
+        getJamMasukKerja();
+        // pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

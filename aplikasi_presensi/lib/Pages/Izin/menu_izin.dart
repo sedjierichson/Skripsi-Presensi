@@ -44,236 +44,171 @@ class _MenuIzinState extends State<MenuIzin> {
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   body: SafeArea(
-    //     child: Center(
-    //       child: Padding(
-    //         padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
-    //         child: Column(
-    //           children: [
-    //             Text(
-    //               'MENU IZIN',
-    //               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-    //             ),
-    //             SizedBox(
-    //               height: 15,
-    //             ),
-    //             Container(
-    //               child: Expanded(
-    //                 child: GridView(
-    //                   children: [
-    //                     Container(
-    //                       child: InkWell(
-    //                         onTap: () => pindahKeFormPulangAwal(),
-    //                         child: Container(
-    //                           decoration: BoxDecoration(
-    //                               borderRadius: BorderRadius.circular(5),
-    //                               color: Colors.greenAccent),
-    //                           height: MediaQuery.of(context).size.height / 6,
-    //                           child: Align(
-    //                             alignment: Alignment.center,
-    //                             child: Text('PULANG LEBIH AWAL'),
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     Container(
-    //                       color: Colors.red,
-    //                     ),
-    //                     Container(
-    //                       color: Colors.red,
-    //                     ),
-    //                     Container(
-    //                       color: Colors.red,
-    //                     )
-    //                   ],
-    //                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //                       crossAxisCount: 2,
-    //                       crossAxisSpacing: 5,
-    //                       mainAxisSpacing: 5),
-    //                 ),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
             child: Padding(
               padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
-              child: Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'PILIH TIPE IZIN',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () => pindahKeFormPulangAwal(),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: HexColor('#13542D')),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Pulang Lebih Awal',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Icon(
-                                        FontAwesomeIcons.houseUser,
-                                        size: 50,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'PILIH TIPE IZIN',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => pindahKeFormPulangAwal(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: HexColor('#13542D')),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Pulang Lebih Awal',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
                                         color: Colors.white,
-                                      )
-                                    ],
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Icon(
+                                    FontAwesomeIcons.houseUser,
+                                    size: 50,
+                                    color: Colors.white,
+                                  )
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () =>
-                                    pindahKeFormMeninggalkanSementara(),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: HexColor('#C3Cf0A')),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Meninggalkan Lokasi Kerja Sementara',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Icon(
-                                        FontAwesomeIcons
-                                            .personWalkingArrowRight,
-                                        size: 50,
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () => pindahKeSuratTugas(),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: HexColor('#FFA133')),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Surat Tugas',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Icon(
-                                        FontAwesomeIcons.envelope,
-                                        size: 50,
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () => pindahKeLupaAbsen(),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: HexColor('#bdbbbb')),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Tidak Melakukan Presensi',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Icon(
-                                        FontAwesomeIcons.clipboardQuestion,
-                                        size: 50,
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        SizedBox(
+                          width: 5,
                         ),
-                      ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => pindahKeFormMeninggalkanSementara(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: HexColor('#C3Cf0A')),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Meninggalkan Lokasi Kerja Sementara',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Icon(
+                                    FontAwesomeIcons.personWalkingArrowRight,
+                                    size: 50,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => pindahKeSuratTugas(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: HexColor('#FFA133')),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Surat Tugas',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Icon(
+                                    FontAwesomeIcons.envelope,
+                                    size: 50,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => pindahKeLupaAbsen(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: HexColor('#bdbbbb')),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Tidak Melakukan Presensi',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Icon(
+                                    FontAwesomeIcons.clipboardQuestion,
+                                    size: 50,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

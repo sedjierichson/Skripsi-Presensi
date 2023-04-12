@@ -113,7 +113,7 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        daftarIzin[index].nama + " - " + daftarIzin[index].nik,
+                        '${daftarIzin[index].nama} - ${daftarIzin[index].nik}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 15),
                       ),

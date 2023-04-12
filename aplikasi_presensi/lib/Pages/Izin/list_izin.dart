@@ -6,6 +6,7 @@ import 'package:aplikasi_presensi/models/izin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
@@ -27,6 +28,10 @@ class _ListIzinState extends State<ListIzin> {
   int jumlahSuratTugas = 0;
   int julahMeninggalkanKantor = 0;
   int jumlahTidakAbsen = 0;
+
+  String tahunFilter = "";
+  String bulanFilter = "";
+  String textTanggal = "";
 
   void pindahKePilihTipeIzin() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -101,17 +106,77 @@ class _ListIzinState extends State<ListIzin> {
             padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
             child: Column(
               children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          textTanggal = "";
+                          jumlahPulangLebihAwal = 0;
+                          jumlahSuratTugas = 0;
+                          jumlahTidakAbsen = 0;
+                          julahMeninggalkanKantor = 0;
+                          getDaftarIzin();
+                        });
+                        DatePicker.showPicker(context,
+                            pickerModel: CustomMonthPicker(
+                              currentTime: DateTime.now(),
+                              minTime: DateTime(2020, 1, 1),
+                              maxTime: DateTime.now(),
+                            ), onConfirm: (val) {
+                          setState(() {
+                            jumlahPulangLebihAwal = 0;
+                            jumlahSuratTugas = 0;
+                            jumlahTidakAbsen = 0;
+                            julahMeninggalkanKantor = 0;
+                            textTanggal = DateFormat('MMMM yyyy').format(val);
+                            tahunFilter = DateFormat('yyyy').format(val);
+                            bulanFilter = DateFormat('MM').format(val);
+                            daftarIzin.retainWhere((element) =>
+                                element.tanggalPengajuan.toString().contains(
+                                    '$tahunFilter' + '-' + '$bulanFilter'));
+                            getJumlah();
+                          });
+                        });
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.calendar,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'IZIN SAYA',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: pindahKePilihTipeIzin,
+                      child: Icon(
+                        FontAwesomeIcons.plus,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 Text(
-                  'IZIN SAYA',
+                  '$textTanggal',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 15,
                   ),
                 ),
                 SizedBox(
                   height: 15,
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
@@ -224,29 +289,8 @@ class _ListIzinState extends State<ListIzin> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height / 25),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.height / 13,
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      color: HexColor('#13542D'),
-                      onPressed: () {
-                        pindahKePilihTipeIzin();
-                      },
-                      child: Text(
-                        'Ajukan Izin Baru',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 Expanded(child: cardIzin())
               ],
@@ -395,5 +439,23 @@ class _ListIzinState extends State<ListIzin> {
         ),
       ),
     );
+  }
+}
+
+class CustomMonthPicker extends DatePickerModel {
+  CustomMonthPicker(
+      {required DateTime currentTime,
+      DateTime? minTime,
+      DateTime? maxTime,
+      LocaleType? locale})
+      : super(
+            locale: locale,
+            minTime: minTime,
+            maxTime: maxTime,
+            currentTime: currentTime);
+
+  @override
+  List<int> layoutProportions() {
+    return [1, 1, 0];
   }
 }
