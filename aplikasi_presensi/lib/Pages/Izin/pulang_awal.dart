@@ -63,9 +63,10 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
         child: SafeArea(
           child: Center(
             child: Padding(
-              padding: EdgeInsets.all(
-                MediaQuery.of(context).size.width / 15,
-              ),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width / 15,
+                  left: MediaQuery.of(context).size.width / 15,
+                  right: MediaQuery.of(context).size.width / 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

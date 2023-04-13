@@ -43,7 +43,10 @@ class _detailIzinBawahanState extends State<detailIzinBawahan> {
         child: SingleChildScrollView(
           child: Center(
             child: Padding(
-              padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width / 15,
+                  left: MediaQuery.of(context).size.width / 15,
+                  right: MediaQuery.of(context).size.width / 15),
               child: widget.detail.idJenisIzin == '1'
                   ? cardPulangLebihAwal()
                   : widget.detail.idJenisIzin.toString() == '2'

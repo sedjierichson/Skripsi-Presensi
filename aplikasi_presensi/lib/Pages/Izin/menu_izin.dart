@@ -49,7 +49,10 @@ class _MenuIzinState extends State<MenuIzin> {
         child: SafeArea(
           child: Center(
             child: Padding(
-              padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width / 15,
+                  left: MediaQuery.of(context).size.width / 15,
+                  right: MediaQuery.of(context).size.width / 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
