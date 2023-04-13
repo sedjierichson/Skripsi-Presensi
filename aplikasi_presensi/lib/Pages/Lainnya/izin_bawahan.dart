@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class IzinBawahanPage extends StatefulWidget {
@@ -63,11 +64,14 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.width / 15,
+                left: MediaQuery.of(context).size.width / 15,
+                right: MediaQuery.of(context).size.width / 15),
             child: Column(
               children: [
                 Text(
-                  'Daftar Izin Karyawan Bawahan',
+                  'Daftar Izin Team Saya',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -101,37 +105,58 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
               ),
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: index % 2 == 0
-                      ? HexColor('#FFA133')
-                      : HexColor('#C3CF0A')),
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(10),
+              ),
               alignment: Alignment.centerLeft,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${daftarIzin[index].nama} - ${daftarIzin[index].nik}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      Text(
-                        daftarIzin[index].jenis,
-                        style: TextStyle(fontSize: 15),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        daftarIzin[index].tanggalPengajuan.toString(),
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      daftarIzin[index].status == '1'
-                          ? Text('Status : Pending')
-                          : daftarIzin[index].status.toString() == '2'
-                              ? Text('Status : Diterima')
-                              : Text('Status : Ditolak')
-                    ],
+                  SizedBox(
+                    width: 10,
+                  ),
+                  daftarIzin[index].status == '1'
+                      ? Icon(
+                          FontAwesomeIcons.clock,
+                          color: HexColor('#FFA133'),
+                        )
+                      : daftarIzin[index].status.toString() == '2'
+                          ? Icon(
+                              FontAwesomeIcons.check,
+                              color: Colors.green,
+                            )
+                          : Icon(
+                              FontAwesomeIcons.xmark,
+                              color: HexColor('#DF2E38'),
+                            ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${daftarIzin[index].nama} - ${daftarIzin[index].nik}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        Text(
+                          daftarIzin[index].jenis,
+                          style: TextStyle(fontSize: 15),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          daftarIzin[index].tanggalPengajuan.toString(),
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        daftarIzin[index].status == '1'
+                            ? Text('Status : Pending')
+                            : daftarIzin[index].status.toString() == '2'
+                                ? Text('Status : Diterima')
+                                : Text('Status : Ditolak')
+                      ],
+                    ),
                   ),
                   Icon(
                     Icons.arrow_forward_ios,

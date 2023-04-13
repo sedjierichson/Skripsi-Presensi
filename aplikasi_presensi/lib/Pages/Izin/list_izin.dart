@@ -40,6 +40,12 @@ class _ListIzinState extends State<ListIzin> {
   }
 
   void getJumlah() {
+    setState(() {
+      jumlahPulangLebihAwal = 0;
+      jumlahSuratTugas = 0;
+      jumlahTidakAbsen = 0;
+      julahMeninggalkanKantor = 0;
+    });
     for (int i = 0; i < daftarIzin.length; i++) {
       if (daftarIzin[i].idJenisIzin.toString() == '1') {
         jumlahPulangLebihAwal += 1;
@@ -54,7 +60,6 @@ class _ListIzinState extends State<ListIzin> {
   }
 
   void getDaftarIzin() async {
-    // print("terpanggil");
     setState(() {
       isLoadingAll = true;
       isErrorAll = false;
@@ -79,12 +84,7 @@ class _ListIzinState extends State<ListIzin> {
       await db.deleteRequestMateri(id.toString());
       globals.showAlertBerhasil(context: context, message: "Izin dihapus");
       setState(() {
-        jumlahPulangLebihAwal = 0;
-        jumlahSuratTugas = 0;
-        jumlahTidakAbsen = 0;
-        julahMeninggalkanKantor = 0;
         getDaftarIzin();
-        // getJumlah();
       });
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
@@ -94,6 +94,11 @@ class _ListIzinState extends State<ListIzin> {
   @override
   void initState() {
     getDaftarIzin();
+    tahunFilter = DateFormat('yyyy').format(DateTime.now());
+    bulanFilter = DateFormat('MM').format(DateTime.now());
+    daftarIzin.retainWhere((element) => element.tanggalPengajuan
+        .toString()
+        .contains('$tahunFilter' + '-' + '$bulanFilter'));
     super.initState();
   }
 
@@ -127,10 +132,6 @@ class _ListIzinState extends State<ListIzin> {
                               maxTime: DateTime.now(),
                             ), onConfirm: (val) {
                           setState(() {
-                            jumlahPulangLebihAwal = 0;
-                            jumlahSuratTugas = 0;
-                            jumlahTidakAbsen = 0;
-                            julahMeninggalkanKantor = 0;
                             textTanggal = DateFormat('MMMM yyyy').format(val);
                             tahunFilter = DateFormat('yyyy').format(val);
                             bulanFilter = DateFormat('MM').format(val);
