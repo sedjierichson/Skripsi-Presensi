@@ -337,58 +337,56 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
 
   Widget tablePresensi() {
     if (isLoadingAll == false && isErrorAll == false) {
-      return Expanded(
-        child: SingleChildScrollView(
-          child: DataTable(
-            columnSpacing: 10,
-            columns: [
-              DataColumn(
-                  label: Container(
-                width: 90,
+      return SingleChildScrollView(
+        child: DataTable(
+          columnSpacing: 10,
+          columns: [
+            DataColumn(
+                label: Container(
+              width: 90,
+              child: Text(
+                'Tanggal',
+                textAlign: TextAlign.center,
+              ),
+            )),
+            DataColumn(
+                label: Text(
+              'Jam Masuk',
+              textAlign: TextAlign.center,
+            )),
+            DataColumn(
+                label: Text(
+              'Jam Keluar',
+              textAlign: TextAlign.center,
+            )),
+          ],
+          rows: kehadiran.map((e) {
+            return DataRow(cells: [
+              DataCell(
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    e.tanggal,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              DataCell(Container(
+                alignment: Alignment.center,
                 child: Text(
-                  'Tanggal',
+                  e.jamMasuk.toString(),
                   textAlign: TextAlign.center,
                 ),
               )),
-              DataColumn(
-                  label: Text(
-                'Jam Masuk',
-                textAlign: TextAlign.center,
-              )),
-              DataColumn(
-                  label: Text(
-                'Jam Keluar',
-                textAlign: TextAlign.center,
-              )),
-            ],
-            rows: kehadiran.map((e) {
-              return DataRow(cells: [
-                DataCell(
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      e.tanggal,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+              DataCell(Container(
+                alignment: Alignment.center,
+                child: Text(
+                  e.jamKeluar.toString(),
+                  textAlign: TextAlign.center,
                 ),
-                DataCell(Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    e.jamMasuk.toString(),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
-                DataCell(Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    e.jamKeluar.toString(),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
-              ]);
-            }).toList(),
-          ),
+              )),
+            ]);
+          }).toList(),
         ),
       );
     } else if (isLoadingAll == false && isErrorAll == true) {

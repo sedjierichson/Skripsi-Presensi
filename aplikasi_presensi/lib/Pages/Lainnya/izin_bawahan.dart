@@ -3,12 +3,16 @@
 import 'package:aplikasi_presensi/Pages/Lainnya/detail_izin_bawahan.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:aplikasi_presensi/models/izin.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
+import 'package:quickalert/quickalert.dart';
 
 class IzinBawahanPage extends StatefulWidget {
   const IzinBawahanPage({super.key});
@@ -22,9 +26,15 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
   List<Izin> daftarIzin = [];
   bool isLoadingAll = true;
   bool isErrorAll = false;
+  String tahunFilter = "";
+  String bulanFilter = "";
+  String textTanggal = "";
+  int jumlahPulangLebihAwal = 0;
+  int jumlahSuratTugas = 0;
+  int julahMeninggalkanKantor = 0;
+  int jumlahTidakAbsen = 0;
 
   void getDaftarIzinBawahan() async {
-    // print("terpanggil");
     setState(() {
       isLoadingAll = true;
       isErrorAll = false;
@@ -35,12 +45,33 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
       setState(() {
         isLoadingAll = false;
       });
+      getJumlah();
     } catch (e) {
       setState(() {
         isLoadingAll = false;
         isErrorAll = true;
       });
       print(e.toString());
+    }
+  }
+
+  void getJumlah() {
+    setState(() {
+      jumlahPulangLebihAwal = 0;
+      jumlahSuratTugas = 0;
+      jumlahTidakAbsen = 0;
+      julahMeninggalkanKantor = 0;
+    });
+    for (int i = 0; i < daftarIzin.length; i++) {
+      if (daftarIzin[i].idJenisIzin.toString() == '1') {
+        jumlahPulangLebihAwal += 1;
+      } else if (daftarIzin[i].idJenisIzin.toString() == '2') {
+        julahMeninggalkanKantor += 1;
+      } else if (daftarIzin[i].idJenisIzin.toString() == '3') {
+        jumlahSuratTugas += 1;
+      } else {
+        jumlahTidakAbsen += 1;
+      }
     }
   }
 
@@ -65,13 +96,80 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.width / 15,
+                top: MediaQuery.of(context).size.width / 20,
                 left: MediaQuery.of(context).size.width / 15,
                 right: MediaQuery.of(context).size.width / 15),
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          textTanggal = "";
+                          getDaftarIzinBawahan();
+                        });
+                        DatePicker.showPicker(context,
+                            pickerModel: CustomMonthPicker(
+                              currentTime: DateTime.now(),
+                              minTime: DateTime(2020, 1, 1),
+                              maxTime: DateTime.now(),
+                            ), onConfirm: (val) {
+                          setState(() {
+                            textTanggal = DateFormat('MMMM yyyy').format(val);
+                            tahunFilter = DateFormat('yyyy').format(val);
+                            bulanFilter = DateFormat('MM').format(val);
+                            daftarIzin.retainWhere((element) =>
+                                element.tanggalPengajuan.toString().contains(
+                                    '$tahunFilter' + '-' + '$bulanFilter'));
+                            getJumlah();
+                          });
+                        });
+                      },
+                      child: Icon(FontAwesomeIcons.calendar),
+                    ),
+                    Text(
+                      'Daftar Izin Team Saya',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => CupertinoAlertDialog(
+                            title:
+                                Text('Jumlah Izin Team Saya Berdasarkan Jenis'),
+                            actions: [
+                              CupertinoDialogAction(
+                                  isDefaultAction: true,
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('OK')),
+                            ],
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                    'Izin Pulang Lebih Awal = $jumlahPulangLebihAwal'),
+                                Text(
+                                    'Meninggalkan Kantor = $julahMeninggalkanKantor'),
+                                Text('Surat Tugas = $jumlahSuratTugas'),
+                                Text('Lupa Absen = $jumlahTidakAbsen'),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Icon(FontAwesomeIcons.circleInfo),
+                    ),
+                  ],
+                ),
                 Text(
-                  'Daftar Izin Team Saya',
+                  '$textTanggal',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -189,5 +287,23 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
         ],
       ));
     }
+  }
+}
+
+class CustomMonthPicker extends DatePickerModel {
+  CustomMonthPicker(
+      {required DateTime currentTime,
+      DateTime? minTime,
+      DateTime? maxTime,
+      LocaleType? locale})
+      : super(
+            locale: locale,
+            minTime: minTime,
+            maxTime: maxTime,
+            currentTime: currentTime);
+
+  @override
+  List<int> layoutProportions() {
+    return [1, 1, 0];
   }
 }

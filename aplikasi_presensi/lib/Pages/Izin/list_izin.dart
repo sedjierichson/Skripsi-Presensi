@@ -94,11 +94,11 @@ class _ListIzinState extends State<ListIzin> {
   @override
   void initState() {
     getDaftarIzin();
-    tahunFilter = DateFormat('yyyy').format(DateTime.now());
-    bulanFilter = DateFormat('MM').format(DateTime.now());
-    daftarIzin.retainWhere((element) => element.tanggalPengajuan
-        .toString()
-        .contains('$tahunFilter' + '-' + '$bulanFilter'));
+    // tahunFilter = DateFormat('yyyy').format(DateTime.now());
+    // bulanFilter = DateFormat('MM').format(DateTime.now());
+    // daftarIzin.retainWhere((element) => element.tanggalPengajuan
+    //     .toString()
+    //     .contains('$tahunFilter' + '-' + '$bulanFilter'));
     super.initState();
   }
 
@@ -108,7 +108,10 @@ class _ListIzinState extends State<ListIzin> {
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.width / 20,
+                left: MediaQuery.of(context).size.width / 15,
+                right: MediaQuery.of(context).size.width / 15),
             child: Column(
               children: [
                 Row(
@@ -163,9 +166,6 @@ class _ListIzinState extends State<ListIzin> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 15,
-                ),
                 Text(
                   '$textTanggal',
                   style: TextStyle(
@@ -174,7 +174,7 @@ class _ListIzinState extends State<ListIzin> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
