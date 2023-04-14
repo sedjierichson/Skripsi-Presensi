@@ -15,7 +15,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -31,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String imeiHPSekarang = '';
   UserService db = UserService();
   late Pegawai p;
-  late SharedPreferences sharedPreferences;
 
   void pindahkeHomePage() {
     Navigator.pushAndRemoveUntil(
@@ -84,11 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void checkData() async {
-    // if (tfLoginNIK.text.toString() == "" ||
-    //     tfLoginPassword.text.toString() == "") {
-    //   globals.showAlertWarning(
-    //       context: context, message: 'NIK dan Password tidak boleh kosong');
-    // } else {
     try {
       var res = await db.loginAPI(
         nik: tfLoginNIK.text.toString(),
@@ -115,7 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
     }
-    // }
   }
 
   void cocokkanIMEI() async {

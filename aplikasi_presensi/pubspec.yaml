@@ -43,7 +43,6 @@ dependencies:
   intl: ^0.18.0
   loading_animation_widget: ^1.2.0+4
   quickalert: ^1.0.1
-  shared_preferences: ^2.1.0
   timezone: ^0.9.1
 
 dev_dependencies:

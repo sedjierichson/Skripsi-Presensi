@@ -84,8 +84,12 @@ class _OtherPageState extends State<OtherPage> {
     }));
   }
 
-  void pindahkeLogin() {
-    globals.pegawai.erase();
+  void pindahkeLogin() async {
+    try {
+      globals.pegawai.erase();
+    } catch (e) {
+      print(e.toString());
+    }
     Navigator.of(context, rootNavigator: true)
         .pushReplacement(MaterialPageRoute(builder: (context) {
       return const LoginScreen();
@@ -105,7 +109,7 @@ class _OtherPageState extends State<OtherPage> {
                   : Column(
                       children: [
                         Text(
-                          globals.pegawai.read('nama'),
+                          globals.pegawai.read('nama') ?? 'x',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
