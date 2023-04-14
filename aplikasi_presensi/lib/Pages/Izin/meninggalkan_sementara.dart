@@ -39,10 +39,10 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
         tfJamIzinPergi.text != "" &&
         tfJamIzinPulang.text != "") {
       try {
-        print('aaaaa' + globals.currentPegawai.nik_atasan);
+        // print('aaaaa' + globals.currentPegawai.nik_atasan);
         await db.insertFormMeninggalkanKantor(
-          int.parse(globals.currentPegawai.nik),
-          int.parse(globals.currentPegawai.nik_atasan),
+          int.parse(globals.pegawai.read('nik')),
+          int.parse(globals.pegawai.read('nik_atasan')),
           tanggal_izin!.toString(),
           jamPergi!.toString(),
           jamPulang!.toString(),

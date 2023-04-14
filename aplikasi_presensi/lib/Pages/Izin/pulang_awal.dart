@@ -34,8 +34,8 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
       // print(globals.currentPegawai.nik);
       try {
         await db.insertFormPulangAwal(
-          globals.currentPegawai.nik,
-          globals.currentPegawai.nik_atasan,
+          globals.pegawai.read('nik'),
+          globals.pegawai.read('nik_atasan'),
           tanggalIzin.toString(),
           tfJamIzin.text.toString(),
           alasan!,

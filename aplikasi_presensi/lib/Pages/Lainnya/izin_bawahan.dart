@@ -41,7 +41,7 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
     });
     try {
       daftarIzin =
-          await db.getIzin(nikAtasan: globals.currentPegawai.nik.toString());
+          await db.getIzin(nikAtasan: globals.pegawai.read('nik').toString());
       setState(() {
         isLoadingAll = false;
       });

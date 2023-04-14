@@ -48,7 +48,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
     } else {
       try {
         var res = await dbPresensi.insertAbsenMasuk(
-            globals.currentPegawai.nik.toString(),
+            globals.pegawai.read('nik').toString(),
             1,
             tanggalAbsen.toString(),
             jamSekarang,

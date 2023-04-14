@@ -38,11 +38,11 @@ class _TeamSayaState extends State<TeamSaya> {
     try {
       if (widget.jabatan == "manajer") {
         bawahan = await db.getBawahanUser(
-          nik: globals.currentPegawai.nik.toString(),
+          nik: globals.pegawai.read('nik').toString(),
         );
       } else {
         bawahan = await db.getBawahanUser(
-          nik: globals.currentPegawai.nik_atasan.toString(),
+          nik: globals.pegawai.read('nik_atasan').toString(),
         );
       }
       setState(() {

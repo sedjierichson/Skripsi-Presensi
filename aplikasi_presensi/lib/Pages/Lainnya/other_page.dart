@@ -35,7 +35,7 @@ class _OtherPageState extends State<OtherPage> {
     });
     try {
       await db.getBawahanUser(
-        nik: globals.currentPegawai.nik.toString(),
+        nik: globals.pegawai.read('nik').toString(),
       );
       setState(() {
         isLoading = false;
@@ -58,7 +58,7 @@ class _OtherPageState extends State<OtherPage> {
   void pindahkeEnterPIN() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return EnterPin(
-        nik: globals.currentPegawai.nik.toString(),
+        nik: globals.pegawai.read('nik').toString(),
         mode: 'ganti_pin',
       );
     }));
@@ -105,12 +105,12 @@ class _OtherPageState extends State<OtherPage> {
                   : Column(
                       children: [
                         Text(
-                          globals.currentPegawai.nama,
+                          globals.pegawai.read('nama'),
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        Text('NIK : ' + globals.currentPegawai.nik),
-                        Text(globals.currentPegawai.jabatan),
+                        Text('NIK : ' + globals.pegawai.read('nik')),
+                        Text(globals.pegawai.read('jabatan')),
                         SizedBox(
                           height: 40,
                         ),

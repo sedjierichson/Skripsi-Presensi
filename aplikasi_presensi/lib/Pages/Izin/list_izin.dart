@@ -66,7 +66,7 @@ class _ListIzinState extends State<ListIzin> {
     });
     try {
       daftarIzin =
-          await db.getIzin(nikUser: globals.currentPegawai.nik.toString());
+          await db.getIzin(nikUser: globals.pegawai.read('nik').toString());
       getJumlah();
       setState(() {
         isLoadingAll = false;

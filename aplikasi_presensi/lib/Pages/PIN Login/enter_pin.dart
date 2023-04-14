@@ -52,7 +52,7 @@ class _EnterPinState extends State<EnterPin> {
         } else if (widget.mode.toString() == "ganti_pin") {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return EnterPin(
-              nik: globals.currentPegawai.nik.toString(),
+              nik: globals.pegawai.read('nik').toString(),
               mode: 'ganti_pin2',
             );
           }));

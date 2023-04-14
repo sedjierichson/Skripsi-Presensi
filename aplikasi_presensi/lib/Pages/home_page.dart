@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
   void insertAbsenMasuk({required String kategori}) async {
     try {
       var res = await dbPresensi.insertAbsenMasuk(
-          globals.currentPegawai.nik.toString(),
+          globals.pegawai.read('nik'),
           1,
           tanggalAbsen.toString(),
           jamSekarang,
@@ -113,8 +113,7 @@ class _HomePageState extends State<HomePage> {
 
   void daftarkanImei(String imeix) async {
     try {
-      await db.updateIMEI(
-          globals.currentPegawai.nik.toString(), imeix.toString());
+      await db.updateIMEI(globals.pegawai.read('nik'), imeix.toString());
     } catch (e) {
       print(e.toString());
     }
@@ -126,7 +125,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         imeiBaru = androidInfo.serialNumber.toString();
       });
-      if (globals.currentHpPegawai.imei != imeiBaru) {
+      if (globals.pegawai.read('imei') != imeiBaru) {
         print('LOGOUTTTT');
       } else {
         print('cocok');
@@ -136,7 +135,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         imeiBaru = iosInfo.identifierForVendor!.toString();
       });
-      if (globals.currentHpPegawai.imei != imeiBaru) {
+      if (globals.pegawai.read('imei') != imeiBaru) {
         print('LOGOUTTTT');
       } else {
         print('cocok');
@@ -147,7 +146,7 @@ class _HomePageState extends State<HomePage> {
   void cekSudahAbsen() async {
     try {
       var res = await dbPresensi.cekSudahAbsen(
-          nik: globals.currentPegawai.nik, tanggal: tanggalAbsen);
+          nik: globals.pegawai.read('nik'), tanggal: tanggalAbsen);
       if (res['jam_keluar'] == null) {
         print('absen belum lengkap');
         if (res['status'] == 1) {
@@ -208,7 +207,8 @@ class _HomePageState extends State<HomePage> {
       // Navigator.pushReplacement(context,
       //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
     } catch (e) {
-      globals.showAlertError(context: context, message: e.toString());
+      print(e.toString());
+      // globals.showAlertError(context: context, message: e.toString());
     }
   }
 
@@ -344,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Hi, ' + globals.currentPegawai.nama,
+                      'Hi, ' + globals.pegawai.read('nama'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 17,
@@ -358,14 +358,14 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           Text(
-                            'NIK : ' + globals.currentPegawai.nik,
+                            'NIK : ' + globals.pegawai.read('nik'),
                             style: TextStyle(
                               fontSize: 12,
                             ),
                           ),
                           Text(' | '),
                           Text(
-                            globals.currentPegawai.jabatan,
+                            globals.pegawai.read('jabatan'),
                             style: TextStyle(
                               fontSize: 12,
                             ),

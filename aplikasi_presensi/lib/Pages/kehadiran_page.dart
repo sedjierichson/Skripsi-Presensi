@@ -30,7 +30,7 @@ class _PageKehadiranState extends State<PageKehadiran> {
   void getDataPresensi() async {
     try {
       kehadiran = await db.getDataPresensi(
-        nik: globals.currentPegawai.nik.toString(),
+        nik: globals.pegawai.read('nik').toString(),
       );
       // print(kehadiran[0].tanggal);
       setState(() {
@@ -48,7 +48,7 @@ class _PageKehadiranState extends State<PageKehadiran> {
   void getDataPresensiFilter() async {
     try {
       kehadiran = await db.getDataPresensi(
-        nik: globals.currentPegawai.nik.toString(),
+        nik: globals.pegawai.read('nik').toString(),
         tahun: tahunFilter,
         bulan: bulanFilter,
       );

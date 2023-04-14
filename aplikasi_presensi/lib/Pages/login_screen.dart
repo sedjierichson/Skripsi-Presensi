@@ -15,6 +15,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -30,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String imeiHPSekarang = '';
   UserService db = UserService();
   late Pegawai p;
+  late SharedPreferences sharedPreferences;
 
   void pindahkeHomePage() {
     Navigator.pushAndRemoveUntil(
@@ -51,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
       globals.pegawai.write('nama', globals.currentPegawai.nama);
       globals.pegawai.write('jabatan', globals.currentPegawai.jabatan);
       globals.pegawai.write('nik_atasan', globals.currentPegawai.nik_atasan);
-      // globals.pegawai.write('imei', null);
+
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return EnterPin(
           nik: tfLoginNIK.text.toString(),
@@ -74,45 +76,46 @@ class _LoginScreenState extends State<LoginScreen> {
       globals.pegawai.write('jabatan', globals.currentPegawai.jabatan);
       globals.pegawai.write('nik_atasan', globals.currentPegawai.nik_atasan);
       globals.pegawai.write('imei', globals.currentHpPegawai.imei);
+
       cocokkanIMEI();
-      // pindahkeHomePage();
-      // print(p.nama);
     } catch (e) {
       print(e);
     }
   }
 
   void checkData() async {
-    if (tfLoginNIK.text.toString() == "" ||
-        tfLoginPassword.text.toString() == "") {
-      globals.showAlertWarning(
-          context: context, message: 'NIK dan Password tidak boleh kosong');
-    } else {
-      try {
-        var res = await db.loginAPI(
-          nik: tfLoginNIK.text.toString(),
-          password: tfLoginPassword.text.toString(),
-        );
-        var res2 = await db.cekNIKSudahTerdaftar(
-          nik: tfLoginNIK.text.toString(),
-        );
-        if (res['status'] == 1 && res2['status'] == 1) {
-          //password benar & sudah pernah login
-          getCurrentUser();
-          print('pernah login');
-        } else if (res['status'] == 1 && res2['status'] == 0) {
-          //password benar & belum pernah login
-          pertamaLogin();
-          print('belum pernah login');
-        } else {
-          //password salah
-          globals.showAlertError(
-              context: context, message: 'NIK atau Password Salah');
-        }
-      } catch (e) {
-        globals.showAlertError(context: context, message: e.toString());
+    // if (tfLoginNIK.text.toString() == "" ||
+    //     tfLoginPassword.text.toString() == "") {
+    //   globals.showAlertWarning(
+    //       context: context, message: 'NIK dan Password tidak boleh kosong');
+    // } else {
+    try {
+      var res = await db.loginAPI(
+        nik: tfLoginNIK.text.toString(),
+        password: tfLoginPassword.text.toString(),
+      );
+      var res2 = await db.cekNIKSudahTerdaftar(
+        nik: tfLoginNIK.text.toString(),
+      );
+      if (res['status'] == 1 && res2['status'] == 1) {
+        //password benar & sudah pernah login
+
+        getCurrentUser();
+        print('pernah login');
+      } else if (res['status'] == 1 && res2['status'] == 0) {
+        //password benar & belum pernah login
+
+        pertamaLogin();
+        print('belum pernah login');
+      } else {
+        //password salah
+        globals.showAlertError(
+            context: context, message: 'NIK atau Password Salah');
       }
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
     }
+    // }
   }
 
   void cocokkanIMEI() async {
@@ -233,8 +236,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(15)),
                         color: Colors.cyan,
                         onPressed: () {
-                          checkData();
-                          print(apiUrl);
+                          if (tfLoginNIK.text.toString() == "" ||
+                              tfLoginPassword.text.toString() == "") {
+                            globals.showAlertWarning(
+                                context: context,
+                                message: 'NIK dan Password tidak boleh kosong');
+                          } else {
+                            checkData();
+                          }
                         },
                         child: Text(
                           'LOGIN',

@@ -60,8 +60,8 @@ class _SuratTugasState extends State<SuratTugas> {
         tfUraianTugas.text != "") {
       try {
         await db.insertFormSuratTugas(
-          globals.currentPegawai.nik,
-          globals.currentPegawai.nik_atasan,
+          globals.pegawai.read('nik'),
+          globals.pegawai.read('nik_atasan'),
           tanggal_awal!.toString(),
           tanggal_akhir!.toString(),
           tfUraianTugas.text.toString(),
