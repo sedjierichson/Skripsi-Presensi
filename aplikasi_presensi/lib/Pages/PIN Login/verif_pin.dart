@@ -49,7 +49,10 @@ class _VerifPinState extends State<VerifPin> {
   void tambahkanUser() async {
     try {
       await db.insertDataPertamaLogin(
-          widget.nik.toString(), VerifikasiPin.toString());
+        widget.nik.toString(),
+        globals.pegawai.read('nama'),
+        VerifikasiPin.toString(),
+      );
       daftarkanImei(imeiBaru);
       pindahkeHomePage();
     } catch (e) {

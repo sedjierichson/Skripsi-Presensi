@@ -138,11 +138,13 @@ class UserService {
     }
   }
 
-  Future<String> insertDataPertamaLogin(String nik, String code) async {
+  Future<String> insertDataPertamaLogin(
+      String nik, String nama, String code) async {
     final response = await http.post(
       Uri.parse("$apiUrl/pegawai.php"),
       body: {
         'nik': nik.toString(),
+        'nama': nama.toString(),
         'security_code': code.toString(),
       },
     );
