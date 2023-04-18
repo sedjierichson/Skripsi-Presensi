@@ -133,26 +133,27 @@ class UserService {
     }
   }
 
-  Future<String> insertDataPertamaLogin(
-      String nik, String nama, String code) async {
+  Future<Map<String, dynamic>> insertDataPertamaLogin(
+      String nik, String nama, String code, String imei) async {
     final response = await http.post(
       Uri.parse("$apiUrl/pegawai.php"),
       body: {
         'nik': nik.toString(),
         'nama': nama.toString(),
         'security_code': code.toString(),
+        'imei': imei.toString()
       },
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonResponse = json.decode(response.body);
-      if (jsonResponse['status'] == 1) {
-        return "Berhasil";
-      } else {
-        throw jsonResponse['message'];
-      }
+      print(jsonResponse);
+      return {
+        'status': jsonResponse['status'],
+        'message': jsonResponse['message']
+      };
     } else {
-      throw ("Gagal insert data user");
+      throw ("Gagal melakukan cek data userr");
     }
   }
 

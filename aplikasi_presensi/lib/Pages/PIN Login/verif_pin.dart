@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, avoid_single_cascade_in_expression_statements
 
 import 'dart:io';
 
 import 'package:aplikasi_presensi/Pages/Lainnya/other_page.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
+import 'package:aplikasi_presensi/Pages/login_screen.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -48,13 +49,30 @@ class _VerifPinState extends State<VerifPin> {
 
   void tambahkanUser() async {
     try {
-      await db.insertDataPertamaLogin(
-        widget.nik.toString(),
-        globals.pegawai.read('nama'),
-        VerifikasiPin.toString(),
-      );
-      daftarkanImei(imeiBaru);
-      pindahkeHomePage();
+      var res = await db.insertDataPertamaLogin(
+          widget.nik.toString(),
+          globals.pegawai.read('nama'),
+          VerifikasiPin.toString(),
+          imeiBaru.toString());
+      if (res['message'] == -1) {
+        // print('kembar');
+        globals.pegawai.erase();
+
+        QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            text: 'IMEI sudah terdaftar',
+            confirmBtnText: 'OK',
+            confirmBtnColor: Colors.blueAccent,
+            autoCloseDuration: Duration(seconds: 5));
+        Future.delayed(const Duration(seconds: 5), () {
+          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+              (Route<dynamic> route) => false);
+        });
+      } else {
+        pindahkeHomePage();
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -94,9 +112,9 @@ class _VerifPinState extends State<VerifPin> {
             confirmBtnColor: Colors.blueAccent,
             autoCloseDuration: Duration(seconds: 5));
         Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) {
-          return const OtherPage();
-        }));
+          ..pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => OtherPage()),
+              (Route<dynamic> route) => false);
       } catch (e) {
         print(e.toString());
       }
