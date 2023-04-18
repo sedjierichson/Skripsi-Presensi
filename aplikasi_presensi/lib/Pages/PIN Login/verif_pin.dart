@@ -55,7 +55,6 @@ class _VerifPinState extends State<VerifPin> {
           VerifikasiPin.toString(),
           imeiBaru.toString());
       if (res['message'] == -1) {
-        // print('kembar');
         globals.pegawai.erase();
 
         QuickAlert.show(
@@ -73,14 +72,6 @@ class _VerifPinState extends State<VerifPin> {
       } else {
         pindahkeHomePage();
       }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  void daftarkanImei(String imeix) async {
-    try {
-      await db.updateIMEI(widget.nik.toString(), imeix.toString());
     } catch (e) {
       print(e.toString());
     }

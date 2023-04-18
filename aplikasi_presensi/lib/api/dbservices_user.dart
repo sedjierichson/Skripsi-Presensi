@@ -183,26 +183,4 @@ class UserService {
       throw ("Gagal insert data user");
     }
   }
-
-  Future<String> updateIMEI(String nik, String imei) async {
-    final response = await http.put(
-      Uri.parse("$apiUrl/pegawai.php"),
-      body: json.encode(
-        {
-          "nik": nik,
-          "imei": imei,
-        },
-      ),
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      var jsonResponse = json.decode(response.body);
-      if (jsonResponse['status'] == 1) {
-        return "Berhasil";
-      } else {
-        throw jsonResponse['message'];
-      }
-    } else {
-      throw ("Gagal update IMEI");
-    }
-  }
 }
