@@ -76,11 +76,6 @@ class UserService {
 
     String uri = "$apiUrl/pegawai.php?nik=$nik";
 
-    // if (nik != "") {
-    //   uri =
-    //       "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api/pegawai.php?id=$nik";
-    // }
-
     final response = await http.get(Uri.parse(uri), headers: requestHeaders);
 
     if (response.statusCode == 200) {

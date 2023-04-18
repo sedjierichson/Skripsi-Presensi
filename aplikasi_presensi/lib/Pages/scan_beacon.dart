@@ -50,44 +50,76 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     });
   }
 
-  void toggleState() {
-    print('scanning nyala');
+  void toggleState() async {
+    try {
+      await for (final state
+          in flutterBlue.state.timeout(const Duration(seconds: 5))) {
+        if (state == BluetoothState.on) {
+          flutterBlue.startScan(allowDuplicates: true);
+          scan();
+          // turn();
+          Future.delayed(const Duration(seconds: 4), () {
+            flutterBlue.stopScan();
+            isLoading = false;
+            // print(scanResultList.length);
+            for (int i = 0; i < scanResultList.length; i++) {
+              if (scanResultList[i].advertisementData.serviceUuids.toString() !=
+                  "[]") {
+                // print(scanResultList[i]
+                //     .advertisementData
+                //     .serviceUuids
+                //     .toString()
+                //     .toLowerCase());
+                String temp = scanResultList[i]
+                    .advertisementData
+                    .serviceUuids
+                    .toString()
+                    .toLowerCase();
+                // print('x' + temp.substring(1, temp.length - 1) + 'x');
 
-    // if (isScanning) {
-    flutterBlue.startScan(scanMode: ScanMode(scan_mode), allowDuplicates: true);
-    scan();
-    turn();
-    // }
-    Future.delayed(const Duration(seconds: 4), () {
-      flutterBlue.stopScan();
-      isLoading = false;
-      print(scanResultList.length);
-      for (int i = 0; i < scanResultList.length; i++) {
-        if (scanResultList[i].advertisementData.serviceUuids.toString() !=
-            "[]") {
-          print(scanResultList[i]
-              .advertisementData
-              .serviceUuids
-              .toString()
-              .toLowerCase());
-          String temp = scanResultList[i]
-              .advertisementData
-              .serviceUuids
-              .toString()
-              .toLowerCase();
-          print('x' + temp.substring(1, temp.length - 1) + 'x');
-
-          hasilbeacon.add(temp.substring(1, temp.length - 1));
+                hasilbeacon.add(temp.substring(1, temp.length - 1));
+              }
+            }
+          });
         }
       }
-    });
+    } catch (e) {
+      print(e.toString());
+      // _logger.info('Timeout when waiting for BT adapter ON');
+    }
+    // flutterBlue.startScan(scanMode: ScanMode(scan_mode), allowDuplicates: true);
+    // scan();
+    // // turn();
+    // Future.delayed(const Duration(seconds: 4), () {
+    //   flutterBlue.stopScan();
+    //   isLoading = false;
+    //   print(scanResultList.length);
+    //   for (int i = 0; i < scanResultList.length; i++) {
+    //     if (scanResultList[i].advertisementData.serviceUuids.toString() !=
+    //         "[]") {
+    //       // print(scanResultList[i]
+    //       //     .advertisementData
+    //       //     .serviceUuids
+    //       //     .toString()
+    //       //     .toLowerCase());
+    //       String temp = scanResultList[i]
+    //           .advertisementData
+    //           .serviceUuids
+    //           .toString()
+    //           .toLowerCase();
+    //       // print('x' + temp.substring(1, temp.length - 1) + 'x');
 
-    setState(() {});
+    //       hasilbeacon.add(temp.substring(1, temp.length - 1));
+    //     }
+    //   }
+    // });
+
+    // setState(() {});
   }
 
   void scan() async {
     // if (isScanning) {
-    flutterBlue.scan();
+    // flutterBlue.scan();
     // Listen to scan results
     // flutterBlue.startScan(withDevices: g);
     flutterBlue.scanResults.listen((results) {
@@ -97,7 +129,7 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
       // print(scanResultList.length);
 
       // update state
-      setState(() {});
+      // setState(() {});
     });
     // }
   }
