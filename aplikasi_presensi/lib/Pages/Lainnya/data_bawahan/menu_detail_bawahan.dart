@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last, prefer_adjacent_string_concatenation, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
 
 import 'package:aplikasi_presensi/Pages/Lainnya/detail_izin_bawahan.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
@@ -6,9 +6,11 @@ import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:aplikasi_presensi/models/izin.dart';
 import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:aplikasi_presensi/models/presensi.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
@@ -31,6 +33,10 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
   List<Izin> daftarIzin = [];
   bool isLoadingAll = true;
   bool isErrorAll = false;
+  bool isFiltering = false;
+  String tahunFilter = "";
+  String bulanFilter = "";
+  String textTanggal = "";
 
   void pindahkeDetailIzin(Izin detail) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -54,7 +60,6 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
         isLoadingAll = false;
         isErrorAll = true;
       });
-      // globals.showAlertError(context: context, message: e.toString());
     }
   }
 
@@ -90,63 +95,167 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
     if (widget.jabatan == 'manajer') {
       return DefaultTabController(
         length: 2,
-        child: Scaffold(
-          body: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    Text(
-                      widget.bawahan.nama,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      widget.bawahan.nik + " - " + widget.bawahan.jabatan,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: HexColor(
-                          '#13542D',
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TabBar(
-                          indicator: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color: HexColor('FFA133'),
-                          ),
-                          tabs: [
-                            Tab(text: 'Presensi'),
-                            Tab(text: 'Izin'),
+        child: Builder(
+          builder: (context) {
+            return Scaffold(
+              body: SafeArea(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     print(DefaultTabController.of(context).index);
+                        //   },
+                        //   child: Text('Test'),
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isFiltering = false;
+                                  // jumlahPulangLebihAwal = 0;
+                                  // jumlahSuratTugas = 0;
+                                  // jumlahTidakAbsen = 0;
+                                  // julahMeninggalkanKantor = 0;
+                                  getDataPresensi();
+                                  getDaftarIzin();
+                                });
+                                DatePicker.showPicker(context,
+                                    pickerModel: CustomMonthPicker(
+                                      currentTime: DateTime.now(),
+                                      minTime: DateTime(2020, 1, 1),
+                                      maxTime: DateTime.now(),
+                                    ), onConfirm: (val) {
+                                  setState(() {
+                                    isFiltering = true;
+                                    textTanggal =
+                                        DateFormat('MMMM yyyy').format(val);
+                                    tahunFilter =
+                                        DateFormat('yyyy').format(val);
+                                    bulanFilter = DateFormat('MM').format(val);
+                                    daftarIzin.retainWhere((element) => element
+                                        .tanggalPengajuan
+                                        .toString()
+                                        .contains('$tahunFilter' +
+                                            '-' +
+                                            '$bulanFilter'));
+                                    kehadiran.retainWhere((element) => element
+                                        .tanggal
+                                        .contains('$tahunFilter' +
+                                            '-' +
+                                            '$bulanFilter'));
+                                    // getJumlah();
+                                  });
+                                });
+                              },
+                              child: Icon(
+                                FontAwesomeIcons.calendar,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              widget.bawahan.nama,
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (context) => CupertinoAlertDialog(
+                                    title: Text(
+                                        'Detail Kehadiran dan Pengajuan Izin'),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                          isDefaultAction: true,
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text('OK')),
+                                    ],
+                                    content: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        // Text(
+                                        //     'Izin Pulang Lebih Awal = $jumlahPulangLebihAwal'),
+                                        // Text(
+                                        //     'Meninggalkan Kantor = $julahMeninggalkanKantor'),
+                                        // Text('Surat Tugas = $jumlahSuratTugas'),
+                                        // Text('Lupa Absen = $jumlahTidakAbsen'),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Icon(FontAwesomeIcons.circleInfo),
+                            ),
                           ],
                         ),
-                      ),
+                        Text(
+                          widget.bawahan.nik + " - " + widget.bawahan.jabatan,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        isFiltering == true
+                            ? Text(
+                                '$textTanggal',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : SizedBox(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: HexColor(
+                              '#13542D',
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TabBar(
+                              indicator: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                color: HexColor('FFA133'),
+                              ),
+                              tabs: [
+                                Tab(text: 'Presensi'),
+                                Tab(text: 'Izin'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              tablePresensi(),
+                              cardIzin(),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          tablePresensi(),
-                          cardIzin(),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       );
     } else {
@@ -444,5 +553,23 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
         ),
       );
     }
+  }
+}
+
+class CustomMonthPicker extends DatePickerModel {
+  CustomMonthPicker(
+      {required DateTime currentTime,
+      DateTime? minTime,
+      DateTime? maxTime,
+      LocaleType? locale})
+      : super(
+            locale: locale,
+            minTime: minTime,
+            maxTime: maxTime,
+            currentTime: currentTime);
+
+  @override
+  List<int> layoutProportions() {
+    return [1, 1, 0];
   }
 }
