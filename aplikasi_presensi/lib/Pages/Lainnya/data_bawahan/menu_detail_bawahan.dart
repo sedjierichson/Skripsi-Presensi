@@ -34,6 +34,17 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
   bool isLoadingAll = true;
   bool isErrorAll = false;
   bool isFiltering = false;
+
+  int jumlahPulangLebihAwal = 0;
+  int jumlahSuratTugas = 0;
+  int jumlahMeninggalkanKantor = 0;
+  int jumlahTidakAbsen = 0;
+
+  int jumlahKategoriA = 0;
+  int jumlahKategoriB = 0;
+  int jumlahKategoriC = 0;
+  int jumlahKategoriD = 0;
+
   String tahunFilter = "";
   String bulanFilter = "";
   String textTanggal = "";
@@ -51,7 +62,7 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
       kehadiran = await db.getDataPresensi(
         nik: widget.bawahan.nik.toString(),
       );
-      // print(kehadiran[0].tanggal);
+      getJumlahKehadiran();
       setState(() {
         isLoadingAll = false;
       });
@@ -71,7 +82,7 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
     });
     try {
       daftarIzin = await db2.getIzin(nikUser: widget.bawahan.nik.toString());
-      // getJumlah();
+      getJumlahIzin();
       setState(() {
         isLoadingAll = false;
       });
@@ -80,6 +91,46 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
         isLoadingAll = false;
         isErrorAll = true;
       });
+    }
+  }
+
+  void getJumlahIzin() {
+    setState(() {
+      jumlahPulangLebihAwal = 0;
+      jumlahSuratTugas = 0;
+      jumlahTidakAbsen = 0;
+      jumlahMeninggalkanKantor = 0;
+    });
+    for (int i = 0; i < daftarIzin.length; i++) {
+      if (daftarIzin[i].idJenisIzin.toString() == '1') {
+        jumlahPulangLebihAwal += 1;
+      } else if (daftarIzin[i].idJenisIzin.toString() == '2') {
+        jumlahMeninggalkanKantor += 1;
+      } else if (daftarIzin[i].idJenisIzin.toString() == '3') {
+        jumlahSuratTugas += 1;
+      } else {
+        jumlahTidakAbsen += 1;
+      }
+    }
+  }
+
+  void getJumlahKehadiran() {
+    setState(() {
+      jumlahKategoriA = 0;
+      jumlahKategoriB = 0;
+      jumlahKategoriC = 0;
+      jumlahKategoriD = 0;
+    });
+    for (int i = 0; i < kehadiran.length; i++) {
+      if (kehadiran[i].kategori.toString() == 'A') {
+        jumlahKategoriA += 1;
+      } else if (kehadiran[i].kategori.toString() == 'B') {
+        jumlahKategoriB += 1;
+      } else if (kehadiran[i].kategori.toString() == 'C') {
+        jumlahKategoriC += 1;
+      } else {
+        jumlahKategoriD += 1;
+      }
     }
   }
 
@@ -104,12 +155,6 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
                     padding: EdgeInsets.all(15),
                     child: Column(
                       children: [
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     print(DefaultTabController.of(context).index);
-                        //   },
-                        //   child: Text('Test'),
-                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -117,10 +162,10 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
                               onTap: () {
                                 setState(() {
                                   isFiltering = false;
-                                  // jumlahPulangLebihAwal = 0;
-                                  // jumlahSuratTugas = 0;
-                                  // jumlahTidakAbsen = 0;
-                                  // julahMeninggalkanKantor = 0;
+                                  jumlahPulangLebihAwal = 0;
+                                  jumlahSuratTugas = 0;
+                                  jumlahTidakAbsen = 0;
+                                  jumlahMeninggalkanKantor = 0;
                                   getDataPresensi();
                                   getDaftarIzin();
                                 });
@@ -148,7 +193,7 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
                                         .contains('$tahunFilter' +
                                             '-' +
                                             '$bulanFilter'));
-                                    // getJumlah();
+                                    getJumlahIzin();
                                   });
                                 });
                               },
@@ -182,12 +227,32 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        // Text(
-                                        //     'Izin Pulang Lebih Awal = $jumlahPulangLebihAwal'),
-                                        // Text(
-                                        //     'Meninggalkan Kantor = $julahMeninggalkanKantor'),
-                                        // Text('Surat Tugas = $jumlahSuratTugas'),
-                                        // Text('Lupa Absen = $jumlahTidakAbsen'),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          'Rekap Kehadiran',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text('Kategori A = $jumlahKategoriA'),
+                                        Text('Kategori B = $jumlahKategoriB'),
+                                        Text('Kategori C = $jumlahKategoriC'),
+                                        Text('Kategori D = $jumlahKategoriD'),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          'Rekap Izin',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                            'Izin Pulang Lebih Awal = $jumlahPulangLebihAwal'),
+                                        Text(
+                                            'Meninggalkan Kantor = $jumlahMeninggalkanKantor'),
+                                        Text('Surat Tugas = $jumlahSuratTugas'),
+                                        Text('Lupa Absen = $jumlahTidakAbsen'),
                                       ],
                                     ),
                                   ),
