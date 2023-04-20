@@ -32,16 +32,15 @@ class _HomePageState extends State<HomePage> {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   UserService db = UserService();
   PresensiService dbPresensi = PresensiService();
-  String imeiBaru = "";
-  String imeiHP = "";
   String tanggalAbsen = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  bool sudahAbsenMasuk = true;
+  bool sudahAbsenMasuk = false;
   String? idPresensi;
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
   String tempKategori = "";
   late final BluetoothDevice device;
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+  Timer? timer;
 
   void pindahAmbilFoto() {
     Navigator.of(context, rootNavigator: true)
@@ -57,25 +56,11 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
-  @override
-  void initState() {
-    setState(() {
-      sudahAbsenMasuk = false;
-    });
-    cekSudahAbsen();
-    // toggleState();
-    super.initState();
-    jamSekarang = _format(DateTime.now());
-    Timer.periodic(Duration(seconds: 1), (timer) => getTime());
-  }
-
   void getJamMasukKerja() async {
     String hari = DateFormat('EEEE').format(DateTime.now());
     try {
       var jam = "09:00:00";
       var res = await dbPresensi.getJamKerja(hari: hari);
-      print(res['jam_masuk']);
-      // print(jamSekarang);
       var temp = jamSekarang.compareTo(res['jam_masuk'].toString());
       if (temp < 0) {
         insertAbsenMasuk(kategori: "A");
@@ -105,41 +90,9 @@ class _HomePageState extends State<HomePage> {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => super.widget));
       }
-      print(res['status']);
+      // print(res['status']);
     } catch (e) {
       print(e.toString());
-    }
-  }
-
-  void daftarkanImei(String imeix) async {
-    try {
-      await db.updateIMEI(globals.pegawai.read('nik'), imeix.toString());
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  void cocokkanIMEI() async {
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      setState(() {
-        imeiBaru = androidInfo.serialNumber.toString();
-      });
-      if (globals.pegawai.read('imei') != imeiBaru) {
-        print('LOGOUTTTT');
-      } else {
-        print('cocok');
-      }
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      setState(() {
-        imeiBaru = iosInfo.identifierForVendor!.toString();
-      });
-      if (globals.pegawai.read('imei') != imeiBaru) {
-        print('LOGOUTTTT');
-      } else {
-        print('cocok');
-      }
     }
   }
 
@@ -148,7 +101,7 @@ class _HomePageState extends State<HomePage> {
       var res = await dbPresensi.cekSudahAbsen(
           nik: globals.pegawai.read('nik'), tanggal: tanggalAbsen);
       if (res['jam_keluar'] == null) {
-        print('absen belum lengkap');
+        // print('absen belum lengkap');
         if (res['status'] == 1) {
           setState(() {
             sudahAbsenMasuk = true;
@@ -163,14 +116,14 @@ class _HomePageState extends State<HomePage> {
           });
         }
       } else {
-        print('absen ulang');
+        // print('absen ulang');
         if (res['status'] == 1) {
           setState(() {
             sudahAbsenMasuk = false;
             idPresensi = res['message'];
           });
         } else {
-          print('belum absen');
+          // print('belum absen');
           setState(() {
             sudahAbsenMasuk = true;
           });
@@ -180,21 +133,19 @@ class _HomePageState extends State<HomePage> {
       print(e.toString());
       // globals.showAlertError(context: context, message: e.toString());
     }
+    print(sudahAbsenMasuk);
+    // presensiKeluarOtomatis();
   }
 
-  void getImeiBaru() async {
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      setState(() {
-        imeiBaru = androidInfo.serialNumber.toString();
+  void presensiKeluarOtomatis() {
+    if (sudahAbsenMasuk == false) {
+      print('canceled');
+      timer?.cancel();
+      timer = null;
+    } else {
+      Timer.periodic(Duration(seconds: 3), (timer) {
+        print('keluar');
       });
-      daftarkanImei(imeiBaru);
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      setState(() {
-        imeiBaru = iosInfo.identifierForVendor!.toString();
-      });
-      daftarkanImei(imeiBaru);
     }
   }
 
@@ -208,7 +159,6 @@ class _HomePageState extends State<HomePage> {
       //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
     } catch (e) {
       print(e.toString());
-      // globals.showAlertError(context: context, message: e.toString());
     }
   }
 
@@ -229,7 +179,7 @@ class _HomePageState extends State<HomePage> {
     try {
       var jam = "17:00:00";
       var res = await dbPresensi.getJamKerja(hari: hari);
-      print(res['jam_pulang']);
+      // print(res['jam_pulang']);
       // print(jamSekarang)
       var temp = jamSekarang.compareTo(res['jam_pulang'].toString());
       //Masuk (A atau C) Pulang ok
@@ -237,7 +187,7 @@ class _HomePageState extends State<HomePage> {
       //Masuk (A atau C) pulang not ok
       //Masuk (B atau D) pulang not ok
       if (temp < 0) {
-        print('Lebih Cepat not ok');
+        // print('Lebih Cepat not ok');
         if (tempKategori == "A") {
           //Kategori C
           updateKategori('C');
@@ -246,7 +196,7 @@ class _HomePageState extends State<HomePage> {
           updateKategori('D');
         }
       } else if (temp > 0) {
-        print('Lewat jam pulang ok');
+        // print('Lewat jam pulang ok');
         if (tempKategori == "A") {
           //Kategori A
           // updateKategori('A');
@@ -256,7 +206,7 @@ class _HomePageState extends State<HomePage> {
         }
         // insertAbsenMasuk(kategori: "B");
       } else {
-        print('Jam pulang ok');
+        // print('Jam pulang ok');
         if (tempKategori == "A") {
           //Kategori A
           // updateKategori('C');
@@ -285,50 +235,13 @@ class _HomePageState extends State<HomePage> {
     return DateFormat("HH:mm:ss").format(dateTime);
   }
 
-  //-----
-  //final tanggal = DateTime.now();
-
-  //BEACON
-  String Caa = "";
-  void turn() async {
-    List<BluetoothService> s = await device.discoverServices();
-    s.forEach((element) async {
-      Caa = element.uuid.toString();
-    });
-  }
-
-  void toggleState() {
-    print('scanning nyala');
-
-    // if (isScanning) {
-    flutterBlue.startScan(scanMode: ScanMode(0), allowDuplicates: true);
-    scan();
-    turn();
-    // }
-    Future.delayed(const Duration(seconds: 4), () {
-      flutterBlue.stopScan();
-      // isLoading = false;
-      // print(scanResultList.length);
-    });
-
-    setState(() {});
-  }
-
-  void scan() async {
-    // if (isScanning) {
-    flutterBlue.scan();
-    // Listen to scan results
-    // flutterBlue.startScan(withDevices: g);
-    // flutterBlue.scanResults.listen((results) {
-    //   // print('masuk');
-    //   // do something with scan results
-    //   scanResultList = results;
-    //   // print(scanResultList.length);
-
-    //   // update state
-    //   setState(() {});
-    // });
-    // }
+  @override
+  void initState() {
+    cekSudahAbsen();
+    presensiKeluarOtomatis();
+    jamSekarang = _format(DateTime.now());
+    Timer.periodic(Duration(seconds: 1), (timer) => getTime());
+    super.initState();
   }
 
   @override
@@ -479,8 +392,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        // getJamMasukKerja();
-        pindahScanBeacon();
+        getJamMasukKerja();
+        // pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

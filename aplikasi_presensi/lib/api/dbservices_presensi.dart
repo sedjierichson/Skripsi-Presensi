@@ -41,7 +41,7 @@ class PresensiService {
     };
     String uri;
     // print(nik);
-    print(tahun);
+    // print(tahun);
     if (nik != '') {
       uri = "$apiUrl/presensi.php?nik=$nik";
     } else if (nik != '' && bulan != '' && tahun != '') {
@@ -95,7 +95,7 @@ class PresensiService {
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
-      print("aaa" + jsonResponse['data']['id'].toString());
+      // print("aaa" + jsonResponse['data']['id'].toString());
       return {
         'status': jsonResponse['status'],
         'id': jsonResponse['data']['id'],

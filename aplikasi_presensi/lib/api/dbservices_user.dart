@@ -147,7 +147,7 @@ class UserService {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonResponse = json.decode(response.body);
-      print(jsonResponse);
+      // print(jsonResponse);
       return {
         'status': jsonResponse['status'],
         'message': jsonResponse['message']

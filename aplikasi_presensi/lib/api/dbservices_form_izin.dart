@@ -70,7 +70,7 @@ class FormIzinService {
     String alasan,
     String tanggal_pengajuan,
   ) async {
-    print("aaaa" + tanggal_pengajuan);
+    // print("aaaa" + tanggal_pengajuan);
     final response =
         await http.post(Uri.parse("$apiUrl/detail_izin.php"), body: {
       'nik_pegawai': nikPegawai.toString(),
@@ -135,7 +135,7 @@ class FormIzinService {
     String alasan,
     String tanggal_pengajuan,
   ) async {
-    print("aaa" + nikPegawai.toString());
+    // print("aaa" + nikPegawai.toString());
     final response = await http.post(
       Uri.parse("$apiUrl/detail_izin.php"),
       body: {
