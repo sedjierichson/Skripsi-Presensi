@@ -38,9 +38,14 @@ class _HomePageState extends State<HomePage> {
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
   String tempKategori = "";
-  late final BluetoothDevice device;
+  // late final BluetoothDevice device;
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   Timer? timer;
+  bool isLoading = true;
+  List<ScanResult> scanResultList = [];
+  List<String> hasilbeacon = [];
+  List<String> beacon = [];
+  bool hasilScanAdaSama = false;
 
   void pindahAmbilFoto() {
     Navigator.of(context, rootNavigator: true)
@@ -138,14 +143,92 @@ class _HomePageState extends State<HomePage> {
   }
 
   void presensiKeluarOtomatis() {
-    if (sudahAbsenMasuk == false) {
-      print('canceled');
-      timer?.cancel();
-      timer = null;
-    } else {
-      Timer.periodic(Duration(seconds: 3), (timer) {
-        print('keluar');
+    if (sudahAbsenMasuk == true) {
+      //Scanning bluetooth
+      toggleState();
+      Future.delayed(const Duration(seconds: 5), () {
+        // Membandingkan Beacon
+        getBeacon();
       });
+      // print('canceled');
+      // timer?.cancel();
+      // timer = null;
+    } else {
+      // Timer.periodic(Duration(seconds: 3), (timer) {
+      //   print('keluar');
+      // });
+    }
+  }
+
+  void toggleState() async {
+    try {
+      await for (final state
+          in flutterBlue.state.timeout(const Duration(seconds: 5))) {
+        if (state == BluetoothState.on) {
+          flutterBlue.startScan(allowDuplicates: true);
+          scan();
+          Future.delayed(const Duration(seconds: 4), () {
+            flutterBlue.stopScan();
+            isLoading = false;
+            for (int i = 0; i < scanResultList.length; i++) {
+              if (scanResultList[i].advertisementData.serviceUuids.toString() !=
+                  "[]") {
+                // print(scanResultList[i]
+                //     .advertisementData
+                //     .serviceUuids
+                //     .toString()
+                //     .toLowerCase());
+                String temp = scanResultList[i]
+                    .advertisementData
+                    .serviceUuids
+                    .toString()
+                    .toLowerCase();
+
+                hasilbeacon.add(temp.substring(1, temp.length - 1));
+              }
+            }
+          });
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void scan() async {
+    flutterBlue.scanResults.listen((results) {
+      scanResultList = results;
+    });
+  }
+
+  void getBeacon() async {
+    print(hasilbeacon[0]);
+    try {
+      beacon = await dbPresensi.getBeaconPresensi();
+      for (int i = 0; i < beacon.length; i++) {
+        var hasil = hasilbeacon.contains(beacon[i].toString());
+        print(hasil);
+        if (hasil == false) {
+          getJamPulangKerja();
+          updateJamKeluar();
+          setState(() {
+            hasilScanAdaSama = false;
+            isLoading = false;
+          });
+          break;
+        } else {
+          setState(() {
+            hasilScanAdaSama = true;
+            isLoading = false;
+          });
+          // Navigator.pop(context);
+          // globals.showAlertError(context: context, message: 'Tidak ada Beacon');
+
+          break;
+        }
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -238,7 +321,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     cekSudahAbsen();
-    presensiKeluarOtomatis();
+    Future.delayed(const Duration(seconds: 5), () {
+      print('menjalankan keluar otomatis');
+      presensiKeluarOtomatis();
+    });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();
@@ -392,8 +478,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        getJamMasukKerja();
-        // pindahScanBeacon();
+        // getJamMasukKerja();
+        pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

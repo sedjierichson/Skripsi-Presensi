@@ -105,12 +105,15 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
           });
           break;
         } else {
+          globals.showAlertError(context: context, message: 'Tidak ada Beacon');
           setState(() {
             hasilScanAdaSama = false;
             isLoading = false;
           });
-          Navigator.pop(context);
-          globals.showAlertError(context: context, message: 'Tidak ada Beacon');
+
+          Future.delayed(const Duration(seconds: 5), () {
+            Navigator.pop(context);
+          });
 
           break;
         }

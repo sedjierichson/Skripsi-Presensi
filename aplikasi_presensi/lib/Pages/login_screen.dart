@@ -97,7 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
         print('pernah login');
       } else if (res['status'] == 1 && res2['status'] == 0) {
         //password benar & belum pernah login
-
         pertamaLogin();
         print('belum pernah login');
       } else {

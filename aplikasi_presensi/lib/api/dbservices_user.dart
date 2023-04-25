@@ -13,6 +13,7 @@ class UserService {
     };
 
     String uri = "$apiRUTAN/pegawai.php?nik=$nik";
+    print(uri);
     final response = await http.get(Uri.parse(uri), headers: requestHeaders);
 
     if (response.statusCode == 200) {

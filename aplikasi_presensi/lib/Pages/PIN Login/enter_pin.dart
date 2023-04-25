@@ -148,6 +148,7 @@ class _EnterPinState extends State<EnterPin> {
                         });
                       },
                       onEditing: (value) {},
+                      digitsOnly: true,
                     ),
                   ),
                   Padding(
