@@ -8,6 +8,7 @@ import 'package:aplikasi_presensi/Pages/ambil_foto.dart';
 import 'package:aplikasi_presensi/Pages/scan_beacon.dart';
 import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
+import 'package:aplikasi_presensi/api/notification_api.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -211,6 +212,11 @@ class _HomePageState extends State<HomePage> {
         if (hasil == false) {
           getJamPulangKerja();
           updateJamKeluar();
+          NotificationWidget.showNotification(
+            title: "Presensi PT X",
+            body:
+                'Beacon tidak terdeteksi! Berhasil melakukan presensi keluar otomatis',
+          );
           setState(() {
             hasilScanAdaSama = false;
             isLoading = false;
