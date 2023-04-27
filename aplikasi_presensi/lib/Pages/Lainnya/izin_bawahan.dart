@@ -34,7 +34,7 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
   int julahMeninggalkanKantor = 0;
   int jumlahTidakAbsen = 0;
 
-  void getDaftarIzinBawahan() async {
+  void getDaftarIzinBawahan({DateTime? filter}) async {
     setState(() {
       isLoadingAll = true;
       isErrorAll = false;
@@ -42,10 +42,16 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
     try {
       daftarIzin =
           await db.getIzin(nikAtasan: globals.pegawai.read('nik').toString());
+      textTanggal = DateFormat('MMMM yyyy').format(filter!);
+      tahunFilter = DateFormat('yyyy').format(filter);
+      bulanFilter = DateFormat('MM').format(filter);
+      daftarIzin.retainWhere((element) => element.tanggalPengajuan
+          .toString()
+          .contains('$tahunFilter' + '-' + '$bulanFilter'));
+      getJumlah();
       setState(() {
         isLoadingAll = false;
       });
-      getJumlah();
     } catch (e) {
       setState(() {
         isLoadingAll = false;
@@ -85,7 +91,7 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
 
   @override
   void initState() {
-    getDaftarIzinBawahan();
+    getDaftarIzinBawahan(filter: DateTime.now());
     super.initState();
   }
 
@@ -106,10 +112,6 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          textTanggal = "";
-                          getDaftarIzinBawahan();
-                        });
                         DatePicker.showPicker(context,
                             pickerModel: CustomMonthPicker(
                               currentTime: DateTime.now(),
@@ -118,12 +120,9 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
                             ), onConfirm: (val) {
                           setState(() {
                             textTanggal = DateFormat('MMMM yyyy').format(val);
-                            tahunFilter = DateFormat('yyyy').format(val);
-                            bulanFilter = DateFormat('MM').format(val);
-                            daftarIzin.retainWhere((element) =>
-                                element.tanggalPengajuan.toString().contains(
-                                    '$tahunFilter' + '-' + '$bulanFilter'));
-                            getJumlah();
+                            // tahunFilter = DateFormat('yyyy').format(val);
+                            // bulanFilter = DateFormat('MM').format(val);
+                            getDaftarIzinBawahan(filter: val);
                           });
                         });
                       },
@@ -279,7 +278,7 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
             onPressed: () {
               setState(() {
                 daftarIzin.clear();
-                getDaftarIzinBawahan();
+                getDaftarIzinBawahan(filter: DateTime.now());
               });
             },
             child: Text("Tap to refresh"),

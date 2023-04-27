@@ -33,7 +33,6 @@ class _SuratTugasState extends State<SuratTugas> {
   bool isLoading = true;
   String tanggal_pengajuan = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-  List<String> listitem = ["item1", "item2", "item3", "item4", "item5"];
   void pindahKeMenuIzin() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
       return const ListIzin();
@@ -162,14 +161,27 @@ class _SuratTugasState extends State<SuratTugas> {
                   ),
                   Text('Tempat Tujuan'),
                   SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.all(4),
-                    // height: 50,
-                    decoration: BoxDecoration(
+                  TextField(
+                    controller: tfTempatTujuan,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height / 20,
+                          left: MediaQuery.of(context).size.width / 20),
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.grey)),
-                    child: dropdownListKantor(),
+                      ),
+                      hintText: 'Masukkan Tempat Tujuan Tugas',
+                      hintStyle: TextStyle(fontSize: 13),
+                    ),
                   ),
+                  // Container(
+                  //   padding: EdgeInsets.all(4),
+                  //   // height: 50,
+                  //   decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(15),
+                  //       border: Border.all(color: Colors.grey)),
+                  //   child: dropdownListKantor(),
+                  // ),
                   SizedBox(
                     height: 20,
                   ),
@@ -204,6 +216,9 @@ class _SuratTugasState extends State<SuratTugas> {
                               borderRadius: BorderRadius.circular(15)),
                           color: HexColor("#13542D"),
                           onPressed: () {
+                            print(tfTanggalIzin.text);
+                            print(tfTempatTujuan.text);
+                            print(tfUraianTugas.text);
                             if (tfTanggalIzin.text.toString() != "" &&
                                 tfTempatTujuan.text.toString() != "" &&
                                 tfUraianTugas.text.toString() != "") {

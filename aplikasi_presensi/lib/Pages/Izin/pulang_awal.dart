@@ -279,8 +279,7 @@ class _PulangLebihAwalState extends State<PulangLebihAwal> {
                                   borderRadius: BorderRadius.circular(15)),
                               color: HexColor('#13542D'),
                               onPressed: () {
-                                if (tfAlasanLainnyaIzin.text.toString() != "" &&
-                                    tfTanggalIzin.text.toString() != "" &&
+                                if (tfTanggalIzin.text.toString() != "" &&
                                     tfJamIzin.text.toString() != "" &&
                                     alasan != "") {
                                   submitForm();

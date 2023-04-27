@@ -27,31 +27,17 @@ class _PageKehadiranState extends State<PageKehadiran> {
   String tahunFilter = "";
   String bulanFilter = "";
 
-  void getDataPresensi() async {
+  void getDataPresensi({DateTime? filter}) async {
     try {
       kehadiran = await db.getDataPresensi(
         nik: globals.pegawai.read('nik').toString(),
       );
-      // print(kehadiran[0].tanggal);
-      setState(() {
-        isLoadingAll = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoadingAll = false;
-        isErrorAll = true;
-      });
-      globals.showAlertError(context: context, message: e.toString());
-    }
-  }
-
-  void getDataPresensiFilter() async {
-    try {
-      kehadiran = await db.getDataPresensi(
-        nik: globals.pegawai.read('nik').toString(),
-        tahun: tahunFilter,
-        bulan: bulanFilter,
-      );
+      textTanggal = DateFormat('MMMM yyyy').format(filter!);
+      tahunFilter = DateFormat('yyyy').format(filter);
+      bulanFilter = DateFormat('MM').format(filter);
+      kehadiran.retainWhere((element) => element.tanggal
+          .toString()
+          .contains('$tahunFilter' + '-' + '$bulanFilter'));
       setState(() {
         isLoadingAll = false;
       });
@@ -66,7 +52,7 @@ class _PageKehadiranState extends State<PageKehadiran> {
 
   @override
   void initState() {
-    getDataPresensi();
+    getDataPresensi(filter: DateTime.now());
     super.initState();
   }
 
@@ -89,10 +75,7 @@ class _PageKehadiranState extends State<PageKehadiran> {
                     InkWell(
                       autofocus: true,
                       onTap: () {
-                        setState(() {
-                          textTanggal = "";
-                          getDataPresensi();
-                        });
+                        getDataPresensi(filter: DateTime.now());
                       },
                       child: Icon(Icons.refresh),
                     ),
@@ -114,11 +97,7 @@ class _PageKehadiranState extends State<PageKehadiran> {
                             ), onConfirm: (val) {
                           setState(() {
                             textTanggal = DateFormat('MMMM yyyy').format(val);
-                            tahunFilter = DateFormat('yyyy').format(val);
-                            bulanFilter = DateFormat('MM').format(val);
-                            kehadiran.retainWhere((element) => element.tanggal
-                                .contains(
-                                    '$tahunFilter' + '-' + '$bulanFilter'));
+                            getDataPresensi(filter: val);
                           });
                         });
                       },
@@ -128,7 +107,7 @@ class _PageKehadiranState extends State<PageKehadiran> {
                 ),
               ),
               SizedBox(
-                height: 15,
+                height: 5,
               ),
               Text(
                 textTanggal,
@@ -138,7 +117,7 @@ class _PageKehadiranState extends State<PageKehadiran> {
                 ),
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               tablePresensi()
             ],
@@ -156,18 +135,14 @@ class _PageKehadiranState extends State<PageKehadiran> {
             columnSpacing: 30,
             columns: [
               DataColumn(
-                  label: Container(
-                width: 90,
-                child: Text(
-                  'Tanggal',
-                  textAlign: TextAlign.center,
+                label: Container(
+                  width: 90,
+                  child: Text(
+                    'Tanggal',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              )),
-              // DataColumn(
-              //     label: Text(
-              //   'Status',
-              //   textAlign: TextAlign.center,
-              // )),
+              ),
               DataColumn(
                   label: Text(
                 'Jam Masuk',
@@ -181,20 +156,15 @@ class _PageKehadiranState extends State<PageKehadiran> {
             ],
             rows: kehadiran.map((e) {
               return DataRow(cells: [
-                DataCell(Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    e.tanggal,
-                    textAlign: TextAlign.center,
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      e.tanggal,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                )),
-                // DataCell(Container(
-                //   alignment: Alignment.center,
-                //   child: Text(
-                //     e.status.toString(),
-                //     textAlign: TextAlign.center,
-                //   ),
-                // )),
+                ),
                 DataCell(Container(
                   alignment: Alignment.center,
                   child: Text(

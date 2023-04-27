@@ -59,7 +59,7 @@ class _ListIzinState extends State<ListIzin> {
     }
   }
 
-  void getDaftarIzin() async {
+  void getDaftarIzin({DateTime? filter}) async {
     setState(() {
       isLoadingAll = true;
       isErrorAll = false;
@@ -67,6 +67,12 @@ class _ListIzinState extends State<ListIzin> {
     try {
       daftarIzin =
           await db.getIzin(nikUser: globals.pegawai.read('nik').toString());
+      textTanggal = DateFormat('MMMM yyyy').format(filter!);
+      tahunFilter = DateFormat('yyyy').format(filter);
+      bulanFilter = DateFormat('MM').format(filter);
+      daftarIzin.retainWhere((element) => element.tanggalPengajuan
+          .toString()
+          .contains('$tahunFilter' + '-' + '$bulanFilter'));
       getJumlah();
       setState(() {
         isLoadingAll = false;
@@ -84,7 +90,7 @@ class _ListIzinState extends State<ListIzin> {
       await db.deleteRequestMateri(id.toString());
       globals.showAlertBerhasil(context: context, message: "Izin dihapus");
       setState(() {
-        getDaftarIzin();
+        getDaftarIzin(filter: DateTime.now());
       });
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
@@ -93,12 +99,7 @@ class _ListIzinState extends State<ListIzin> {
 
   @override
   void initState() {
-    getDaftarIzin();
-    // tahunFilter = DateFormat('yyyy').format(DateTime.now());
-    // bulanFilter = DateFormat('MM').format(DateTime.now());
-    // daftarIzin.retainWhere((element) => element.tanggalPengajuan
-    //     .toString()
-    //     .contains('$tahunFilter' + '-' + '$bulanFilter'));
+    getDaftarIzin(filter: DateTime.now());
     super.initState();
   }
 
@@ -120,14 +121,7 @@ class _ListIzinState extends State<ListIzin> {
                   children: [
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          textTanggal = "";
-                          jumlahPulangLebihAwal = 0;
-                          jumlahSuratTugas = 0;
-                          jumlahTidakAbsen = 0;
-                          julahMeninggalkanKantor = 0;
-                          getDaftarIzin();
-                        });
+                        getDaftarIzin(filter: DateTime.now());
                         DatePicker.showPicker(context,
                             pickerModel: CustomMonthPicker(
                               currentTime: DateTime.now(),
@@ -136,12 +130,7 @@ class _ListIzinState extends State<ListIzin> {
                             ), onConfirm: (val) {
                           setState(() {
                             textTanggal = DateFormat('MMMM yyyy').format(val);
-                            tahunFilter = DateFormat('yyyy').format(val);
-                            bulanFilter = DateFormat('MM').format(val);
-                            daftarIzin.retainWhere((element) =>
-                                element.tanggalPengajuan.toString().contains(
-                                    '$tahunFilter' + '-' + '$bulanFilter'));
-                            getJumlah();
+                            getDaftarIzin(filter: val);
                           });
                         });
                       },
@@ -310,7 +299,7 @@ class _ListIzinState extends State<ListIzin> {
         itemBuilder: (context, index) {
           return Container(
             margin: EdgeInsets.only(bottom: 5),
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.only(left: 8, right: 15, top: 5, bottom: 5),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               border: Border.all(),
@@ -330,17 +319,18 @@ class _ListIzinState extends State<ListIzin> {
                 ),
                 Text(
                   daftarIzin[index].jenis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Text(
-                  DateFormat('dd MMMM yyyy').format(
-                    DateTime.parse(
-                      daftarIzin[index].tanggalPengajuan.toString(),
-                    ),
-                  ),
+                  'Tanggal Pengajuan : ' +
+                      DateFormat('dd MMMM yyyy').format(
+                        DateTime.parse(
+                          daftarIzin[index].tanggalPengajuan.toString(),
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -390,15 +380,17 @@ class _ListIzinState extends State<ListIzin> {
             ),
           ),
         ),
-        IconButton(
-          onPressed: () {
+        InkWell(
+          onTap: () {
             deleteIzin(id);
           },
-          icon: Icon(
-            FontAwesomeIcons.trash,
-            size: 17,
+          child: Container(
+            child: Icon(
+              FontAwesomeIcons.trash,
+              size: 17,
+              color: Colors.red,
+            ),
           ),
-          color: Colors.red,
         )
       ],
     );
