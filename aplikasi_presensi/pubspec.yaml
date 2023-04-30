@@ -34,7 +34,6 @@ dependencies:
   flutter_blue_plus: ^1.4.0
   flutter_datetime_picker: ^1.5.1
   flutter_local_notifications: ^13.0.0
-  flutter_verification_code: ^1.1.6
   font_awesome_flutter: ^10.4.0
   get_storage: ^2.1.1
   hexcolor: ^3.0.1
@@ -42,6 +41,7 @@ dependencies:
   image_picker: ^0.8.7
   intl: ^0.18.0
   loading_animation_widget: ^1.2.0+4
+  pinput: ^2.2.31
   quickalert: ^1.0.1
   timezone: ^0.9.1
 

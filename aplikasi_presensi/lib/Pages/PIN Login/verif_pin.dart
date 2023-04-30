@@ -10,7 +10,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_verification_code/flutter_verification_code.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:pinput/pinput.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
@@ -149,45 +150,46 @@ class _VerifPinState extends State<VerifPin> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 15),
-                    child: VerificationCode(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    child: Pinput(
                       length: 4,
-                      textStyle: TextStyle(fontSize: 20, color: Colors.black),
-                      underlineColor: Colors.black,
-                      keyboardType: TextInputType.number,
-                      underlineUnfocusedColor: Colors.black,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       onCompleted: (value) {
                         setState(() {
                           VerifikasiPin = value;
                         });
                       },
-                      onEditing: (value) {},
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 15),
-                    child: SizedBox(
+                  SizedBox(
+                    height: 50,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (widget.mode == 'pertama_login') {
+                        tambahkanUser();
+                      } else if (widget.mode == 'ganti_pin2') {
+                        successGantiPin();
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50,
                       width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.height / 15,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        color: Colors.cyan,
-                        onPressed: () {
-                          if (widget.mode == 'pertama_login') {
-                            tambahkanUser();
-                          } else if (widget.mode == 'ganti_pin2') {
-                            successGantiPin();
-                          }
-                        },
-                        child: Text(
-                          'ATUR PIN',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
+                      decoration: BoxDecoration(
+                        color: HexColor('#13542D'),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'ATUR PIN',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17),
                       ),
                     ),
                   ),

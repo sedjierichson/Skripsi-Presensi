@@ -140,8 +140,7 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
                         showCupertinoModalPopup(
                           context: context,
                           builder: (context) => CupertinoAlertDialog(
-                            title:
-                                Text('Jumlah Izin Team Saya Berdasarkan Jenis'),
+                            title: Text('Rekap Izin Team Saya $textTanggal'),
                             actions: [
                               CupertinoDialogAction(
                                   isDefaultAction: true,
