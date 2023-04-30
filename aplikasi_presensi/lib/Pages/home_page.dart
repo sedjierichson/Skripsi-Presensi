@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   void getJamMasukKerja() async {
     String hari = DateFormat('EEEE').format(DateTime.now());
+    // print(hari);
     try {
       var jam = "09:00:00";
       var res = await dbPresensi.getJamKerja(hari: hari);
@@ -146,18 +147,19 @@ class _HomePageState extends State<HomePage> {
   void presensiKeluarOtomatis() {
     if (sudahAbsenMasuk == true) {
       //Scanning bluetooth
-      toggleState();
-      Future.delayed(const Duration(seconds: 5), () {
-        // Membandingkan Beacon
-        getBeacon();
+      Timer.periodic(Duration(seconds: 6), (timer) {
+        print('scanning bluetooth lagi');
+        setState(() {
+          hasilbeacon = [];
+          scanResultList = [];
+          beacon = [];
+        });
+        toggleState();
+
+        Future.delayed(const Duration(seconds: 5), () {
+          getBeacon();
+        });
       });
-      // print('canceled');
-      // timer?.cancel();
-      // timer = null;
-    } else {
-      // Timer.periodic(Duration(seconds: 3), (timer) {
-      //   print('keluar');
-      // });
     }
   }
 
@@ -203,7 +205,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getBeacon() async {
-    print(hasilbeacon[0]);
+    // print(hasilbeacon[0]);
     try {
       beacon = await dbPresensi.getBeaconPresensi();
       for (int i = 0; i < beacon.length; i++) {
@@ -291,7 +293,7 @@ class _HomePageState extends State<HomePage> {
           // updateKategori('A');
         } else if (tempKategori == "B") {
           //Kategori B
-          updateKategori('B');
+          // updateKategori('B');
         }
         // insertAbsenMasuk(kategori: "B");
       } else {
@@ -328,12 +330,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     cekSudahAbsen();
     Future.delayed(const Duration(seconds: 5), () {
-      print('menjalankan keluar otomatis');
       presensiKeluarOtomatis();
     });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -484,8 +491,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        // getJamMasukKerja();
-        pindahScanBeacon();
+        getJamMasukKerja();
+        // pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
