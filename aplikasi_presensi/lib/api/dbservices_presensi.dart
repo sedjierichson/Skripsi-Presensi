@@ -33,6 +33,50 @@ class PresensiService {
     }
   }
 
+  Future<Map<String, dynamic>> getKantorBeacon({required String uuid}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+
+    String uri = "$apiUrl/beacon.php?uuid=$uuid";
+    final response = await http.get(Uri.parse(uri), headers: requestHeaders);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      return {
+        'lokasi': jsonResponse['data']['id_kantor'],
+      };
+    } else {
+      throw ("Gagal melakukan cek data api user");
+    }
+  }
+
+  // Future<Map<String, dynamic>> getKantorBeacon({required String uuid}) async {
+  //   Map<String, String> requestHeaders = {
+  //     "Accept": "application/json",
+  //     "Access-Control_Allow_Origin": "*"
+  //   };
+  //   final response = await http.get(
+  //     Uri.parse('$apiUrl/beacon.php?uuid=$uuid'),
+  //     headers: requestHeaders,
+  //   );
+
+  //   if (response.statusCode == 200 || response.statusCode == 201) {
+  //     var jsonResponse = json.decode(response.body);
+  //     if (jsonResponse['status'] == 1) {
+  //       return {
+  //         'status': jsonResponse['status'],
+  //         'lokasi': jsonResponse['data']['id_kantor']
+  //       };
+  //     } else {
+  //       throw jsonResponse['message'];
+  //     }
+  //   } else {
+  //     throw ("Gagal mengambil detail beacon");
+  //   }
+  // }
+
   Future<List<Presensi>> getDataPresensi(
       {String nik = "", String bulan = "", String tahun = ""}) async {
     Map<String, String> requestHeaders = {

@@ -64,6 +64,7 @@ flutter:
     - assets/images/time_out.png
     - assets/images/working_time.png
     - assets/images/attendance.png
+    - assets/images/cross.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

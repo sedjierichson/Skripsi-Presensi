@@ -1,4 +1,7 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'package:aplikasi_presensi/Pages/ambil_foto.dart';
+import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -30,17 +33,17 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
   bool isScanning = false;
   List<String> hasilbeacon = [];
 
-  List<String> uuidScanAdaSama = [
-    '32a6d2-4693-8a-4ffaf50af319',
-    '32a66425-26d2-4693-859a-4ffaf50af319',
-    'aaaa',
-    'bbbbbb'
-  ];
-  List<String> uuidScanTidakAdaSama = [
-    '32a65-26d2-4-859a-4ffaf50af319',
-    '32a65-26d2-4693-8afa0af319',
-    '02129fd8-e302-479c-8450d509'
-  ];
+  // List<String> uuidScanAdaSama = [
+  //   '32a6d2-4693-8a-4ffaf50af319',
+  //   '32a66425-26d2-4693-859a-4ffaf50af319',
+  //   'aaaa',
+  //   'bbbbbb'
+  // ];
+  // List<String> uuidScanTidakAdaSama = [
+  //   '32a65-26d2-4-859a-4ffaf50af319',
+  //   '32a65-26d2-4693-8afa0af319',
+  //   '02129fd8-e302-479c-8450d509'
+  // ];
 
   void toggleState() async {
     try {
@@ -83,10 +86,12 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     });
   }
 
-  void pindahAmbilFoto() {
+  void pindahAmbilFoto(String uuid) {
     Navigator.of(context, rootNavigator: true)
         .pushReplacement(MaterialPageRoute(builder: (context) {
-      return AmbilFoto();
+      return AmbilFoto(
+        uuid: uuid,
+      );
     }));
   }
 
@@ -96,24 +101,35 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
       beacon = await dbPresensi.getBeaconPresensi();
       for (int i = 0; i < beacon.length; i++) {
         var hasil = hasilbeacon.contains(beacon[i].toString());
-        print(hasil);
+        print("Beacon yang sama adalah : " + beacon[i]);
         if (hasil == true) {
-          pindahAmbilFoto();
+          pindahAmbilFoto(beacon[i]);
           setState(() {
             hasilScanAdaSama = true;
             isLoading = false;
           });
           break;
         } else {
-          globals.showAlertError(context: context, message: 'Tidak ada Beacon');
           setState(() {
             hasilScanAdaSama = false;
             isLoading = false;
           });
-
-          Future.delayed(const Duration(seconds: 5), () {
-            Navigator.pop(context);
-          });
+          globals.showAlertError(
+              context: context,
+              message:
+                  'Beacon tidak terdeteksi. Kembali ke halaman beranda...');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return BottomNavBar();
+              },
+            ),
+            (route) => false,
+          );
+          // Future.delayed(const Duration(seconds: 3), () {
+          //   Navigator.pop(context);
+          // });
 
           break;
         }
@@ -140,7 +156,14 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: isLoading == true ? loadingAnimation() : SizedBox(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              isLoading == true ? loadingAnimation() : SizedBox(),
+              // hasilScanAdaSama == true ? SizedBox() : errorTidakAdaBeacon()
+            ],
+          ),
         ),
       ),
     );
@@ -163,6 +186,70 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
         Text(
           'Mendeteksi beacon presensi...',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Text(
+          'Pastikan anda berada didalam area kantor',
+          style: TextStyle(
+            fontSize: 15,
+          ),
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
+  }
+
+  Widget errorTidakAdaBeacon() {
+    return Column(
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 4,
+          child: Image.asset(
+            "assets/images/cross.png",
+            fit: BoxFit.contain,
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Text(
+          'BEACON TIDAK TERDETEKSI',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return BottomNavBar();
+                },
+              ),
+              (route) => false,
+            );
+          },
+          child: Container(
+            alignment: Alignment.center,
+            height: 40,
+            width: MediaQuery.of(context).size.width / 2,
+            decoration: BoxDecoration(
+              color: HexColor('#13542D'),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              'Kembali ke Beranda',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
         )
       ],
     );

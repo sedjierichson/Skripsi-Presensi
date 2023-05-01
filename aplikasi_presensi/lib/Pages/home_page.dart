@@ -48,13 +48,6 @@ class _HomePageState extends State<HomePage> {
   List<String> beacon = [];
   bool hasilScanAdaSama = false;
 
-  void pindahAmbilFoto() {
-    Navigator.of(context, rootNavigator: true)
-        .push(MaterialPageRoute(builder: (context) {
-      return AmbilFoto();
-    }));
-  }
-
   void pindahScanBeacon() {
     Navigator.of(context, rootNavigator: true)
         .push(MaterialPageRoute(builder: (context) {
@@ -491,8 +484,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        getJamMasukKerja();
-        // pindahScanBeacon();
+        // getJamMasukKerja();
+        pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

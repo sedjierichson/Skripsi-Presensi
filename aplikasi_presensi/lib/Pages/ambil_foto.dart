@@ -17,7 +17,8 @@ import 'package:aplikasi_presensi/globals.dart' as globals;
 import 'package:intl/intl.dart';
 
 class AmbilFoto extends StatefulWidget {
-  const AmbilFoto({super.key});
+  final String uuid;
+  const AmbilFoto({super.key, required this.uuid});
 
   @override
   State<AmbilFoto> createState() => _AmbilFotoState();
@@ -30,6 +31,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
   PresensiService dbPresensi = PresensiService();
   String tanggalAbsen = DateFormat('yyyy-MM-dd').format(DateTime.now());
   String jamSekarang = '';
+  String idKantor = '';
 
   Future getImage() async {
     final imageTmp = await ImagePicker().pickImage(source: ImageSource.camera);
@@ -49,7 +51,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
       try {
         var res = await dbPresensi.insertAbsenMasuk(
             globals.pegawai.read('nik').toString(),
-            1,
+            int.parse(idKantor),
             tanggalAbsen.toString(),
             jamSekarang,
             base64Image!,
@@ -98,6 +100,17 @@ class _AmbilFotoState extends State<AmbilFoto> {
     }
   }
 
+  void getLokasiPresensi() async {
+    try {
+      var res = await dbPresensi.getKantorBeacon(uuid: widget.uuid.toString());
+      setState(() {
+        idKantor = res['lokasi'].toString();
+      });
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
   void getTime() {
     final DateTime now = DateTime.now();
     final String formatted = _format(now);
@@ -130,6 +143,7 @@ class _AmbilFotoState extends State<AmbilFoto> {
   @override
   void initState() {
     jamSekarang = _format(DateTime.now());
+    getLokasiPresensi();
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();
   }
