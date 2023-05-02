@@ -34,7 +34,8 @@ class _AmbilFotoState extends State<AmbilFoto> {
   String idKantor = '';
 
   Future getImage() async {
-    final imageTmp = await ImagePicker().pickImage(source: ImageSource.camera);
+    final imageTmp = await ImagePicker().pickImage(
+        source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
     if (imageTmp == null) return;
     setState(() {
       image = File(imageTmp.path);

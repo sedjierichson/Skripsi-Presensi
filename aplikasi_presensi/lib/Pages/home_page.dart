@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
   void presensiKeluarOtomatis() {
     if (sudahAbsenMasuk == true) {
       //Scanning bluetooth
-      Timer.periodic(Duration(seconds: 6), (timer) {
+      timer = Timer.periodic(Duration(seconds: 6), (timer) {
         print('scanning bluetooth lagi');
         setState(() {
           hasilbeacon = [];
@@ -205,13 +205,18 @@ class _HomePageState extends State<HomePage> {
         var hasil = hasilbeacon.contains(beacon[i].toString());
         print(hasil);
         if (hasil == false) {
-          getJamPulangKerja();
-          updateJamKeluar();
           NotificationWidget.showNotification(
             title: "Presensi PT X",
             body:
-                'Beacon tidak terdeteksi! Berhasil melakukan presensi keluar otomatis',
+                'Beacon tidak terdeteksi! Berhasil melakukan presensi keluar otomatis $i',
           );
+          // NotificationWidget.showNotification(
+          //   title: "Presensi PT X",
+          //   body: i,
+          // );
+          getJamPulangKerja();
+          updateJamKeluar();
+          timer?.cancel();
           setState(() {
             hasilScanAdaSama = false;
             isLoading = false;
@@ -321,6 +326,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    NotificationWidget.init();
     cekSudahAbsen();
     Future.delayed(const Duration(seconds: 5), () {
       presensiKeluarOtomatis();

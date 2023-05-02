@@ -96,7 +96,7 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
   }
 
   void getBeacon() async {
-    print(hasilbeacon[0]);
+    // print(hasilbeacon[0]);
     try {
       beacon = await dbPresensi.getBeaconPresensi();
       for (int i = 0; i < beacon.length; i++) {
@@ -118,18 +118,18 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
               context: context,
               message:
                   'Beacon tidak terdeteksi. Kembali ke halaman beranda...');
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return BottomNavBar();
-              },
-            ),
-            (route) => false,
-          );
-          // Future.delayed(const Duration(seconds: 3), () {
-          //   Navigator.pop(context);
-          // });
+
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return BottomNavBar();
+                },
+              ),
+              (route) => false,
+            );
+          });
 
           break;
         }
@@ -201,57 +201,57 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     );
   }
 
-  Widget errorTidakAdaBeacon() {
-    return Column(
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 4,
-          child: Image.asset(
-            "assets/images/cross.png",
-            fit: BoxFit.contain,
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          'BEACON TIDAK TERDETEKSI',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        InkWell(
-          onTap: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return BottomNavBar();
-                },
-              ),
-              (route) => false,
-            );
-          },
-          child: Container(
-            alignment: Alignment.center,
-            height: 40,
-            width: MediaQuery.of(context).size.width / 2,
-            decoration: BoxDecoration(
-              color: HexColor('#13542D'),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              'Kembali ke Beranda',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ),
-        )
-      ],
-    );
-  }
+  // Widget errorTidakAdaBeacon() {
+  //   return Column(
+  //     children: [
+  //       SizedBox(
+  //         width: MediaQuery.of(context).size.width / 4,
+  //         child: Image.asset(
+  //           "assets/images/cross.png",
+  //           fit: BoxFit.contain,
+  //         ),
+  //       ),
+  //       SizedBox(
+  //         height: 20,
+  //       ),
+  //       Text(
+  //         'BEACON TIDAK TERDETEKSI',
+  //         style: TextStyle(
+  //           fontSize: 20,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       SizedBox(
+  //         height: 20,
+  //       ),
+  //       InkWell(
+  //         onTap: () {
+  //           Navigator.pushAndRemoveUntil(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (BuildContext context) {
+  //                 return BottomNavBar();
+  //               },
+  //             ),
+  //             (route) => false,
+  //           );
+  //         },
+  //         child: Container(
+  //           alignment: Alignment.center,
+  //           height: 40,
+  //           width: MediaQuery.of(context).size.width / 2,
+  //           decoration: BoxDecoration(
+  //             color: HexColor('#13542D'),
+  //             borderRadius: BorderRadius.circular(10),
+  //           ),
+  //           child: Text(
+  //             'Kembali ke Beranda',
+  //             style:
+  //                 TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+  //           ),
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 }
