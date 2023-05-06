@@ -35,10 +35,12 @@ class _HomePageState extends State<HomePage> {
   PresensiService dbPresensi = PresensiService();
   String tanggalAbsen = DateFormat('yyyy-MM-dd').format(DateTime.now());
   bool sudahAbsenMasuk = false;
+  bool absenHistory = false;
   String? idPresensi;
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
   String tempKategori = "";
+  String jamBeaconTidakTerdeteksi = '';
   // late final BluetoothDevice device;
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   Timer? timer;
@@ -55,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
-  void getJamMasukKerja() async {
+  void getJamMasukKerja({required int isHistory}) async {
     String hari = DateFormat('EEEE').format(DateTime.now());
     // print(hari);
     try {
@@ -63,18 +65,23 @@ class _HomePageState extends State<HomePage> {
       var res = await dbPresensi.getJamKerja(hari: hari);
       var temp = jamSekarang.compareTo(res['jam_masuk'].toString());
       if (temp < 0) {
-        insertAbsenMasuk(kategori: "A");
+        insertAbsenMasukKlikTombol(kategori: "A", isHistory: isHistory);
       } else if (temp > 0) {
-        insertAbsenMasuk(kategori: "B");
+        insertAbsenMasukKlikTombol(kategori: "B", isHistory: isHistory);
       } else {
-        insertAbsenMasuk(kategori: "A");
+        insertAbsenMasukKlikTombol(kategori: "A", isHistory: isHistory);
       }
     } catch (e) {
       print(e.toString());
     }
   }
 
-  void insertAbsenMasuk({required String kategori}) async {
+  void insertAbsenMasukKlikTombol(
+      {required String kategori, required int isHistory}) async {
+    //klik tombol untuk harian (not history keluar masuk)
+    setState(() {
+      absenHistory = true;
+    });
     try {
       var res = await dbPresensi.insertAbsenMasuk(
           globals.pegawai.read('nik'),
@@ -83,10 +90,11 @@ class _HomePageState extends State<HomePage> {
           jamSekarang,
           "tempImage",
           "tempImage",
-          kategori);
+          kategori,
+          isHistory);
       if (res['status'] == 1) {
-        globals.showAlertBerhasil(
-            context: context, message: 'Berhasil absen masuk');
+        // globals.showAlertBerhasil(
+        //     context: context, message: 'Berhasil absen masuk');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => super.widget));
       }
@@ -131,29 +139,27 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       print(e.toString());
-      // globals.showAlertError(context: context, message: e.toString());
     }
     print(sudahAbsenMasuk);
-    // presensiKeluarOtomatis();
   }
 
   void presensiKeluarOtomatis() {
-    if (sudahAbsenMasuk == true) {
-      //Scanning bluetooth
-      timer = Timer.periodic(Duration(seconds: 6), (timer) {
-        print('scanning bluetooth lagi');
-        setState(() {
-          hasilbeacon = [];
-          scanResultList = [];
-          beacon = [];
-        });
-        toggleState();
-
-        Future.delayed(const Duration(seconds: 5), () {
-          getBeacon();
-        });
+    // if (sudahAbsenMasuk == true) {
+    //Scanning bluetooth
+    timer = Timer.periodic(Duration(seconds: 6), (timer) {
+      print('scanning bluetooth lagi');
+      setState(() {
+        hasilbeacon = [];
+        scanResultList = [];
+        beacon = [];
       });
-    }
+      toggleState();
+
+      Future.delayed(const Duration(seconds: 5), () {
+        getBeacon();
+      });
+    });
+    // }
   }
 
   void toggleState() async {
@@ -198,38 +204,60 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getBeacon() async {
-    // print(hasilbeacon[0]);
     try {
       beacon = await dbPresensi.getBeaconPresensi();
       for (int i = 0; i < beacon.length; i++) {
         var hasil = hasilbeacon.contains(beacon[i].toString());
-        print(hasil);
         if (hasil == false) {
-          NotificationWidget.showNotification(
-            title: "Presensi PT X",
-            body:
-                'Beacon tidak terdeteksi! Berhasil melakukan presensi keluar otomatis $i',
-          );
-          // NotificationWidget.showNotification(
-          //   title: "Presensi PT X",
-          //   body: i,
-          // );
-          getJamPulangKerja();
-          updateJamKeluar();
-          timer?.cancel();
+          //beacon tidak ada
+          if (sudahAbsenMasuk = true) {
+            NotificationWidget.showNotification(
+              title: "Presensi PT X",
+              body: 'Beacon tidak terdeteksi!',
+            );
+          }
+          if (absenHistory == false && sudahAbsenMasuk == true) {
+            //kalau sudah absen masuk harian & tidak ada beacon
+            print('absen keluar is history');
+            //catat jam keluar
+            getJamMasukKerja(isHistory: 1);
+            setState(() {
+              // absenHistory = true;
+              jamBeaconTidakTerdeteksi = jamSekarang;
+            });
+          } else {
+            setState(() {
+              jamBeaconTidakTerdeteksi = jamSekarang;
+            });
+          }
+          // getJamPulangKerja();
+          // timer?.cancel();
           setState(() {
             hasilScanAdaSama = false;
             isLoading = false;
           });
           break;
         } else {
+          if (absenHistory == true && sudahAbsenMasuk == true) {
+            //Update jam kembali setelah meninggalkan kantor
+            print('update history kembali is history');
+            updateHistoryJamKembali();
+            setState(() {
+              absenHistory = false;
+            });
+          } else if (sudahAbsenMasuk == false) {
+            // Berada di kantor tapi belum absen masuk harian
+            print('baru datang kantor, belum absen');
+            NotificationWidget.showNotification(
+              title: "Presensi PT X",
+              body:
+                  'Beacon presensi terdeteksi ! Silahkan lakukan presensi masuk !',
+            );
+          }
           setState(() {
             hasilScanAdaSama = true;
             isLoading = false;
           });
-          // Navigator.pop(context);
-          // globals.showAlertError(context: context, message: 'Tidak ada Beacon');
-
           break;
         }
       }
@@ -242,10 +270,6 @@ class _HomePageState extends State<HomePage> {
     // cekSudahAbsen();
     try {
       await dbPresensi.updateKategori(idPresensi.toString(), kategori);
-      // globals.showAlertBerhasil(
-      //     context: context, message: 'Absen keluar berhasil');
-      // Navigator.pushReplacement(context,
-      //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
     } catch (e) {
       print(e.toString());
     }
@@ -261,6 +285,20 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
     }
+    timer?.cancel();
+  }
+
+  void updateHistoryJamKembali() async {
+    try {
+      await dbPresensi.updateHistoryJamKembali(
+          nik: globals.pegawai.read('nik'),
+          jam: jamSekarang,
+          tanggal: tanggalAbsen.toString());
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
   }
 
   void getJamPulangKerja() async {
@@ -270,7 +308,8 @@ class _HomePageState extends State<HomePage> {
       var res = await dbPresensi.getJamKerja(hari: hari);
       // print(res['jam_pulang']);
       // print(jamSekarang)
-      var temp = jamSekarang.compareTo(res['jam_pulang'].toString());
+      var temp =
+          jamBeaconTidakTerdeteksi.compareTo(res['jam_pulang'].toString());
       //Masuk (A atau C) Pulang ok
       //Masuk (B dan D) & pulang ok
       //Masuk (A atau C) pulang not ok
@@ -307,6 +346,7 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print(e.toString());
     }
+    updateJamKeluar();
   }
 
   //Fungsi Untuk Get Jam secara Live
@@ -327,7 +367,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     NotificationWidget.init();
-    cekSudahAbsen();
+    // cekSudahAbsen();
     Future.delayed(const Duration(seconds: 5), () {
       presensiKeluarOtomatis();
     });
@@ -408,73 +448,87 @@ class _HomePageState extends State<HomePage> {
                       ? buttonCardAbsenMasuk()
                       : buttonCardAbsenKeluar(),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 8,
+                    height: 10,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    child: Row(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 10,
-                              child: Image.asset(
-                                "assets/images/time_in.png",
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              jamMasuk,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            Text('Jam Masuk'),
-                          ],
+                        //Kembali dari pergi
+                        ElevatedButton(
+                          onPressed: () {
+                            updateHistoryJamKembali();
+                          },
+                          child: Text('Presensi Kembali otomatis'),
                         ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 10,
-                              child: Image.asset(
-                                "assets/images/time_out.png",
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              jamKeluar,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            Text('Jam Keluar'),
-                          ],
+
+                        ElevatedButton(
+                          onPressed: () {
+                            getJamMasukKerja(isHistory: 1);
+                          },
+                          child: Text('Presensi Keluar otomatis'),
                         ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 10,
-                              child: Image.asset(
-                                "assets/images/working_time.png",
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              '09:00',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            Text('Jam Kerja'),
-                          ],
-                        ),
+                        // Column(
+                        //   children: [
+                        //     SizedBox(
+                        //       width: MediaQuery.of(context).size.width / 10,
+                        //       child: Image.asset(
+                        //         "assets/images/time_in.png",
+                        //         fit: BoxFit.fitWidth,
+                        //       ),
+                        //     ),
+                        //     SizedBox(
+                        //       height: 10,
+                        //     ),
+                        //     Text(
+                        //       jamMasuk,
+                        //       style: TextStyle(
+                        //           fontWeight: FontWeight.bold, fontSize: 16),
+                        //     ),
+                        //     Text('Jam Masuk'),
+                        //   ],
+                        // ),
+                        // Column(
+                        //   children: [
+                        //     SizedBox(
+                        //       width: MediaQuery.of(context).size.width / 10,
+                        //       child: Image.asset(
+                        //         "assets/images/time_out.png",
+                        //         fit: BoxFit.fitWidth,
+                        //       ),
+                        //     ),
+                        //     SizedBox(
+                        //       height: 10,
+                        //     ),
+                        //     Text(
+                        //       jamKeluar,
+                        //       style: TextStyle(
+                        //           fontWeight: FontWeight.bold, fontSize: 16),
+                        //     ),
+                        //     Text('Jam Keluar'),
+                        //   ],
+                        // ),
+                        // Column(
+                        //   children: [
+                        //     SizedBox(
+                        //       width: MediaQuery.of(context).size.width / 10,
+                        //       child: Image.asset(
+                        //         "assets/images/working_time.png",
+                        //         fit: BoxFit.fitWidth,
+                        //       ),
+                        //     ),
+                        //     SizedBox(
+                        //       height: 10,
+                        //     ),
+                        //     Text(
+                        //       '09:00',
+                        //       style: TextStyle(
+                        //           fontWeight: FontWeight.bold, fontSize: 16),
+                        //     ),
+                        //     Text('Jam Kerja'),
+                        //   ],
+                        // ),
                       ],
                     ),
                   )
@@ -490,7 +544,7 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        // getJamMasukKerja();
+        // getJamMasukKerja(isHistory: 0);
         pindahScanBeacon();
       },
       child: Container(
@@ -501,8 +555,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         alignment: Alignment.center,
-        width: MediaQuery.of(context).size.height / 3.5,
-        height: MediaQuery.of(context).size.height / 3.5,
+        width: MediaQuery.of(context).size.height / 3,
+        height: MediaQuery.of(context).size.height / 3,
         child: Text(
           'Absen Masuk',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -515,7 +569,7 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () {
         getJamPulangKerja();
-        updateJamKeluar();
+        // updateJamKeluar();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -525,8 +579,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         alignment: Alignment.center,
-        width: MediaQuery.of(context).size.height / 3.5,
-        height: MediaQuery.of(context).size.height / 3.5,
+        width: MediaQuery.of(context).size.height / 3,
+        height: MediaQuery.of(context).size.height / 3,
         child: Text(
           'Absen Keluar',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),

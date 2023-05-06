@@ -95,7 +95,7 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     }));
   }
 
-  void getBeacon() async {
+  void compareBeacon() async {
     // print(hasilbeacon[0]);
     try {
       beacon = await dbPresensi.getBeaconPresensi();
@@ -146,7 +146,7 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     });
     toggleState();
     Future.delayed(const Duration(seconds: 5), () {
-      getBeacon();
+      compareBeacon();
     });
     super.initState();
   }

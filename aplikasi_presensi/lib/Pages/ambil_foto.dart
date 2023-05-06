@@ -57,7 +57,8 @@ class _AmbilFotoState extends State<AmbilFoto> {
             jamSekarang,
             base64Image!,
             getRandomString(10) + "_" + image!.path.split('/').last,
-            kategori);
+            kategori,
+            0); //0 = not history keluar masuk dalam sehari
         if (res['status'] == 1) {
           globals.showAlertBerhasil(
               context: context, message: 'Berhasil absen masuk');

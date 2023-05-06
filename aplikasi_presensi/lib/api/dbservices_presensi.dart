@@ -153,14 +153,14 @@ class PresensiService {
   }
 
   Future<Map<String, dynamic>> insertAbsenMasuk(
-    String nikPegawai,
-    int idKantor,
-    String tanggal,
-    String jamMasuk,
-    String base64Image,
-    String fileName,
-    String kategori,
-  ) async {
+      String nikPegawai,
+      int idKantor,
+      String tanggal,
+      String jamMasuk,
+      String base64Image,
+      String fileName,
+      String kategori,
+      int isHistory) async {
     final response = await http.post(Uri.parse("$apiUrl/presensi.php"), body: {
       'nik': nikPegawai.toString(),
       'id_kantor': idKantor.toString(),
@@ -168,7 +168,8 @@ class PresensiService {
       'jam_masuk': jamMasuk,
       'image': base64Image,
       'img_name': fileName,
-      'kategori': kategori
+      'kategori': kategori,
+      'is_history': isHistory.toString()
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -193,6 +194,32 @@ class PresensiService {
         {
           "id_presensi": id_presensi.toString(),
           "jam_keluar": jamKeluar,
+        },
+      ),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == 1) {
+        return "Berhasil";
+      } else {
+        throw jsonResponse['message'];
+      }
+    } else {
+      throw ("Gagal update jam keluar");
+    }
+  }
+
+  Future<String> updateHistoryJamKembali(
+      {required String nik,
+      required String tanggal,
+      required String jam}) async {
+    final response = await http.put(
+      Uri.parse("$apiUrl/presensi.php"),
+      body: json.encode(
+        {
+          "nik": nik.toString(),
+          "tanggal": tanggal,
+          "jam_kembali": jam,
         },
       ),
     );
