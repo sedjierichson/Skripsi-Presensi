@@ -213,11 +213,13 @@ class PresensiService {
     }
   }
 
-  Future<String> updateJamKeluar(String id_presensi, String jamKeluar) async {
+  Future<String> updateJamKeluar(
+      String nik, String id_presensi, String jamKeluar) async {
     final response = await http.put(
       Uri.parse("$apiUrl/presensi.php"),
       body: json.encode(
         {
+          "nik": nik,
           "id_presensi": id_presensi.toString(),
           "jam_keluar": jamKeluar,
         },

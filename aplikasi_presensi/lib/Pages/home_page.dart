@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           idPresensiHistory = res['message'];
           print("id presensi history = " + idPresensiHistory);
-          GetStorage().write('idhistory', idPresensiHistory);
+          globals.pegawai.write('idhistory', idPresensiHistory);
         });
         // globals.showAlertBerhasil(
         //     context: context, message: 'Berhasil absen masuk');
@@ -313,7 +313,8 @@ class _HomePageState extends State<HomePage> {
 
   void updateJamKeluar({required String jam}) async {
     try {
-      await dbPresensi.updateJamKeluar(idPresensi.toString(), jam);
+      await dbPresensi.updateJamKeluar(
+          globals.pegawai.read('nik'), idPresensi.toString(), jam);
       globals.showAlertBerhasil(
           context: context, message: 'Absen keluar berhasil');
       Navigator.pushReplacement(context,
@@ -386,11 +387,9 @@ class _HomePageState extends State<HomePage> {
     String hari = DateFormat('EEEE').format(DateTime.now());
     try {
       var res = await dbPresensi.getJamKerja(hari: hari);
-      presensiHistory = await dbPresensi.gethistoryPresensi(id: "291");
-      // print(res2);
-      // print('a' + GetStorage().read('idhistory'));
-      // print(presensiHistory[0]);
-      // var temp = jamSekarang.compareTo(res['jam_pulang'].toString());
+      presensiHistory = await dbPresensi.gethistoryPresensi(
+          id: globals.pegawai.read('idhistory'));
+      print("aaa" + presensiHistory!.jamKeluar.toString());
       var temp = presensiHistory!.jamKeluar
           .toString()
           .compareTo(res['jam_pulang'].toString());
