@@ -131,8 +131,8 @@ class _HomePageState extends State<HomePage> {
         });
         // globals.showAlertBerhasil(
         //     context: context, message: 'Berhasil absen masuk');
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => super.widget));
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
       }
       // print(res['status']);
     } catch (e) {
@@ -274,6 +274,7 @@ class _HomePageState extends State<HomePage> {
           });
           break;
         } else {
+          //ada beacon
           if (absenHistory == true && sudahAbsenMasuk == true) {
             //Update jam kembali setelah meninggalkan kantor
             print('update history kembali is history');
