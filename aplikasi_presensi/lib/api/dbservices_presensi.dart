@@ -52,44 +52,26 @@ class PresensiService {
     }
   }
 
-  // Future<Map<String, dynamic>> getKantorBeacon({required String uuid}) async {
-  //   Map<String, String> requestHeaders = {
-  //     "Accept": "application/json",
-  //     "Access-Control_Allow_Origin": "*"
-  //   };
-  //   final response = await http.get(
-  //     Uri.parse('$apiUrl/beacon.php?uuid=$uuid'),
-  //     headers: requestHeaders,
-  //   );
-
-  //   if (response.statusCode == 200 || response.statusCode == 201) {
-  //     var jsonResponse = json.decode(response.body);
-  //     if (jsonResponse['status'] == 1) {
-  //       return {
-  //         'status': jsonResponse['status'],
-  //         'lokasi': jsonResponse['data']['id_kantor']
-  //       };
-  //     } else {
-  //       throw jsonResponse['message'];
-  //     }
-  //   } else {
-  //     throw ("Gagal mengambil detail beacon");
-  //   }
-  // }
-
   Future<List<Presensi>> getDataPresensi(
-      {String nik = "", String bulan = "", String tahun = ""}) async {
+      {String nik = "",
+      String bulan = "",
+      String tahun = "",
+      String id = ""}) async {
     Map<String, String> requestHeaders = {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*"
     };
     String uri;
+    print('masuk');
+    // print(id);
     // print(nik);
     // print(tahun);
     if (nik != '') {
       uri = "$apiUrl/presensi.php?nik=$nik";
     } else if (nik != '' && bulan != '' && tahun != '') {
       uri = "$apiUrl/presensi.php?nikk=$nik&tahun=$tahun&bulan=$bulan";
+    } else if (id != '') {
+      uri = "$apiUrl/presensi.php?id=$id";
     } else {
       uri = "$apiUrl/presensi.php";
     }
@@ -120,6 +102,50 @@ class PresensiService {
           listPresensi.add(presensi);
         }
         return listPresensi;
+      }
+    } else {
+      throw ("Gagal mengambil data sub-materi");
+    }
+  }
+
+  Future<Presensi> gethistoryPresensi(
+      {String nik = "",
+      String bulan = "",
+      String tahun = "",
+      String id = ""}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+    String uri;
+    print('masuk');
+    uri = "$apiUrl/presensi.php?id=$id";
+    final response = await http.get(
+      Uri.parse(uri),
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        var data = map['data'];
+
+        Presensi presensi = Presensi(
+            id: data['id'],
+            nik: data['nik'].toString(),
+            idKantor: data['id_kantor'].toString(),
+            lokasi: data['lokasi'].toString(),
+            tanggal: data['tanggal'],
+            jamMasuk: data['jam_masuk'],
+            jamKeluar: data['jam_keluar'],
+            foto: data['foto'],
+            kategori: data['kategori'],
+            status: data['status']);
+        // listPresensi.add(presensi);
+        // }
+        return presensi;
       }
     } else {
       throw ("Gagal mengambil data sub-materi");

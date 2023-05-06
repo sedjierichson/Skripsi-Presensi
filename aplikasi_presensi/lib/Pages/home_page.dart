@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, use_build_context_synchronously
 
 import 'dart:async';
 import 'dart:io';
@@ -9,6 +9,7 @@ import 'package:aplikasi_presensi/Pages/scan_beacon.dart';
 import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/api/notification_api.dart';
+import 'package:aplikasi_presensi/models/presensi.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   UserService db = UserService();
   PresensiService dbPresensi = PresensiService();
+  PresensiService dbPresensi2 = PresensiService();
   String tanggalAbsen = DateFormat('yyyy-MM-dd').format(DateTime.now());
   bool sudahAbsenMasuk = false;
   bool absenHistory = false;
@@ -49,6 +51,8 @@ class _HomePageState extends State<HomePage> {
   List<String> hasilbeacon = [];
   List<String> beacon = [];
   bool hasilScanAdaSama = false;
+  String idPresensiHistory = '';
+  Presensi? presensiHistory;
 
   void pindahScanBeacon() {
     Navigator.of(context, rootNavigator: true)
@@ -93,6 +97,38 @@ class _HomePageState extends State<HomePage> {
           kategori,
           isHistory);
       if (res['status'] == 1) {
+        // globals.showAlertBerhasil(
+        //     context: context, message: 'Berhasil absen masuk');
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => super.widget));
+      }
+      // print(res['status']);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void insertHistoryAbsenKeluarOtomatis() async {
+    //klik tombol untuk harian (not history keluar masuk)
+    setState(() {
+      absenHistory = true;
+    });
+    try {
+      var res = await dbPresensi.insertAbsenMasuk(
+          globals.pegawai.read('nik'),
+          999,
+          tanggalAbsen.toString(),
+          jamSekarang,
+          "history",
+          "history",
+          "D",
+          1);
+      if (res['status'] == 1) {
+        setState(() {
+          idPresensiHistory = res['message'];
+          print("id presensi history = " + idPresensiHistory);
+          GetStorage().write('idhistory', idPresensiHistory);
+        });
         // globals.showAlertBerhasil(
         //     context: context, message: 'Berhasil absen masuk');
         Navigator.pushReplacement(context,
@@ -275,9 +311,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void updateJamKeluar() async {
+  void updateJamKeluar({required String jam}) async {
     try {
-      await dbPresensi.updateJamKeluar(idPresensi.toString(), jamSekarang);
+      await dbPresensi.updateJamKeluar(idPresensi.toString(), jam);
       globals.showAlertBerhasil(
           context: context, message: 'Absen keluar berhasil');
       Navigator.pushReplacement(context,
@@ -301,15 +337,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void getJamPulangKerja() async {
+  void getJamPulangKerjaMasihAdaBeacon() async {
     String hari = DateFormat('EEEE').format(DateTime.now());
     try {
       var jam = "17:00:00";
       var res = await dbPresensi.getJamKerja(hari: hari);
-      // print(res['jam_pulang']);
-      // print(jamSekarang)
-      var temp =
-          jamBeaconTidakTerdeteksi.compareTo(res['jam_pulang'].toString());
+      var temp = jamSekarang.compareTo(res['jam_pulang'].toString());
       //Masuk (A atau C) Pulang ok
       //Masuk (B dan D) & pulang ok
       //Masuk (A atau C) pulang not ok
@@ -346,7 +379,59 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print(e.toString());
     }
-    updateJamKeluar();
+    updateJamKeluar(jam: jamSekarang);
+  }
+
+  void getJamPulangKerjaTidakAdaBeacon() async {
+    String hari = DateFormat('EEEE').format(DateTime.now());
+    try {
+      var res = await dbPresensi.getJamKerja(hari: hari);
+      presensiHistory = await dbPresensi.gethistoryPresensi(id: "291");
+      // print(res2);
+      // print('a' + GetStorage().read('idhistory'));
+      // print(presensiHistory[0]);
+      // var temp = jamSekarang.compareTo(res['jam_pulang'].toString());
+      var temp = presensiHistory!.jamKeluar
+          .toString()
+          .compareTo(res['jam_pulang'].toString());
+      //Masuk (A atau C) Pulang ok
+      //Masuk (B dan D) & pulang ok
+      //Masuk (A atau C) pulang not ok
+      //Masuk (B atau D) pulang not ok
+      if (temp < 0) {
+        // print('Lebih Cepat not ok');
+        if (tempKategori == "A") {
+          //Kategori C
+          updateKategori('C');
+        } else if (tempKategori == "B") {
+          //Kategori D
+          updateKategori('D');
+        }
+      } else if (temp > 0) {
+        // print('Lewat jam pulang ok');
+        if (tempKategori == "A") {
+          //Kategori A
+          // updateKategori('A');
+        } else if (tempKategori == "B") {
+          //Kategori B
+          // updateKategori('B');
+        }
+        // insertAbsenMasuk(kategori: "B");
+      } else {
+        // print('Jam pulang ok');
+        if (tempKategori == "A") {
+          //Kategori A
+          // updateKategori('C');
+        } else if (tempKategori == "B") {
+          //Kategori B
+          updateKategori('B');
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    updateJamKeluar(jam: presensiHistory!.jamKeluar.toString());
+    // updateJamKeluar(jam: jamSekarang.toString());
   }
 
   //Fungsi Untuk Get Jam secara Live
@@ -367,10 +452,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     NotificationWidget.init();
-    // cekSudahAbsen();
-    Future.delayed(const Duration(seconds: 5), () {
-      presensiKeluarOtomatis();
-    });
+    cekSudahAbsen();
+    // Future.delayed(const Duration(seconds: 5), () {
+    //   presensiKeluarOtomatis();
+    // });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();
@@ -460,15 +545,23 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             updateHistoryJamKembali();
                           },
-                          child: Text('Presensi Kembali otomatis'),
+                          child: Text('Presensi Kembali History otomatis'),
                         ),
 
                         ElevatedButton(
                           onPressed: () {
-                            getJamMasukKerja(isHistory: 1);
+                            insertHistoryAbsenKeluarOtomatis();
                           },
-                          child: Text('Presensi Keluar otomatis'),
+                          child: Text('Presensi Keluar Otomatis History'),
                         ),
+                        ElevatedButton(
+                          onPressed: () {
+                            getJamPulangKerjaTidakAdaBeacon();
+                          },
+                          child:
+                              Text('Presensi Keluar Manual tidak ada beacon'),
+                        ),
+
                         // Column(
                         //   children: [
                         //     SizedBox(
@@ -544,8 +637,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        // getJamMasukKerja(isHistory: 0);
-        pindahScanBeacon();
+        getJamMasukKerja(isHistory: 0);
+        // pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -568,8 +661,14 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenKeluar() {
     return GestureDetector(
       onTap: () {
-        getJamPulangKerja();
-        // updateJamKeluar();
+        // if (hasilbeacon == false) {
+        //   //absen pulang tapi sudah tidak ada beacon
+        //   getJamPulangKerja(jam: jamBeaconTidakTerdeteksi);
+        // } else {
+        //   //absen pulang tapi masih ada beacon
+        //   getJamPulangKerja(jam: jamSekarang);
+        // }
+        getJamPulangKerjaMasihAdaBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
