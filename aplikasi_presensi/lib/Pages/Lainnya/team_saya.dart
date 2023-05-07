@@ -114,10 +114,9 @@ class _TeamSayaState extends State<TeamSaya> {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color:
-                      index % 2 == 0 ? HexColor('#FFA133') : HexColor('#C3CF0A')
-                  // HexColor('#FFA133'),
-                  ),
+                  color: index % 2 == 0
+                      ? HexColor('#FFA133')
+                      : HexColor('#C3CF0A')),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

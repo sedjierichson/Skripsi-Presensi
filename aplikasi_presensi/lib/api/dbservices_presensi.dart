@@ -131,7 +131,6 @@ class PresensiService {
         throw (map['message']);
       } else {
         var data = map['data'];
-
         Presensi presensi = Presensi(
             id: data['id'],
             nik: data['nik'].toString(),
@@ -143,8 +142,6 @@ class PresensiService {
             foto: data['foto'],
             kategori: data['kategori'],
             status: data['status']);
-        // listPresensi.add(presensi);
-        // }
         return presensi;
       }
     } else {
