@@ -80,6 +80,27 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void getJamKeluarIsHistory() async {
+    String hari = DateFormat('EEEE').format(DateTime.now());
+    // print(hari);
+    try {
+      var res = await dbPresensi.getJamKerja(hari: hari);
+      var temp = jamSekarang.compareTo(res['jam_masuk'].toString());
+      if (temp < 0) {
+        insertAbsenMasukKlikTombol(kategori: "A", isHistory: 1);
+      } else if (temp > 0) {
+        insertAbsenMasukKlikTombol(kategori: "B", isHistory: 1);
+      } else {
+        insertAbsenMasukKlikTombol(kategori: "A", isHistory: 1);
+      }
+      setState(() {
+        absenHistory = true;
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   void insertAbsenMasukKlikTombol(
       {required String kategori, required int isHistory}) async {
     //klik tombol untuk harian (not history keluar masuk)
@@ -179,7 +200,7 @@ class _HomePageState extends State<HomePage> {
     print(sudahAbsenMasuk);
   }
 
-  void presensiKeluarOtomatis() {
+  void checkBeacon() {
     // if (sudahAbsenMasuk == true) {
     //Scanning bluetooth
     timer = Timer.periodic(Duration(seconds: 6), (timer) {
@@ -244,27 +265,26 @@ class _HomePageState extends State<HomePage> {
       beacon = await dbPresensi.getBeaconPresensi();
       for (int i = 0; i < beacon.length; i++) {
         var hasil = hasilbeacon.contains(beacon[i].toString());
+
         if (hasil == false) {
-          //beacon tidak ada
-          if (sudahAbsenMasuk = true) {
-            NotificationWidget.showNotification(
-              title: "Presensi PT X",
-              body: 'Beacon tidak terdeteksi!',
-            );
-          }
+          //simpan jam beacon tidak terdeteksi
+          setState(() {
+            jamBeaconTidakTerdeteksi = jamSekarang;
+          });
+
+          //Kalau sudah absen masuk & beacon tidak ada
+          // if (sudahAbsenMasuk == true) {
+          //   NotificationWidget.showNotification(
+          //     title: "Presensi PT X",
+          //     body: 'Beacon tidak terdeteksi!',
+          //   );
+          // }
+          //kalau sudah absen masuk, tapi belum meninggalkan kantor
           if (absenHistory == false && sudahAbsenMasuk == true) {
             //kalau sudah absen masuk harian & tidak ada beacon
             print('absen keluar is history');
             //catat jam keluar
-            getJamMasukKerja(isHistory: 1);
-            setState(() {
-              // absenHistory = true;
-              jamBeaconTidakTerdeteksi = jamSekarang;
-            });
-          } else {
-            setState(() {
-              jamBeaconTidakTerdeteksi = jamSekarang;
-            });
+            insertHistoryAbsenKeluarOtomatis();
           }
           // getJamPulangKerja();
           // timer?.cancel();
@@ -275,14 +295,17 @@ class _HomePageState extends State<HomePage> {
           break;
         } else {
           //ada beacon
+          // Keluar kantor -> Kembali ke kantor & beacon terdeteksi
           if (absenHistory == true && sudahAbsenMasuk == true) {
             //Update jam kembali setelah meninggalkan kantor
             print('update history kembali is history');
             updateHistoryJamKembali();
-            setState(() {
-              absenHistory = false;
-            });
-          } else if (sudahAbsenMasuk == false) {
+            // setState(() {
+            //   absenHistory = false;
+            // });
+          }
+          // Ada beacon & belum absen masuk harian
+          else if (sudahAbsenMasuk == false) {
             // Berada di kantor tapi belum absen masuk harian
             print('baru datang kantor, belum absen');
             NotificationWidget.showNotification(
@@ -323,17 +346,21 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
     }
-    timer?.cancel();
+    // timer?.cancel();
   }
 
   void updateHistoryJamKembali() async {
     try {
       await dbPresensi.updateHistoryJamKembali(
-          nik: globals.pegawai.read('nik'),
-          jam: jamSekarang,
-          tanggal: tanggalAbsen.toString());
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+        nik: globals.pegawai.read('nik'),
+        jam: jamSekarang,
+        tanggal: tanggalAbsen.toString(),
+      );
+      setState(() {
+        absenHistory = false;
+      });
+      // Navigator.pushReplacement(context,
+      //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
     }
@@ -453,9 +480,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     NotificationWidget.init();
     cekSudahAbsen();
-    // Future.delayed(const Duration(seconds: 5), () {
-    //   presensiKeluarOtomatis();
-    // });
+    Future.delayed(const Duration(seconds: 5), () {
+      checkBeacon();
+    });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();
@@ -637,8 +664,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        getJamMasukKerja(isHistory: 0);
-        // pindahScanBeacon();
+        // getJamMasukKerja(isHistory: 0);
+        pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -661,14 +688,14 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenKeluar() {
     return GestureDetector(
       onTap: () {
-        // if (hasilbeacon == false) {
-        //   //absen pulang tapi sudah tidak ada beacon
-        //   getJamPulangKerja(jam: jamBeaconTidakTerdeteksi);
-        // } else {
-        //   //absen pulang tapi masih ada beacon
-        //   getJamPulangKerja(jam: jamSekarang);
-        // }
-        getJamPulangKerjaMasihAdaBeacon();
+        if (hasilScanAdaSama == false) {
+          //absen pulang tapi sudah tidak ada beacon
+          getJamPulangKerjaTidakAdaBeacon();
+        } else {
+          //absen pulang tapi masih ada beacon
+          getJamPulangKerjaMasihAdaBeacon();
+        }
+        // getJamPulangKerjaMasihAdaBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
