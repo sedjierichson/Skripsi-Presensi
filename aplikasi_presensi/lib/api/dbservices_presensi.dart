@@ -168,6 +168,7 @@ class PresensiService {
         'id': jsonResponse['data']['id'],
         'jam_masuk': jsonResponse['data']['jam_masuk'],
         'jam_keluar': jsonResponse['data']['jam_keluar'],
+        'jam_kerja': jsonResponse['data']['jam_kerja'],
         'kategori': jsonResponse['data']['kategori'],
       };
     } else {

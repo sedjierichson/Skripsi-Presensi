@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   String? idPresensi;
   String jamMasuk = "--:--";
   String jamKeluar = "--:--";
+  String jamKerja = "--:--";
   String tempKategori = "";
   String jamBeaconTidakTerdeteksi = '';
   // late final BluetoothDevice device;
@@ -165,9 +166,17 @@ class _HomePageState extends State<HomePage> {
     try {
       var res = await dbPresensi.cekSudahAbsen(
           nik: globals.pegawai.read('nik'), tanggal: tanggalAbsen);
-      if (res['jam_keluar'] == null) {
-        // print('absen belum lengkap');
-        if (res['status'] == 1) {
+      // if (res['jam_keluar'] == null) {
+      // print('absen belum lengkap');
+      if (res['status'] == 1) {
+        if (res['jam_keluar'] != null && res['jam_masuk'] != null) {
+          setState(() {
+            sudahAbsenMasuk = false;
+            jamMasuk = res['jam_masuk'].toString();
+            jamKeluar = res['jam_keluar'].toString();
+            jamKerja = res['jam_kerja'].toString();
+          });
+        } else {
           setState(() {
             sudahAbsenMasuk = true;
             idPresensi = res['id']?.toString();
@@ -175,25 +184,26 @@ class _HomePageState extends State<HomePage> {
             jamKeluar = res['jam_keluar'].toString();
             tempKategori = res['kategori'].toString();
           });
-        } else {
-          setState(() {
-            sudahAbsenMasuk = false;
-          });
         }
       } else {
-        // print('absen ulang');
-        if (res['status'] == 1) {
-          setState(() {
-            sudahAbsenMasuk = false;
-            idPresensi = res['message'];
-          });
-        } else {
-          // print('belum absen');
-          setState(() {
-            sudahAbsenMasuk = true;
-          });
-        }
+        setState(() {
+          sudahAbsenMasuk = false;
+        });
       }
+      // } else {
+      // print('absen ulang');
+      // if (res['status'] == 1) {
+      //   setState(() {
+      //     sudahAbsenMasuk = false;
+      //     idPresensi = res['message'];
+      //   });
+      // } else {
+      //   // print('belum absen');
+      //   setState(() {
+      //     sudahAbsenMasuk = true;
+      //   });
+      // }
+      // }
     } catch (e) {
       print(e.toString());
     }
@@ -560,95 +570,95 @@ class _HomePageState extends State<HomePage> {
                       ? buttonCardAbsenMasuk()
                       : buttonCardAbsenKeluar(),
                   SizedBox(
-                    height: 10,
+                    height: 50,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    child: Column(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         //Kembali dari pergi
-                        ElevatedButton(
-                          onPressed: () {
-                            updateHistoryJamKembali();
-                          },
-                          child: Text('Presensi Kembali History otomatis'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     updateHistoryJamKembali();
+                        //   },
+                        //   child: Text('Presensi Kembali History otomatis'),
+                        // ),
 
-                        ElevatedButton(
-                          onPressed: () {
-                            insertHistoryAbsenKeluarOtomatis();
-                          },
-                          child: Text('Presensi Keluar Otomatis History'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            getJamPulangKerjaTidakAdaBeacon();
-                          },
-                          child:
-                              Text('Presensi Keluar Manual tidak ada beacon'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     insertHistoryAbsenKeluarOtomatis();
+                        //   },
+                        //   child: Text('Presensi Keluar Otomatis History'),
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     getJamPulangKerjaTidakAdaBeacon();
+                        //   },
+                        //   child:
+                        //       Text('Presensi Keluar Manual tidak ada beacon'),
+                        // ),
 
-                        // Column(
-                        //   children: [
-                        //     SizedBox(
-                        //       width: MediaQuery.of(context).size.width / 10,
-                        //       child: Image.asset(
-                        //         "assets/images/time_in.png",
-                        //         fit: BoxFit.fitWidth,
-                        //       ),
-                        //     ),
-                        //     SizedBox(
-                        //       height: 10,
-                        //     ),
-                        //     Text(
-                        //       jamMasuk,
-                        //       style: TextStyle(
-                        //           fontWeight: FontWeight.bold, fontSize: 16),
-                        //     ),
-                        //     Text('Jam Masuk'),
-                        //   ],
-                        // ),
-                        // Column(
-                        //   children: [
-                        //     SizedBox(
-                        //       width: MediaQuery.of(context).size.width / 10,
-                        //       child: Image.asset(
-                        //         "assets/images/time_out.png",
-                        //         fit: BoxFit.fitWidth,
-                        //       ),
-                        //     ),
-                        //     SizedBox(
-                        //       height: 10,
-                        //     ),
-                        //     Text(
-                        //       jamKeluar,
-                        //       style: TextStyle(
-                        //           fontWeight: FontWeight.bold, fontSize: 16),
-                        //     ),
-                        //     Text('Jam Keluar'),
-                        //   ],
-                        // ),
-                        // Column(
-                        //   children: [
-                        //     SizedBox(
-                        //       width: MediaQuery.of(context).size.width / 10,
-                        //       child: Image.asset(
-                        //         "assets/images/working_time.png",
-                        //         fit: BoxFit.fitWidth,
-                        //       ),
-                        //     ),
-                        //     SizedBox(
-                        //       height: 10,
-                        //     ),
-                        //     Text(
-                        //       '09:00',
-                        //       style: TextStyle(
-                        //           fontWeight: FontWeight.bold, fontSize: 16),
-                        //     ),
-                        //     Text('Jam Kerja'),
-                        //   ],
-                        // ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 10,
+                              child: Image.asset(
+                                "assets/images/time_in.png",
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              jamMasuk == 'null' ? '--:--' : jamMasuk,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            Text('Jam Masuk'),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 10,
+                              child: Image.asset(
+                                "assets/images/time_out.png",
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              jamKeluar == 'null' ? '--:--' : jamKeluar,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            Text('Jam Keluar'),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 10,
+                              child: Image.asset(
+                                "assets/images/working_time.png",
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              jamKerja.isNotEmpty ? jamKerja : '--:--',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            Text('Jam Kerja'),
+                          ],
+                        ),
                       ],
                     ),
                   )
@@ -664,8 +674,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        // getJamMasukKerja(isHistory: 0);
-        pindahScanBeacon();
+        getJamMasukKerja(isHistory: 0);
+        // pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -688,14 +698,14 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenKeluar() {
     return GestureDetector(
       onTap: () {
-        if (hasilScanAdaSama == false) {
-          //absen pulang tapi sudah tidak ada beacon
-          getJamPulangKerjaTidakAdaBeacon();
-        } else {
-          //absen pulang tapi masih ada beacon
-          getJamPulangKerjaMasihAdaBeacon();
-        }
-        // getJamPulangKerjaMasihAdaBeacon();
+        // if (hasilScanAdaSama == false) {
+        //   //absen pulang tapi sudah tidak ada beacon
+        //   getJamPulangKerjaTidakAdaBeacon();
+        // } else {
+        //   //absen pulang tapi masih ada beacon
+        //   getJamPulangKerjaMasihAdaBeacon();
+        // }
+        getJamPulangKerjaMasihAdaBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
