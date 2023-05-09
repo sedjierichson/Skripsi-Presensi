@@ -165,20 +165,22 @@ class _PageKehadiranState extends State<PageKehadiran> {
                     ),
                   ),
                 ),
-                DataCell(Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    e.jamMasuk.toString(),
-                    textAlign: TextAlign.center,
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: textJamMasuk(
+                      e.jamMasuk.toString(),
+                    ),
                   ),
-                )),
-                DataCell(Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    e.jamKeluar.toString(),
-                    textAlign: TextAlign.center,
+                ),
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: textJamKeluar(
+                      e.jamKeluar.toString(),
+                    ),
                   ),
-                )),
+                ),
               ]);
             }).toList(),
           ),
@@ -219,6 +221,38 @@ class _PageKehadiranState extends State<PageKehadiran> {
           ],
         ),
       );
+    }
+  }
+
+  Widget textJamMasuk(String jam) {
+    if (jam.compareTo('09:00:00') > 0) {
+      return Text(jam.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.red,
+          ));
+    } else {
+      return Text(jam.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+          ));
+    }
+  }
+
+  Widget textJamKeluar(String jam) {
+    if (jam.compareTo('18:00:00') < 0) {
+      return Text(jam.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.red,
+          ));
+    } else {
+      return Text(jam.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+          ));
     }
   }
 }
