@@ -168,16 +168,28 @@ class _PageKehadiranState extends State<PageKehadiran> {
                 DataCell(
                   Container(
                     alignment: Alignment.center,
-                    child: textJamMasuk(
+                    child: Text(
                       e.jamMasuk.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: e.jamMasuk.toString().compareTo('09:00:00') > 0
+                            ? Colors.red
+                            : Colors.black,
+                      ),
                     ),
                   ),
                 ),
                 DataCell(
                   Container(
                     alignment: Alignment.center,
-                    child: textJamKeluar(
+                    child: Text(
                       e.jamKeluar.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: e.jamKeluar.toString().compareTo('18:00:00') < 0
+                            ? Colors.red
+                            : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -221,22 +233,6 @@ class _PageKehadiranState extends State<PageKehadiran> {
           ],
         ),
       );
-    }
-  }
-
-  Widget textJamMasuk(String jam) {
-    if (jam.compareTo('09:00:00') > 0) {
-      return Text(jam.toString(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.red,
-          ));
-    } else {
-      return Text(jam.toString(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-          ));
     }
   }
 
