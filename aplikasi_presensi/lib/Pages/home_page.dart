@@ -62,6 +62,15 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
+  void pindahAmbilFoto(String uuid) {
+    Navigator.of(context, rootNavigator: true)
+        .pushReplacement(MaterialPageRoute(builder: (context) {
+      return AmbilFoto(
+        uuid: '1',
+      );
+    }));
+  }
+
   void getJamMasukKerja({required int isHistory}) async {
     String hari = DateFormat('EEEE').format(DateTime.now());
     // print(hari);
@@ -207,7 +216,7 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print(e.toString());
     }
-    print(sudahAbsenMasuk);
+    print('state = ' + sudahAbsenMasuk.toString());
   }
 
   void checkBeacon() {
@@ -369,17 +378,14 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         absenHistory = false;
       });
-      // Navigator.pushReplacement(context,
-      //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
     } catch (e) {
       globals.showAlertError(context: context, message: e.toString());
     }
   }
 
-  void getJamPulangKerjaMasihAdaBeacon() async {
+  void checkoutMasihAdaBeacon() async {
     String hari = DateFormat('EEEE').format(DateTime.now());
     try {
-      var jam = "17:00:00";
       var res = await dbPresensi.getJamKerja(hari: hari);
       var temp = jamSekarang.compareTo(res['jam_pulang'].toString());
       //Masuk (A atau C) Pulang ok
@@ -395,22 +401,8 @@ class _HomePageState extends State<HomePage> {
           //Kategori D
           updateKategori('D');
         }
-      } else if (temp > 0) {
-        // print('Lewat jam pulang ok');
-        if (tempKategori == "A") {
-          //Kategori A
-          // updateKategori('A');
-        } else if (tempKategori == "B") {
-          //Kategori B
-          // updateKategori('B');
-        }
-        // insertAbsenMasuk(kategori: "B");
-      } else {
-        // print('Jam pulang ok');
-        if (tempKategori == "A") {
-          //Kategori A
-          // updateKategori('C');
-        } else if (tempKategori == "B") {
+      } else if (temp == 0) {
+        if (tempKategori == "B") {
           //Kategori B
           updateKategori('B');
         }
@@ -421,7 +413,7 @@ class _HomePageState extends State<HomePage> {
     updateJamKeluar(jam: jamSekarang);
   }
 
-  void getJamPulangKerjaTidakAdaBeacon() async {
+  void checkoutTidakAdaBeacon() async {
     String hari = DateFormat('EEEE').format(DateTime.now());
     try {
       var res = await dbPresensi.getJamKerja(hari: hari);
@@ -593,7 +585,7 @@ class _HomePageState extends State<HomePage> {
                         // ),
                         // ElevatedButton(
                         //   onPressed: () {
-                        //     getJamPulangKerjaTidakAdaBeacon();
+                        //     checkoutTidakAdaBeacon();
                         //   },
                         //   child:
                         //       Text('Presensi Keluar Manual tidak ada beacon'),
@@ -705,7 +697,7 @@ class _HomePageState extends State<HomePage> {
         //   //absen pulang tapi masih ada beacon
         //   getJamPulangKerjaMasihAdaBeacon();
         // }
-        getJamPulangKerjaMasihAdaBeacon();
+        checkoutMasihAdaBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

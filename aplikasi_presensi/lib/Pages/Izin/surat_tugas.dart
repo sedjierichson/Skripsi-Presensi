@@ -55,7 +55,7 @@ class _SuratTugasState extends State<SuratTugas> {
 
   void submitForm() async {
     if (tfTanggalIzin.text != "" &&
-        valueChoose != "" &&
+        tfTempatTujuan != "" &&
         tfUraianTugas.text != "") {
       try {
         await db.insertFormSuratTugas(
@@ -64,7 +64,7 @@ class _SuratTugasState extends State<SuratTugas> {
           tanggal_awal!.toString(),
           tanggal_akhir!.toString(),
           tfUraianTugas.text.toString(),
-          valueChoose!,
+          tfTempatTujuan.text.toString()!,
           tanggal_pengajuan.toString(),
         );
         pindahKeMenuIzin();

@@ -11,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
 import 'package:intl/intl.dart';
+import 'package:quickalert/quickalert.dart';
 
 class ListIzin extends StatefulWidget {
   const ListIzin({super.key});
@@ -297,42 +298,45 @@ class _ListIzinState extends State<ListIzin> {
         scrollDirection: Axis.vertical,
         itemCount: daftarIzin.length,
         itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 5),
-            padding: EdgeInsets.only(left: 8, right: 15, top: 5, bottom: 5),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                daftarIzin[index].status.toString() == '1'
-                    ? textPending(daftarIzin[index].id)
-                    : daftarIzin[index].status.toString() == '2'
-                        ? textDiterima()
-                        : textDitolak(),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  daftarIzin[index].jenis,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  'Tanggal Pengajuan : ' +
-                      DateFormat('dd MMMM yyyy').format(
-                        DateTime.parse(
-                          daftarIzin[index].tanggalPengajuan.toString(),
+          return GestureDetector(
+            onTap: () => dialogBoxDetailIzin(daftarIzin[index]),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 5),
+              padding: EdgeInsets.only(left: 8, right: 15, top: 5, bottom: 5),
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  daftarIzin[index].status.toString() == '1'
+                      ? textPending(daftarIzin[index].id)
+                      : daftarIzin[index].status.toString() == '2'
+                          ? textDiterima()
+                          : textDitolak(),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    daftarIzin[index].jenis,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    'Tanggal Pengajuan : ' +
+                        DateFormat('dd MMMM yyyy').format(
+                          DateTime.parse(
+                            daftarIzin[index].tanggalPengajuan.toString(),
+                          ),
                         ),
-                      ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -357,6 +361,143 @@ class _ListIzinState extends State<ListIzin> {
           ),
         ],
       ));
+    }
+  }
+
+  void dialogBoxDetailIzin(Izin daftarIzin) {
+    if (daftarIzin.idJenisIzin == '1') {
+      print('masuk');
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.custom,
+        widget: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              daftarIzin.jenis,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 7,
+            ),
+            Text(DateFormat('dd MMMM yyyy')
+                .format(DateTime.parse(daftarIzin.tanggalAwal.toString()))),
+            Text('Jam Pulang = ' + daftarIzin.jamAwal.toString()),
+            Text("Alasan = " + daftarIzin.alasan.toString()),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              daftarIzin.status.toString() == '1'
+                  ? 'Pending'
+                  : daftarIzin.status.toString() == '2'
+                      ? 'Terima'
+                      : 'Tolak',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      );
+    } else if (daftarIzin.idJenisIzin == '2') {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.custom,
+        widget: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              daftarIzin.jenis,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 7,
+            ),
+            Text(DateFormat('dd MMMM yyyy')
+                .format(DateTime.parse(daftarIzin.tanggalAwal.toString()))),
+            Text('Jam Pergi = ' + daftarIzin.jamAwal.toString()),
+            Text('Jam Kembali = ' + daftarIzin.jamAkhir.toString()),
+            Text("Alasan = " + daftarIzin.alasan.toString()),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              daftarIzin.status.toString() == '1'
+                  ? 'Pending'
+                  : daftarIzin.status.toString() == '2'
+                      ? 'Terima'
+                      : 'Tolak',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      );
+    } else if (daftarIzin.idJenisIzin == '3') {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.custom,
+        widget: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              daftarIzin.jenis,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 7,
+            ),
+            Text('Tanggal Awal = ' + daftarIzin.tanggalAwal.toString()),
+            Text('Tanggal Akhir = ' + daftarIzin.tanggalAkhir.toString()),
+            Text("Tugas = " + daftarIzin.uraianTugas.toString()),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              daftarIzin.status.toString() == '1'
+                  ? 'Pending'
+                  : daftarIzin.status.toString() == '2'
+                      ? 'Terima'
+                      : 'Tolak',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      );
+    } else if (daftarIzin.idJenisIzin == '4') {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.custom,
+        widget: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              daftarIzin.jenis,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 7,
+            ),
+            Text('Tanggal Absen = ' + daftarIzin.tanggalAwal.toString()),
+            Text('Jam Masuk = ' + daftarIzin.jamAwal.toString()),
+            Text('Jam Pulang = ' + daftarIzin.jamAkhir.toString()),
+            Text("Alasan = " + daftarIzin.alasan.toString()),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              daftarIzin.status.toString() == '1'
+                  ? 'Pending'
+                  : daftarIzin.status.toString() == '2'
+                      ? 'Terima'
+                      : 'Tolak',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      );
     }
   }
 
