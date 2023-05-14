@@ -90,6 +90,7 @@ class _SetReminderState extends State<SetReminder> {
                 ),
                 // MaterialButton(
                 //   onPressed: () {
+                //     print('masuk');
                 //     NotificationWidget.showNotification(
                 //       title: "Notifications",
                 //       body: 'Test Notif',

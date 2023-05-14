@@ -482,9 +482,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     NotificationWidget.init();
     cekSudahAbsen();
-    Future.delayed(const Duration(seconds: 5), () {
-      checkBeacon();
-    });
+    // Future.delayed(const Duration(seconds: 5), () {
+    //   checkBeacon();
+    // });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();

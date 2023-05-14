@@ -106,7 +106,7 @@ class NotificationWidget {
 
   static notificationDetails() {
     return NotificationDetails(
-      android: AndroidNotificationDetails('channelId', 'channelName',
+      android: AndroidNotificationDetails('channel id', 'channel name',
           importance: Importance.max),
       iOS: DarwinNotificationDetails(),
     );
