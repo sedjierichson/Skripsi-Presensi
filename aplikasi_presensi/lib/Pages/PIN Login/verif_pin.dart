@@ -83,6 +83,7 @@ class _VerifPinState extends State<VerifPin> {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       setState(() {
         imeiBaru = androidInfo.serialNumber.toString();
+        print(imeiBaru);
       });
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
