@@ -45,6 +45,7 @@ dependencies:
   pinput: ^2.2.31
   quickalert: ^1.0.1
   timezone: ^0.9.1
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_lints: ^2.0.0

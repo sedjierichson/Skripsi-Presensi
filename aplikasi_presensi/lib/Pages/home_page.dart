@@ -482,9 +482,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     NotificationWidget.init();
     cekSudahAbsen();
-    // Future.delayed(const Duration(seconds: 5), () {
-    //   checkBeacon();
-    // });
+    Future.delayed(const Duration(seconds: 5), () {
+      checkBeacon();
+    });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();
@@ -666,8 +666,8 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
-        getJamMasukKerja(isHistory: 0);
-        // pindahScanBeacon();
+        // getJamMasukKerja(isHistory: 0);
+        pindahScanBeacon();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -690,14 +690,14 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenKeluar() {
     return GestureDetector(
       onTap: () {
-        // if (hasilScanAdaSama == false) {
-        //   //absen pulang tapi sudah tidak ada beacon
-        //   getJamPulangKerjaTidakAdaBeacon();
-        // } else {
-        //   //absen pulang tapi masih ada beacon
-        //   getJamPulangKerjaMasihAdaBeacon();
-        // }
-        checkoutMasihAdaBeacon();
+        if (hasilScanAdaSama == false) {
+          //absen pulang tapi sudah tidak ada beacon
+          checkoutTidakAdaBeacon();
+        } else {
+          //absen pulang tapi masih ada beacon
+          checkoutMasihAdaBeacon();
+        }
+        // checkoutMasihAdaBeacon();
       },
       child: Container(
         decoration: BoxDecoration(

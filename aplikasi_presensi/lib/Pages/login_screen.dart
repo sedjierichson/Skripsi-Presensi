@@ -110,17 +110,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void cocokkanIMEI() async {
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      setState(() {
-        imeiHPSekarang = androidInfo.serialNumber.toString();
-      });
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      setState(() {
-        imeiHPSekarang = iosInfo.identifierForVendor!.toString();
-      });
-    }
+    print(globals.pegawai.read('uuidapp'));
+    setState(() {
+      imeiHPSekarang = globals.pegawai.read('uuidapp');
+    });
+    // if (Platform.isAndroid) {
+    //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    //   setState(() {
+    //     imeiHPSekarang = androidInfo.serialNumber.toString();
+    //   });
+    // } else if (Platform.isIOS) {
+    //   IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    //   setState(() {
+    //     imeiHPSekarang = iosInfo.identifierForVendor!.toString();
+    //   });
+    // }
 
     if (globals.currentHpPegawai.imei != imeiHPSekarang) {
       globals.showAlertError(

@@ -86,7 +86,10 @@ class _OtherPageState extends State<OtherPage> {
 
   void pindahkeLogin() async {
     try {
-      globals.pegawai.erase();
+      globals.pegawai.remove('nik');
+      globals.pegawai.remove('nama');
+      globals.pegawai.remove('jabatan');
+      globals.pegawai.remove('nik_atasan');
     } catch (e) {
       print(e.toString());
     }

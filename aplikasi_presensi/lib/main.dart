@@ -20,6 +20,7 @@ void main() async {
       Permission.notification.request();
     }
   });
+
   tz.initializeTimeZones();
 
   runApp(const MyApp());

@@ -1,8 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.aplikasi_presensi">
+<!-- <manifest xmlns:tools="http://schemas.android.com/tools"> -->
     <uses-permission android:name="android.permission.BLUETOOTH" />  
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />  
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
    <application
         android:label="aplikasi_presensi"
         android:name="${applicationName}"

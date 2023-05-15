@@ -15,6 +15,7 @@ import 'package:pinput/pinput.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:uuid/uuid.dart';
 
 class VerifPin extends StatefulWidget {
   final String pinLogin;
@@ -34,6 +35,7 @@ class _VerifPinState extends State<VerifPin> {
   String VerifikasiPin = '';
   UserService db = UserService();
   String imeiBaru = "";
+  var uuid = Uuid();
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   void pindahkeHomePage() {
@@ -49,48 +51,56 @@ class _VerifPinState extends State<VerifPin> {
   }
 
   void tambahkanUser() async {
-    try {
-      var res = await db.insertDataPertamaLogin(
-          widget.nik.toString(),
-          globals.pegawai.read('nama'),
-          VerifikasiPin.toString(),
-          imeiBaru.toString());
-      if (res['message'] == -1) {
-        globals.pegawai.erase();
+    if (VerifikasiPin == widget.pinLogin) {
+      try {
+        var res = await db.insertDataPertamaLogin(
+            widget.nik.toString(),
+            globals.pegawai.read('nama'),
+            VerifikasiPin.toString(),
+            imeiBaru.toString());
+        if (res['message'] == -1) {
+          globals.pegawai.erase();
 
-        QuickAlert.show(
-            context: context,
-            type: QuickAlertType.error,
-            text: 'IMEI sudah terdaftar',
-            confirmBtnText: 'OK',
-            confirmBtnColor: Colors.blueAccent,
-            autoCloseDuration: Duration(seconds: 5));
-        Future.delayed(const Duration(seconds: 5), () {
-          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => LoginScreen()),
-              (Route<dynamic> route) => false);
-        });
-      } else {
-        pindahkeHomePage();
+          QuickAlert.show(
+              context: context,
+              type: QuickAlertType.error,
+              text: 'IMEI sudah terdaftar',
+              confirmBtnText: 'OK',
+              confirmBtnColor: Colors.blueAccent,
+              autoCloseDuration: Duration(seconds: 5));
+          Future.delayed(const Duration(seconds: 5), () {
+            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+                (Route<dynamic> route) => false);
+          });
+        } else {
+          pindahkeHomePage();
+        }
+      } catch (e) {
+        print(e.toString());
       }
-    } catch (e) {
-      print(e.toString());
+    } else {
+      globals.showAlertError(context: context, message: 'PIN Tidak Sama');
     }
   }
 
   void getImeiBaru() async {
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      setState(() {
-        imeiBaru = androidInfo.serialNumber.toString();
-        print(imeiBaru);
-      });
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      setState(() {
-        imeiBaru = iosInfo.identifierForVendor!.toString();
-      });
-    }
+    setState(() {
+      imeiBaru = uuid.v4();
+      globals.pegawai.write('uuidapp', imeiBaru);
+    });
+    // if (Platform.isAndroid) {
+    //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    //   setState(() {
+    //     imeiBaru = androidInfo.serialNumber.toString();
+    //     print(imeiBaru);
+    //   });
+    // } else if (Platform.isIOS) {
+    //   IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    //   setState(() {
+    //     imeiBaru = iosInfo.identifierForVendor!.toString();
+    //   });
+    // }
   }
 
   void successGantiPin() async {
