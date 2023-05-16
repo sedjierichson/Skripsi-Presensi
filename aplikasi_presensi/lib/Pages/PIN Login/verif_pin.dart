@@ -59,7 +59,10 @@ class _VerifPinState extends State<VerifPin> {
             VerifikasiPin.toString(),
             imeiBaru.toString());
         if (res['message'] == -1) {
-          globals.pegawai.erase();
+          globals.pegawai.remove('nik');
+          globals.pegawai.remove('nama');
+          globals.pegawai.remove('jabatan');
+          globals.pegawai.remove('nik_atasan');
 
           QuickAlert.show(
               context: context,
@@ -85,10 +88,16 @@ class _VerifPinState extends State<VerifPin> {
   }
 
   void getUUIDAplikasiBaru() async {
-    setState(() {
-      imeiBaru = uuid.v4();
-      globals.pegawai.write('uuidapp', imeiBaru);
-    });
+    if (globals.pegawai.read('uuidapp') != null) {
+      setState(() {
+        imeiBaru = globals.pegawai.read('uuidapp');
+      });
+    } else {
+      setState(() {
+        imeiBaru = uuid.v4();
+        globals.pegawai.write('uuidapp', imeiBaru);
+      });
+    }
   }
 
   void successGantiPin() async {
