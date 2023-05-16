@@ -13,6 +13,8 @@ import 'package:pinput/pinput.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
 
+import '../login_screen.dart';
+
 class EnterPin extends StatefulWidget {
   final String nik;
   final String mode;
@@ -178,6 +180,29 @@ class _EnterPinState extends State<EnterPin> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  widget.mode.toString() == 'sudah_login'
+                      ? InkWell(
+                          child: Text('Logout'),
+                          onTap: () {
+                            try {
+                              globals.pegawai.remove('nik');
+                              globals.pegawai.remove('nama');
+                              globals.pegawai.remove('jabatan');
+                              globals.pegawai.remove('nik_atasan');
+                            } catch (e) {
+                              print(e.toString());
+                            }
+                            Navigator.of(context, rootNavigator: true)
+                                .pushReplacement(
+                                    MaterialPageRoute(builder: (context) {
+                              return const LoginScreen();
+                            }));
+                          },
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
