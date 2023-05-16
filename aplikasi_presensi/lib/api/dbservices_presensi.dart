@@ -303,4 +303,48 @@ class PresensiService {
       throw ("Gagal melakukan cek data api user");
     }
   }
+
+  Future<List<Presensi>> getHistoryKeluarMasukPresensi({
+    String nik = "",
+    String tanggal = "",
+  }) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+    String uri;
+    print('masuk');
+    uri = "$apiUrl/presensi.php?nik_history=$nik&tanggal_history=$tanggal";
+    final response = await http.get(
+      Uri.parse(uri),
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        List<dynamic> data = map['data'];
+        List<Presensi> listPresensi = [];
+        for (int i = 0; i < data.length; i++) {
+          Presensi presensi = Presensi(
+              id: data[i]['id'],
+              nik: data[i]['nik'].toString(),
+              idKantor: data[i]['id_kantor'].toString(),
+              lokasi: data[i]['lokasi'].toString(),
+              tanggal: data[i]['tanggal'],
+              jamMasuk: data[i]['jam_masuk'],
+              jamKeluar: data[i]['jam_keluar'],
+              foto: data[i]['foto'],
+              kategori: data[i]['kategori'],
+              status: data[i]['status']);
+          listPresensi.add(presensi);
+        }
+        return listPresensi;
+      }
+    } else {
+      throw ("Gagal mengambil data sub-materi");
+    }
+  }
 }

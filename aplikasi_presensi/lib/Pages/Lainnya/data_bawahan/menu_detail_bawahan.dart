@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last, prefer_adjacent_string_concatenation, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
 
+import 'package:aplikasi_presensi/Pages/Lainnya/data_bawahan/history_keluar_masuk_bawahan.dart';
 import 'package:aplikasi_presensi/Pages/Lainnya/detail_izin_bawahan.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
@@ -512,55 +513,86 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
   Widget tablePresensi() {
     if (isLoadingAll == false && isErrorAll == false) {
       return SingleChildScrollView(
-        child: DataTable(
-          columnSpacing: 10,
-          columns: [
-            DataColumn(
-                label: Container(
-              width: 90,
-              child: Text(
-                'Tanggal',
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 10,
+            columns: [
+              DataColumn(
+                  label: Container(
+                width: 90,
+                child: Text(
+                  'Tanggal',
+                  textAlign: TextAlign.center,
+                ),
+              )),
+              DataColumn(
+                  label: Text(
+                'Jam Masuk',
                 textAlign: TextAlign.center,
-              ),
-            )),
-            DataColumn(
-                label: Text(
-              'Jam Masuk',
-              textAlign: TextAlign.center,
-            )),
-            DataColumn(
-                label: Text(
-              'Jam Keluar',
-              textAlign: TextAlign.center,
-            )),
-          ],
-          rows: kehadiran.map((e) {
-            return DataRow(cells: [
-              DataCell(
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    e.tanggal,
-                    textAlign: TextAlign.center,
+              )),
+              DataColumn(
+                  label: Text(
+                'Jam Keluar',
+                textAlign: TextAlign.center,
+              )),
+              DataColumn(
+                  label: Text(
+                'Aksi',
+                textAlign: TextAlign.center,
+              )),
+            ],
+            rows: kehadiran.map((e) {
+              return DataRow(cells: [
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      e.tanggal,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              ),
-              DataCell(Container(
-                alignment: Alignment.center,
-                child: Text(
-                  e.jamMasuk.toString(),
-                  textAlign: TextAlign.center,
+                DataCell(Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    e.jamMasuk.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+                DataCell(Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    e.jamKeluar.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        print('lihat foto');
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return historyKeluarMasuk(
+                            nik: e.nik,
+                            tanggal: e.tanggal,
+                            foto: e.foto,
+                          );
+                        }));
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.eye,
+                        size: 16,
+                      ),
+                    ),
+                  ),
                 ),
-              )),
-              DataCell(Container(
-                alignment: Alignment.center,
-                child: Text(
-                  e.jamKeluar.toString(),
-                  textAlign: TextAlign.center,
-                ),
-              )),
-            ]);
-          }).toList(),
+              ]);
+            }).toList(),
+          ),
         ),
       );
     } else if (isLoadingAll == false && isErrorAll == true) {

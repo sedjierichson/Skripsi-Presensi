@@ -84,23 +84,11 @@ class _VerifPinState extends State<VerifPin> {
     }
   }
 
-  void getImeiBaru() async {
+  void getUUIDAplikasiBaru() async {
     setState(() {
       imeiBaru = uuid.v4();
       globals.pegawai.write('uuidapp', imeiBaru);
     });
-    // if (Platform.isAndroid) {
-    //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    //   setState(() {
-    //     imeiBaru = androidInfo.serialNumber.toString();
-    //     print(imeiBaru);
-    //   });
-    // } else if (Platform.isIOS) {
-    //   IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-    //   setState(() {
-    //     imeiBaru = iosInfo.identifierForVendor!.toString();
-    //   });
-    // }
   }
 
   void successGantiPin() async {
@@ -134,7 +122,7 @@ class _VerifPinState extends State<VerifPin> {
 
   @override
   void initState() {
-    getImeiBaru();
+    getUUIDAplikasiBaru();
     super.initState();
   }
 
