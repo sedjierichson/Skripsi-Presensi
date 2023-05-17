@@ -143,7 +143,7 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
                               context: context,
                             );
                             if (pickedTime != null) {
-                              DateTime parsedTime = DateFormat.jm()
+                              DateTime parsedTime = DateFormat('hh:mm')
                                   .parse(pickedTime.format(context).toString());
                               String formattedTime =
                                   DateFormat('HH:mm').format(parsedTime);
@@ -184,7 +184,7 @@ class _MeninggalkanSementaraState extends State<MeninggalkanSementara> {
                               context: context,
                             );
                             if (pickedTime != null) {
-                              DateTime parsedTime = DateFormat.jm()
+                              DateTime parsedTime = DateFormat('hh:mm')
                                   .parse(pickedTime.format(context).toString());
                               String formattedTime =
                                   DateFormat('HH:mm').format(parsedTime);
