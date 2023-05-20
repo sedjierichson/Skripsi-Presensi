@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
       globals.pegawai.write('nik_atasan', globals.currentPegawai.nik_atasan);
       globals.pegawai.write('imei', globals.currentHpPegawai.imei);
 
-      cocokkanIMEI();
+      cocokkanUUIDAplikasi();
     } catch (e) {
       print(e);
     }
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void cocokkanIMEI() async {
+  void cocokkanUUIDAplikasi() async {
     print(globals.pegawai.read('uuidapp'));
     setState(() {
       imeiHPSekarang = globals.pegawai.read('uuidapp');

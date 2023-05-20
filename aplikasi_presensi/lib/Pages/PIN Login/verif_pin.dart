@@ -5,8 +5,10 @@ import 'dart:io';
 import 'package:aplikasi_presensi/Pages/Lainnya/other_page.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/login_screen.dart';
+import 'package:aplikasi_presensi/api/dbservices_device.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -34,6 +36,7 @@ class VerifPin extends StatefulWidget {
 class _VerifPinState extends State<VerifPin> {
   String VerifikasiPin = '';
   UserService db = UserService();
+  DeviceService dbDevice = DeviceService();
   String imeiBaru = "";
   var uuid = Uuid();
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -58,6 +61,7 @@ class _VerifPinState extends State<VerifPin> {
             globals.pegawai.read('nama'),
             VerifikasiPin.toString(),
             imeiBaru.toString());
+
         if (res['message'] == -1) {
           globals.pegawai.remove('nik');
           globals.pegawai.remove('nama');
@@ -77,7 +81,8 @@ class _VerifPinState extends State<VerifPin> {
                 (Route<dynamic> route) => false);
           });
         } else {
-          pindahkeHomePage();
+          getFcmToken();
+          // pindahkeHomePage();
         }
       } catch (e) {
         print(e.toString());
@@ -97,6 +102,25 @@ class _VerifPinState extends State<VerifPin> {
         imeiBaru = uuid.v4();
         globals.pegawai.write('uuidapp', imeiBaru);
       });
+    }
+  }
+
+  void getFcmToken() async {
+    try {
+      // if (await InternetConnectionChecker().hasConnection == true) {
+      FirebaseMessaging.instance.getToken().then((newToken) {
+        dbDevice.insertFCMToken(nik: widget.nik, token: newToken.toString());
+        globals.pegawai.write('deviceId', newToken.toString());
+        // getCurrentUser();
+      }).catchError((e) {
+        globals.showAlertBerhasil(context: context, message: e);
+      });
+      pindahkeHomePage();
+      // } else {
+      // globals.showToast(message: "Tidak ada koneksi internet");
+      // }
+    } catch (_) {
+      globals.showAlertError(context: context, message: _.toString());
     }
   }
 

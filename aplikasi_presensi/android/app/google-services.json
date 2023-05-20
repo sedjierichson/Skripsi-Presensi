@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "21779768245",
+    "project_id": "skripsipresensifcm",
+    "storage_bucket": "skripsipresensifcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21779768245:android:a692fc5a75f915a5f66ffc",
+        "android_client_info": {
+          "package_name": "com.example.aplikasi_presensi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21779768245-r3b3c0u3du7sj9ff27jsebmj78og8s3p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7XVxceRHA75CxxKmbYjJwNlJLIWw5wTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21779768245-r3b3c0u3du7sj9ff27jsebmj78og8s3p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

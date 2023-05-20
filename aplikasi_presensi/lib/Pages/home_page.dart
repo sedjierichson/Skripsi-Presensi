@@ -666,6 +666,7 @@ class _HomePageState extends State<HomePage> {
   Widget buttonCardAbsenMasuk() {
     return GestureDetector(
       onTap: () {
+        // pindahAmbilFoto('11');
         // getJamMasukKerja(isHistory: 0);
         pindahScanBeacon();
       },
