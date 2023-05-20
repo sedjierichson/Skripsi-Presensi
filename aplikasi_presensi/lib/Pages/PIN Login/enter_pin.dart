@@ -2,6 +2,7 @@
 
 import 'package:aplikasi_presensi/Pages/PIN%20Login/verif_pin.dart';
 import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
+import 'package:aplikasi_presensi/api/dbservices_device.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/models/pegawai.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _EnterPinState extends State<EnterPin> {
   String pin_login = '';
   String pinTerdaftar = '';
   UserService db = UserService();
+  DeviceService dbDevice = DeviceService();
   List<Pegawai> p = [];
 
   void getPIN() async {
@@ -188,6 +190,9 @@ class _EnterPinState extends State<EnterPin> {
                           child: Text('Logout'),
                           onTap: () {
                             try {
+                              dbDevice.removeDeviceId(
+                                  nik: globals.pegawai.read('nik'),
+                                  token: globals.pegawai.read('deviceId'));
                               globals.pegawai.remove('nik');
                               globals.pegawai.remove('nama');
                               globals.pegawai.remove('jabatan');

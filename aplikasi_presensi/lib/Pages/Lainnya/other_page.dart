@@ -4,6 +4,7 @@ import 'package:aplikasi_presensi/Pages/Lainnya/izin_bawahan.dart';
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:aplikasi_presensi/Pages/custom_clipper.dart';
 import 'package:aplikasi_presensi/Pages/login_screen.dart';
+import 'package:aplikasi_presensi/api/dbservices_device.dart';
 import 'set_reminder.dart';
 import 'team_saya.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
@@ -24,6 +25,7 @@ class OtherPage extends StatefulWidget {
 class _OtherPageState extends State<OtherPage> {
   // List<apiRutanPegawai> bawahan = [];
   UserService db = UserService();
+  DeviceService dbDevice = DeviceService();
   bool isLoading = true;
   bool isError = false;
   bool adaBawahan = false;
@@ -86,10 +88,14 @@ class _OtherPageState extends State<OtherPage> {
 
   void pindahkeLogin() async {
     try {
+      dbDevice.removeDeviceId(
+          nik: globals.pegawai.read('nik'),
+          token: globals.pegawai.read('deviceId'));
       globals.pegawai.remove('nik');
       globals.pegawai.remove('nama');
       globals.pegawai.remove('jabatan');
       globals.pegawai.remove('nik_atasan');
+      globals.pegawai.remove('deviceId');
     } catch (e) {
       print(e.toString());
     }
