@@ -8,7 +8,6 @@ import 'package:aplikasi_presensi/Pages/home_page.dart';
 import 'package:aplikasi_presensi/api/apidbconfig.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/models/pegawai.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -26,7 +25,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController tfLoginNIK = TextEditingController();
   TextEditingController tfLoginPassword = TextEditingController();
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   String imeiHPSekarang = '';
   UserService db = UserService();
   late Pegawai p;

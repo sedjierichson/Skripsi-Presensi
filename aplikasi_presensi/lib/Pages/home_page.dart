@@ -10,7 +10,6 @@ import 'package:aplikasi_presensi/api/dbservices_presensi.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
 import 'package:aplikasi_presensi/api/notification_api.dart';
 import 'package:aplikasi_presensi/models/presensi.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -19,6 +18,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:workmanager/workmanager.dart';
 // import 'package:modal_bottom_sheet/src/bottom_sheet_route.dart' as mymodal;
 
 class HomePage extends StatefulWidget {
@@ -31,7 +31,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String formatter = DateFormat('d ' + 'MMMM ' + 'y').format(DateTime.now());
   String jamSekarang = '';
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   UserService db = UserService();
   PresensiService dbPresensi = PresensiService();
   PresensiService dbPresensi2 = PresensiService();
@@ -54,6 +53,13 @@ class _HomePageState extends State<HomePage> {
   bool hasilScanAdaSama = false;
   String idPresensiHistory = '';
   Presensi? presensiHistory;
+
+  void callbackDispatcher() {
+    Workmanager().executeTask((task, inputData) {
+      print("haloooooowowow"); //simpleTask will be emitted here.
+      return Future.value(true);
+    });
+  }
 
   void pindahScanBeacon() {
     Navigator.of(context, rootNavigator: true)
@@ -530,6 +536,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     NotificationWidget.init();
+    Workmanager().initialize(
+        callbackDispatcher, // The top level function, aka callbackDispatcher
+        isInDebugMode:
+            true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+        );
+    Workmanager().registerPeriodicTask(
+      "uniq",
+      "uniqiq",
+      frequency: Duration(seconds: 5),
+    );
     cekSudahAbsen();
     Future.delayed(const Duration(seconds: 5), () {
       checkBeacon();

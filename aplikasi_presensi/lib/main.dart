@@ -12,6 +12,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:workmanager/workmanager.dart';
+
+// void callbackDispatcher() {
+//   Workmanager().executeTask((task, inputData) {
+//     print("haloooooowowow"); //simpleTask will be emitted here.
+//     return Future.value(true);
+//   });
+// }
 
 void main() async {
   await GetStorage.init();
@@ -43,7 +51,23 @@ void main() async {
       Permission.notification.request();
     }
   });
+  await Permission.bluetoothScan.isDenied.then((value) {
+    if (value) {
+      Permission.bluetoothScan.request();
+    }
+  });
+  WidgetsFlutterBinding.ensureInitialized();
 
+  // await Workmanager().initialize(
+  //     callbackDispatcher, // The top level function, aka callbackDispatcher
+  //     isInDebugMode:
+  //         true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+  //     );
+  // Workmanager().registerPeriodicTask(
+  //   "uniq",
+  //   "uniqiq",
+  //   frequency: Duration(seconds: 5),
+  // );
   tz.initializeTimeZones();
 
   runApp(const MyApp());

@@ -3,7 +3,7 @@
 // const apiRUTAN = "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api";
 
 // Android
-// const apiUrl = "http://10.0.2.2:8888/api-presensi/api-presensi/api";
+const apiUrl = "http://10.0.2.2:8888/api-presensi/api-presensi/api";
 // const apiRUTAN = "http://10.0.2.2:8888/contoh-api-rutan/contoh-api-rutan/api";
 
 // Real Device
@@ -24,7 +24,7 @@
 //     "http://172.22.78.139:8888/contoh-api-rutan/contoh-api-rutan/api";
 
 // NGROK
-const apiUrl = "https://4aa2-182-16-163-206.ngrok-free.app/api-presensi/api";
+// const apiUrl = "https://4aa2-182-16-163-206.ngrok-free.app/api-presensi/api";
 // const apiUrl =
 //     "https://2e5e-180-247-95-226.ngrok-free.app/api-presensi/api-presensi/api";
 

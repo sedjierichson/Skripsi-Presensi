@@ -28,7 +28,6 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.2
-  device_info_plus: ^8.1.0
   firebase_messaging: ^14.6.1
   flutter:
     sdk: flutter
@@ -47,6 +46,7 @@ dependencies:
   quickalert: ^1.0.1
   timezone: ^0.9.1
   uuid: ^3.0.7
+  workmanager: ^0.5.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0

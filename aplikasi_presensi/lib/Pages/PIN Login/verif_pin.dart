@@ -7,7 +7,6 @@ import 'package:aplikasi_presensi/Pages/bottom_navbar.dart';
 import 'package:aplikasi_presensi/Pages/login_screen.dart';
 import 'package:aplikasi_presensi/api/dbservices_device.dart';
 import 'package:aplikasi_presensi/api/dbservices_user.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -39,7 +38,6 @@ class _VerifPinState extends State<VerifPin> {
   DeviceService dbDevice = DeviceService();
   String imeiBaru = "";
   var uuid = Uuid();
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   void pindahkeHomePage() {
     Navigator.pushAndRemoveUntil(
