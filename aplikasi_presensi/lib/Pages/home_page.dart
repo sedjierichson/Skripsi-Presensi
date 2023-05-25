@@ -282,64 +282,113 @@ class _HomePageState extends State<HomePage> {
   void getBeacon() async {
     try {
       beacon = await dbPresensi.getBeaconPresensi();
-      for (int i = 0; i < beacon.length; i++) {
-        var hasil = hasilbeacon.contains(beacon[i].toString());
-
-        if (hasil == false) {
-          //simpan jam beacon tidak terdeteksi
-          setState(() {
-            jamBeaconTidakTerdeteksi = jamSekarang;
-          });
-
-          //Kalau sudah absen masuk & beacon tidak ada
-          // if (sudahAbsenMasuk == true) {
-          //   NotificationWidget.showNotification(
-          //     title: "Presensi PT X",
-          //     body: 'Beacon tidak terdeteksi!',
-          //   );
-          // }
-          //kalau sudah absen masuk, tapi belum meninggalkan kantor
-          if (absenHistory == false && sudahAbsenMasuk == true) {
-            //kalau sudah absen masuk harian & tidak ada beacon
-            print('absen keluar is history');
-            //catat jam keluar
-            insertHistoryAbsenKeluarOtomatis();
-          }
-          // getJamPulangKerja();
-          // timer?.cancel();
-          setState(() {
-            hasilScanAdaSama = false;
-            isLoading = false;
-          });
-          break;
-        } else {
-          //ada beacon
-          // Keluar kantor -> Kembali ke kantor & beacon terdeteksi
-          if (absenHistory == true && sudahAbsenMasuk == true) {
-            //Update jam kembali setelah meninggalkan kantor
-            print('update history kembali is history');
-            updateHistoryJamKembali();
-            // setState(() {
-            //   absenHistory = false;
-            // });
-          }
-          // Ada beacon & belum absen masuk harian
-          else if (sudahAbsenMasuk == false) {
-            // Berada di kantor tapi belum absen masuk harian
-            print('baru datang kantor, belum absen');
-            NotificationWidget.showNotification(
-              title: "Presensi PT X",
-              body:
-                  'Beacon presensi terdeteksi ! Silahkan lakukan presensi masuk !',
-            );
-          }
-          setState(() {
-            hasilScanAdaSama = true;
-            isLoading = false;
-          });
-          break;
+      if (hasilbeacon.any((element) => beacon.contains(element))) {
+        if (absenHistory == true && sudahAbsenMasuk == true) {
+          //Update jam kembali setelah meninggalkan kantor
+          print('update history kembali is history');
+          updateHistoryJamKembali();
+          // setState(() {
+          //   absenHistory = false;
+          // });
         }
+        // Ada beacon & belum absen masuk harian
+        else if (sudahAbsenMasuk == false) {
+          // Berada di kantor tapi belum absen masuk harian
+          print('baru datang kantor, belum absen');
+          NotificationWidget.showNotification(
+            title: "Presensi PT X",
+            body:
+                'Beacon presensi terdeteksi ! Silahkan lakukan presensi masuk !',
+          );
+        }
+        setState(() {
+          hasilScanAdaSama = true;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          jamBeaconTidakTerdeteksi = jamSekarang;
+        });
+
+        //Kalau sudah absen masuk & beacon tidak ada
+        // if (sudahAbsenMasuk == true) {
+        //   NotificationWidget.showNotification(
+        //     title: "Presensi PT X",
+        //     body: 'Beacon tidak terdeteksi!',
+        //   );
+        // }
+        //kalau sudah absen masuk, tapi belum meninggalkan kantor
+        if (absenHistory == false && sudahAbsenMasuk == true) {
+          //kalau sudah absen masuk harian & tidak ada beacon
+          print('absen keluar is history');
+          //catat jam keluar
+          insertHistoryAbsenKeluarOtomatis();
+        }
+        // getJamPulangKerja();
+        // timer?.cancel();
+        setState(() {
+          hasilScanAdaSama = false;
+          isLoading = false;
+        });
       }
+      // for (int i = 0; i < beacon.length; i++) {
+      //   var hasil = hasilbeacon.contains(beacon[i].toString());
+
+      //   if (hasil == false) {
+      //     //simpan jam beacon tidak terdeteksi
+      //     setState(() {
+      //       jamBeaconTidakTerdeteksi = jamSekarang;
+      //     });
+
+      //     //Kalau sudah absen masuk & beacon tidak ada
+      //     // if (sudahAbsenMasuk == true) {
+      //     //   NotificationWidget.showNotification(
+      //     //     title: "Presensi PT X",
+      //     //     body: 'Beacon tidak terdeteksi!',
+      //     //   );
+      //     // }
+      //     //kalau sudah absen masuk, tapi belum meninggalkan kantor
+      //     if (absenHistory == false && sudahAbsenMasuk == true) {
+      //       //kalau sudah absen masuk harian & tidak ada beacon
+      //       print('absen keluar is history');
+      //       //catat jam keluar
+      //       insertHistoryAbsenKeluarOtomatis();
+      //     }
+      //     // getJamPulangKerja();
+      //     // timer?.cancel();
+      //     setState(() {
+      //       hasilScanAdaSama = false;
+      //       isLoading = false;
+      //     });
+      //     break;
+      //   } else {
+      //     //ada beacon
+      //     // Keluar kantor -> Kembali ke kantor & beacon terdeteksi
+      //     if (absenHistory == true && sudahAbsenMasuk == true) {
+      //       //Update jam kembali setelah meninggalkan kantor
+      //       print('update history kembali is history');
+      //       updateHistoryJamKembali();
+      //       // setState(() {
+      //       //   absenHistory = false;
+      //       // });
+      //     }
+      //     // Ada beacon & belum absen masuk harian
+      //     else if (sudahAbsenMasuk == false) {
+      //       // Berada di kantor tapi belum absen masuk harian
+      //       print('baru datang kantor, belum absen');
+      //       NotificationWidget.showNotification(
+      //         title: "Presensi PT X",
+      //         body:
+      //             'Beacon presensi terdeteksi ! Silahkan lakukan presensi masuk !',
+      //       );
+      //     }
+      //     setState(() {
+      //       hasilScanAdaSama = true;
+      //       isLoading = false;
+      //     });
+      //     break;
+      //   }
+      // }
     } catch (e) {
       print(e.toString());
     }

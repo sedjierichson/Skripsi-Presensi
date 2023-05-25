@@ -99,41 +99,74 @@ class _scanBeaconPageState extends State<scanBeaconPage> {
     // print(hasilbeacon[0]);
     try {
       beacon = await dbPresensi.getBeaconPresensi();
-      for (int i = 0; i < beacon.length; i++) {
-        var hasil = hasilbeacon.contains(beacon[i].toString());
-        print("Beacon yang sama adalah : " + beacon[i]);
-        if (hasil == true) {
-          pindahAmbilFoto(beacon[i]);
-          setState(() {
-            hasilScanAdaSama = true;
-            isLoading = false;
-          });
-          break;
-        } else {
-          setState(() {
-            hasilScanAdaSama = false;
-            isLoading = false;
-          });
-          globals.showAlertError(
-              context: context,
-              message:
-                  'Beacon tidak terdeteksi. Kembali ke halaman beranda...');
+      if (hasilbeacon.any((element) => beacon.contains(element))) {
+        print('index beacon sama' +
+            beacon
+                .indexWhere((element) => hasilbeacon.contains(element))
+                .toString());
+        pindahAmbilFoto(beacon[
+            beacon.indexWhere((element) => hasilbeacon.contains(element))]);
+        setState(() {
+          hasilScanAdaSama = true;
+          isLoading = false;
+        });
+      } else {
+        print('tidak ada sama');
+        setState(() {
+          hasilScanAdaSama = false;
+          isLoading = false;
+        });
+        globals.showAlertError(
+            context: context,
+            message: 'Beacon tidak terdeteksi. Kembali ke halaman beranda...');
 
-          Future.delayed(const Duration(seconds: 3), () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return BottomNavBar();
-                },
-              ),
-              (route) => false,
-            );
-          });
-
-          break;
-        }
+        Future.delayed(const Duration(seconds: 3), () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return BottomNavBar();
+              },
+            ),
+            (route) => false,
+          );
+        });
       }
+      // for (int i = 0; i < beacon.length; i++) {
+      //   var hasil = hasilbeacon[i].contains(beacon[i].toString());
+      //   if (hasil == true) {
+      //     print("Beacon yang sama adalah : " + beacon[i]);
+      //     pindahAmbilFoto(beacon[i]);
+      //     setState(() {
+      //       hasilScanAdaSama = true;
+      //       isLoading = false;
+      //     });
+      //     break;
+      //   } else {
+      //     setState(() {
+      //       hasilScanAdaSama = false;
+      //       isLoading = false;
+      //     });
+      //     globals.showAlertError(
+      //         context: context,
+      //         message:
+      //             'Beacon tidak terdeteksi. Kembali ke halaman beranda...');
+
+      //     Future.delayed(const Duration(seconds: 3), () {
+      //       Navigator.pushAndRemoveUntil(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (BuildContext context) {
+      //             return BottomNavBar();
+      //           },
+      //         ),
+      //         (route) => false,
+      //       );
+      //     });
+
+      //     // break;
+      //   }
+      // }
     } catch (e) {
       print(e.toString());
     }
