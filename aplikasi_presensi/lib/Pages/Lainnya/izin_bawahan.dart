@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:aplikasi_presensi/Pages/Lainnya/detail_izin_bawahan.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
 import 'package:aplikasi_presensi/models/izin.dart';
@@ -42,6 +44,7 @@ class _IzinBawahanPageState extends State<IzinBawahanPage> {
     try {
       daftarIzin =
           await db.getIzin(nikAtasan: globals.pegawai.read('nik').toString());
+      log(daftarIzin[0].nik.toString());
       textTanggal = DateFormat('MMMM yyyy').format(filter!);
       tahunFilter = DateFormat('yyyy').format(filter);
       bulanFilter = DateFormat('MM').format(filter);

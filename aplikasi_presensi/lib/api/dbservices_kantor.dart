@@ -24,8 +24,8 @@ class KantorServices {
         for (int i = 0; i < data.length; i++) {
           Kantor kantor = Kantor(
               id: int.parse(data[i]['id']),
-              nama: data[i]['nama'],
-              alamat: data[i]['alamat']);
+              nama: data[i]['nama'].toString(),
+              alamat: data[i]['alamat'].toString());
           listKantor.add(kantor);
         }
         return listKantor;

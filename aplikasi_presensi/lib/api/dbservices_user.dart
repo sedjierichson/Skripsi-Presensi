@@ -23,11 +23,11 @@ class UserService {
       } else {
         var data = map['data'];
         Pegawai pegawai = Pegawai(
-          nama: data['nama'],
-          nik: data['nik'],
-          jabatan: data['jabatan'],
-          nik_atasan: data['nik_atasan'],
-          email: data['email'],
+          nama: data['nama'].toString(),
+          nik: data['nik'].toString(),
+          jabatan: data['jabatan'].toString(),
+          nik_atasan: data['nik_atasan'].toString(),
+          email: data['email'].toString(),
         );
         // print(pegawai.imei);
         return pegawai;
@@ -86,9 +86,9 @@ class UserService {
       } else {
         var data = map['data'];
         DataHpPegawai hppegawai = DataHpPegawai(
-          nik: data['nik'],
-          imei: data['imei'],
-          securityCode: data['security_code'],
+          nik: data['nik'].toString(),
+          imei: data['imei'].toString(),
+          securityCode: data['security_code'].toString(),
         );
         // print(pegawai.imei);
         return hppegawai;

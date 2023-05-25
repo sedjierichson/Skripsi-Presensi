@@ -89,16 +89,16 @@ class PresensiService {
         List<Presensi> listPresensi = [];
         for (int i = 0; i < data.length; i++) {
           Presensi presensi = Presensi(
-              id: data[i]['id'],
+              id: data[i]['id'].toString(),
               nik: data[i]['nik'].toString(),
               idKantor: data[i]['id_kantor'].toString(),
               lokasi: data[i]['lokasi'].toString(),
-              tanggal: data[i]['tanggal'],
-              jamMasuk: data[i]['jam_masuk'],
-              jamKeluar: data[i]['jam_keluar'],
-              foto: data[i]['foto'],
-              kategori: data[i]['kategori'],
-              status: data[i]['status']);
+              tanggal: data[i]['tanggal'].toString(),
+              jamMasuk: data[i]['jam_masuk'].toString(),
+              jamKeluar: data[i]['jam_keluar'].toString(),
+              foto: data[i]['foto'].toString(),
+              kategori: data[i]['kategori'].toString(),
+              status: data[i]['status'].toString());
           listPresensi.add(presensi);
         }
         return listPresensi;
@@ -132,16 +132,16 @@ class PresensiService {
       } else {
         var data = map['data'];
         Presensi presensi = Presensi(
-            id: data['id'],
+            id: data['id'].toString(),
             nik: data['nik'].toString(),
             idKantor: data['id_kantor'].toString(),
             lokasi: data['lokasi'].toString(),
-            tanggal: data['tanggal'],
-            jamMasuk: data['jam_masuk'],
-            jamKeluar: data['jam_keluar'],
-            foto: data['foto'],
-            kategori: data['kategori'],
-            status: data['status']);
+            tanggal: data['tanggal'].toString(),
+            jamMasuk: data['jam_masuk'].toString(),
+            jamKeluar: data['jam_keluar'].toString(),
+            foto: data['foto'].toString(),
+            kategori: data['kategori'].toString(),
+            status: data['status'].toString());
         return presensi;
       }
     } else {
@@ -329,16 +329,16 @@ class PresensiService {
         List<Presensi> listPresensi = [];
         for (int i = 0; i < data.length; i++) {
           Presensi presensi = Presensi(
-              id: data[i]['id'],
+              id: data[i]['id'].toString(),
               nik: data[i]['nik'].toString(),
               idKantor: data[i]['id_kantor'].toString(),
               lokasi: data[i]['lokasi'].toString(),
-              tanggal: data[i]['tanggal'],
-              jamMasuk: data[i]['jam_masuk'],
-              jamKeluar: data[i]['jam_keluar'],
-              foto: data[i]['foto'],
-              kategori: data[i]['kategori'],
-              status: data[i]['status']);
+              tanggal: data[i]['tanggal'].toString(),
+              jamMasuk: data[i]['jam_masuk'].toString(),
+              jamKeluar: data[i]['jam_keluar'].toString(),
+              foto: data[i]['foto'].toString(),
+              kategori: data[i]['kategori'].toString(),
+              status: data[i]['status'].toString());
           listPresensi.add(presensi);
         }
         return listPresensi;

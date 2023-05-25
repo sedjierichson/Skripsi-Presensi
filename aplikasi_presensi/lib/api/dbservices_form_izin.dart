@@ -15,6 +15,7 @@ class FormIzinService {
       uri = "$apiUrl/detail_izin.php?nik_pegawai=$nikUser";
     } else if (nikAtasan != null) {
       uri = "$apiUrl/detail_izin.php?nik_atasan=$nikAtasan";
+      print(uri);
     } else {
       uri = "$apiUrl/detail_izin.php?";
     }
@@ -35,25 +36,26 @@ class FormIzinService {
         List<Izin> listIzin = [];
         for (int i = 0; i < data.length; i++) {
           Izin izin = Izin(
-            id: data[i]['id'],
-            idJenisIzin: data[i]['id_jenis_izin'],
-            jenis: data[i]['tipe_izin'],
-            nik: data[i]['nik_pegawai'],
-            nama: data[i]['nama'],
-            nikAtasan: data[i]['nik_atasan'],
-            tanggalAwal: data[i]['tanggal_awal'],
-            tanggalAkhir: data[i]['tanggal_akhir'],
-            jamAwal: data[i]['jam_awal'],
-            jamAkhir: data[i]['jam_akhir'],
-            alasan: data[i]['alasan'],
-            tempatTujuan: data[i]['tempat_tujuan'],
-            uraianTugas: data[i]['uraian_tugas'],
-            tanggalPengajuan: data[i]['tanggal_pengajuan'],
-            tanggalRespon: data[i]['tanggal_respon'],
-            status: data[i]['status'],
+            id: data[i]['id'].toString(),
+            idJenisIzin: data[i]['id_jenis_izin'].toString(),
+            jenis: data[i]['tipe_izin'].toString(),
+            nik: data[i]['nik_pegawai'].toString(),
+            nama: data[i]['nama'].toString(),
+            nikAtasan: data[i]['nik_atasan'].toString(),
+            tanggalAwal: data[i]['tanggal_awal'].toString(),
+            tanggalAkhir: data[i]['tanggal_akhir'].toString(),
+            jamAwal: data[i]['jam_awal'].toString(),
+            jamAkhir: data[i]['jam_akhir'].toString(),
+            alasan: data[i]['alasan'].toString(),
+            tempatTujuan: data[i]['tempat_tujuan'].toString(),
+            uraianTugas: data[i]['uraian_tugas'].toString(),
+            tanggalPengajuan: data[i]['tanggal_pengajuan'].toString(),
+            tanggalRespon: data[i]['tanggal_respon'].toString(),
+            status: data[i]['status'].toString(),
           );
           listIzin.add(izin);
         }
+        print(listIzin);
         return listIzin;
       }
     } else {
