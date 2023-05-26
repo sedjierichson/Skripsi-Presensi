@@ -18,7 +18,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
-import 'package:workmanager/workmanager.dart';
 // import 'package:modal_bottom_sheet/src/bottom_sheet_route.dart' as mymodal;
 
 class HomePage extends StatefulWidget {
@@ -53,13 +52,6 @@ class _HomePageState extends State<HomePage> {
   bool hasilScanAdaSama = false;
   String idPresensiHistory = '';
   Presensi? presensiHistory;
-
-  void callbackDispatcher() {
-    Workmanager().executeTask((task, inputData) {
-      print("haloooooowowow"); //simpleTask will be emitted here.
-      return Future.value(true);
-    });
-  }
 
   void pindahScanBeacon() {
     Navigator.of(context, rootNavigator: true)
@@ -536,16 +528,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     NotificationWidget.init();
-    Workmanager().initialize(
-        callbackDispatcher, // The top level function, aka callbackDispatcher
-        isInDebugMode:
-            true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-        );
-    Workmanager().registerPeriodicTask(
-      "uniq",
-      "uniqiq",
-      frequency: Duration(seconds: 5),
-    );
     cekSudahAbsen();
     Future.delayed(const Duration(seconds: 5), () {
       checkBeacon();
