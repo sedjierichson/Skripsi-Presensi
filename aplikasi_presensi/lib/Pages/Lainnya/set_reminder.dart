@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:aplikasi_presensi/Pages/Lainnya/other_page.dart';
 import 'package:aplikasi_presensi/api/notification_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -80,6 +82,18 @@ class _SetReminderState extends State<SetReminder> {
                         jamKeluar: jamMasuk.toString().substring(0, 2),
                         menitKeluar: jamMasuk.toString().substring(3, 5),
                       );
+                      QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.success,
+                          text: 'Berhasil mengatur jam pengingat',
+                          confirmBtnText: 'OK',
+                          confirmBtnColor: Colors.blueAccent,
+                          autoCloseDuration: Duration(seconds: 5));
+                      Navigator.of(context)
+                        ..pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => OtherPage()),
+                            (Route<dynamic> route) => false);
                     },
                     child: Text(
                       "SIMPAN",

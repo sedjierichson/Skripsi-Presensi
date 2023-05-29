@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:aplikasi_presensi/Pages/Lainnya/izin_bawahan.dart';
+import 'package:aplikasi_presensi/Pages/Lainnya/log_data.dart';
 import 'package:aplikasi_presensi/Pages/PIN%20Login/enter_pin.dart';
 import 'package:aplikasi_presensi/Pages/custom_clipper.dart';
 import 'package:aplikasi_presensi/Pages/login_screen.dart';
@@ -80,6 +81,12 @@ class _OtherPageState extends State<OtherPage> {
     }));
   }
 
+  void pindahkeLogData() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return const LogData();
+    }));
+  }
+
   void pindahkeIzinBawahan() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return const IzinBawahanPage();
@@ -127,33 +134,6 @@ class _OtherPageState extends State<OtherPage> {
                         SizedBox(
                           height: 40,
                         ),
-                        // adaBawahan == true
-                        //     ? MaterialButton(
-                        //         padding: EdgeInsets.all(15),
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(15),
-                        //         ),
-                        //         color: Color.fromARGB(255, 207, 207, 207),
-                        //         onPressed: () {
-                        //           pindahkeTeamSaya();
-                        //         },
-                        //         child: Row(
-                        //           children: [
-                        //             Icon(Icons.group),
-                        //             SizedBox(
-                        //               width: 20,
-                        //             ),
-                        //             Expanded(
-                        //               child: Text('Team Saya'),
-                        //             ),
-                        //             Icon(
-                        //               Icons.arrow_forward_ios,
-                        //               size: 15,
-                        //             )
-                        //           ],
-                        //         ),
-                        //       )
-                        //     : SizedBox(),
                         MaterialButton(
                           padding: EdgeInsets.all(15),
                           shape: RoundedRectangleBorder(
@@ -273,7 +253,9 @@ class _OtherPageState extends State<OtherPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
                           color: Color.fromARGB(255, 207, 207, 207),
-                          onPressed: () {},
+                          onPressed: () {
+                            pindahkeLogData();
+                          },
                           child: Row(
                             children: [
                               Icon(Icons.assignment_rounded),

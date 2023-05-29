@@ -221,7 +221,7 @@ class _HomePageState extends State<HomePage> {
     // if (sudahAbsenMasuk == true) {
     //Scanning bluetooth
     timer = Timer.periodic(Duration(seconds: 6), (timer) {
-      print('scanning bluetooth lagi');
+      // print('scanning bluetooth lagi');
       setState(() {
         hasilbeacon = [];
         scanResultList = [];
@@ -566,7 +566,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width / 3,
+                      width: MediaQuery.of(context).size.width,
                       child: Row(
                         children: [
                           Text(
