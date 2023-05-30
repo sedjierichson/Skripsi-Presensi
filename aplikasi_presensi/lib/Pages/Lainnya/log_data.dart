@@ -146,23 +146,9 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "5", keterangan: "tanpa penghalang");
-                        },
-                        child: Text('5 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
                               jarak: "10", keterangan: "tanpa penghalang");
                         },
                         child: Text('10 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
-                              jarak: "15", keterangan: "tanpa penghalang");
-                        },
-                        child: Text('15 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -174,16 +160,30 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "25", keterangan: "tanpa penghalang");
+                              jarak: "30", keterangan: "tanpa penghalang");
                         },
-                        child: Text('25 meter'),
+                        child: Text('30 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "30", keterangan: "tanpa penghalang");
+                              jarak: "35", keterangan: "tanpa penghalang");
                         },
-                        child: Text('30 meter'),
+                        child: Text('35 meter'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          checkBeacon(
+                              jarak: "40", keterangan: "tanpa penghalang");
+                        },
+                        child: Text('40 meter'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          checkBeacon(
+                              jarak: "45", keterangan: "tanpa penghalang");
+                        },
+                        child: Text('45 meter'),
                       ),
                     ],
                   ),
@@ -196,23 +196,9 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "5", keterangan: "penghalang pintu kaca");
-                        },
-                        child: Text('5 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
                               jarak: "10", keterangan: "penghalang pintu kaca");
                         },
                         child: Text('10 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
-                              jarak: "15", keterangan: "penghalang pintu kaca");
-                        },
-                        child: Text('15 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -224,16 +210,23 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "25", keterangan: "penghalang pintu kaca");
+                              jarak: "30", keterangan: "penghalang pintu kaca");
                         },
-                        child: Text('25 meter'),
+                        child: Text('30 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "30", keterangan: "penghalang pintu kaca");
+                              jarak: "35", keterangan: "penghalang pintu kaca");
                         },
-                        child: Text('30 meter'),
+                        child: Text('35 meter'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          checkBeacon(
+                              jarak: "40", keterangan: "penghalang pintu kaca");
+                        },
+                        child: Text('40 meter'),
                       ),
                     ],
                   ),
@@ -246,23 +239,9 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "5", keterangan: "penghalang tembok");
-                        },
-                        child: Text('5 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
                               jarak: "10", keterangan: "penghalang tembok");
                         },
                         child: Text('10 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
-                              jarak: "15", keterangan: "penghalang tembok");
-                        },
-                        child: Text('15 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -274,16 +253,23 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "25", keterangan: "penghalang tembok");
+                              jarak: "30", keterangan: "penghalang tembok");
                         },
-                        child: Text('25 meter'),
+                        child: Text('30 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "30", keterangan: "penghalang tembok");
+                              jarak: "35", keterangan: "penghalang tembok");
                         },
-                        child: Text('30 meter'),
+                        child: Text('35 meter'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          checkBeacon(
+                              jarak: "40", keterangan: "penghalang tembok");
+                        },
+                        child: Text('40 meter'),
                       ),
                     ],
                   ),
@@ -296,23 +282,9 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "5", keterangan: "penghalang badan");
-                        },
-                        child: Text('5 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
                               jarak: "10", keterangan: "penghalang badan");
                         },
                         child: Text('10 meter'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          checkBeacon(
-                              jarak: "15", keterangan: "penghalang badan");
-                        },
-                        child: Text('15 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -324,16 +296,23 @@ class _LogDataState extends State<LogData> {
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "25", keterangan: "penghalang badan");
+                              jarak: "30", keterangan: "penghalang badan");
                         },
-                        child: Text('25 meter'),
+                        child: Text('30 meter'),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           checkBeacon(
-                              jarak: "30", keterangan: "penghalang badan");
+                              jarak: "35", keterangan: "penghalang badan");
                         },
-                        child: Text('30 meter'),
+                        child: Text('35 meter'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          checkBeacon(
+                              jarak: "40", keterangan: "penghalang badan");
+                        },
+                        child: Text('40 meter'),
                       ),
                     ],
                   ),
