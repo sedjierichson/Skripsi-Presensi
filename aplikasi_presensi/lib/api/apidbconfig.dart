@@ -10,6 +10,5 @@ const apiRUTAN = "https://rutan.tech/temp_ot_progresearch/api";
 
 // NGROK
 // const apiUrl = "https://4aa2-182-16-163-206.ngrok-free.app/api-presensi/api";
-// const apiUrl =
-//     "https://9416-180-247-95-226.ngrok-free.app/api-presensi/api-presensi/api";
-
+const apiUrl =
+    "https://c1dd-180-253-164-83.ngrok-free.app/api-presensi/api-presensi/api";
