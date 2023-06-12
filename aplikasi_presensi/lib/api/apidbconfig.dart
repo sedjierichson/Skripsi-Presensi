@@ -1,7 +1,8 @@
 const apiRUTAN = "https://rutan.tech/temp_ot_progresearch/api";
 
 // iOS
-// const apiUrl = "http://127.0.0.1:8888/api-presensi/api-presensi/api";
+const apiUrl = "http://127.0.0.1:8888/api-presensi/api-presensi/api";
+// const apiUrl = "http://192.168.0.101:8888/api-presensi/api-presensi/api";
 // const apiRUTAN = "http://127.0.0.1:8888/contoh-api-rutan/contoh-api-rutan/api";
 
 // Android
@@ -10,5 +11,5 @@ const apiRUTAN = "https://rutan.tech/temp_ot_progresearch/api";
 
 // NGROK
 // const apiUrl = "https://4aa2-182-16-163-206.ngrok-free.app/api-presensi/api";
-const apiUrl =
-    "https://c1dd-180-253-164-83.ngrok-free.app/api-presensi/api-presensi/api";
+// const apiUrl =
+//     "https://2a31-203-189-122-12.ngrok-free.app/api-presensi/api-presensi/api";

@@ -126,7 +126,25 @@ class _detailIzinBawahanState extends State<detailIzinBawahan> {
 
   void terimaTolakIzin(String id, String tanggal, String mode) async {
     try {
-      await db.terimaTolakIzin(id, tanggal, mode);
+      if (widget.detail.idJenisIzin == '4') {
+        await db.terimaTolakIzin(
+          id: id,
+          tanggal_respon: tanggal,
+          mode: mode,
+          id_jenis_izin: widget.detail.idJenisIzin.toString(),
+          nik: widget.detail.nik.toString(),
+          id_kantor: widget.detail.id_kantor.toString(),
+          tanggal: widget.detail.tanggalAwal.toString(),
+          jam_masuk: widget.detail.jamAwal.toString(),
+          jam_keluar: widget.detail.jamAkhir.toString(),
+          kategori: "E",
+          img_name: "dariizin",
+          image: "dariizin",
+          is_history: "0",
+        );
+      } else {
+        await db.terimaTolakIzin(id: id, tanggal_respon: tanggal, mode: mode);
+      }
       Navigator.pop(context);
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {

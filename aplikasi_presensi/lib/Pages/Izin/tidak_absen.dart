@@ -3,6 +3,8 @@
 import 'package:aplikasi_presensi/Pages/Izin/list_izin.dart';
 import 'package:aplikasi_presensi/Pages/Izin/menu_izin.dart';
 import 'package:aplikasi_presensi/api/dbservices_form_izin.dart';
+import 'package:aplikasi_presensi/api/dbservices_kantor.dart';
+import 'package:aplikasi_presensi/models/kantor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -25,6 +27,10 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
   TextEditingController tfJamKeluar = TextEditingController();
   TextEditingController tfAlasanLainnyaIzin = TextEditingController();
   String tanggal_pengajuan = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  late List<Kantor> listKantor;
+  String? valueChoose;
+  KantorServices dbKantor = KantorServices();
+  bool isLoading = true;
 
   String? alasan;
   String? tanggalIzin;
@@ -36,6 +42,20 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
       return const ListIzin();
     }));
+  }
+
+  void getListKantor() async {
+    try {
+      listKantor = await dbKantor.getDataKantor();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print(e.toString());
+    }
   }
 
   void submitForm() async {
@@ -66,6 +86,12 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
     } else {
       print("IZIN FORM LENGKAP");
     }
+  }
+
+  @override
+  void initState() {
+    getListKantor();
+    super.initState();
   }
 
   @override
@@ -135,6 +161,17 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
                         suffixIcon: Icon(Icons.calendar_month),
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    // height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey)),
+                    child: dropdownListKantor(),
                   ),
                   SizedBox(
                     height: 20,
@@ -384,5 +421,35 @@ class _PemberitahuanTidakAbsenState extends State<PemberitahuanTidakAbsen> {
         ),
       ),
     );
+  }
+
+  Widget dropdownListKantor() {
+    if (isLoading == false) {
+      return DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          hint: Text('Pilih Kantor Tujuan'),
+          value: valueChoose,
+          icon: const Icon(Icons.arrow_downward),
+          elevation: 16,
+          style: const TextStyle(color: Colors.black),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              valueChoose = value!;
+              print(valueChoose);
+            });
+          },
+          items: listKantor.map((value) {
+            return DropdownMenuItem(
+              value: value.id.toString(),
+              child: Text(value.nama.toString()),
+            );
+          }).toList(),
+        ),
+      );
+    } else {
+      return SizedBox();
+    }
   }
 }

@@ -5,6 +5,7 @@ class Izin {
   String nik;
   String nama;
   String nikAtasan;
+  String? id_kantor;
   String? tanggalAwal;
   String? tanggalAkhir;
   String? jamAwal;
@@ -23,6 +24,7 @@ class Izin {
       required this.nik,
       required this.nama,
       required this.nikAtasan,
+      this.id_kantor,
       this.tanggalAwal,
       this.tanggalAkhir,
       this.jamAwal,
