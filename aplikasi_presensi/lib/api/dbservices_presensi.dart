@@ -108,14 +108,16 @@ class PresensiService {
     }
   }
 
-  Future<List<Rekap>> getDataRekat({String nik_atasan = ""}) async {
+  Future<List<Rekap>> getDataRekat(
+      {String nik_atasan = "", String bulan = "", String tahun = ""}) async {
     Map<String, String> requestHeaders = {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*"
     };
     String uri;
 
-    uri = "$apiUrl/presensi.php?nik_atasan=$nik_atasan";
+    uri =
+        "$apiUrl/presensi.php?nik_atasan=$nik_atasan&bulan_rekap=$bulan&tahun_rekap=$tahun";
     final response = await http.get(
       Uri.parse(uri),
       headers: requestHeaders,
@@ -123,11 +125,12 @@ class PresensiService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> map = json.decode(response.body);
+      // print(map);
       if (map['status'] == 0) {
         throw (map['message']);
       } else {
         List<dynamic> data = map['data'];
-        print(data);
+        // print(data);
         List<Rekap> listPresensi = [];
         for (int i = 0; i < data.length; i++) {
           Rekap rekap = Rekap(

@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 
 class rekapKehadiran extends StatefulWidget {
   const rekapKehadiran({super.key});
@@ -26,14 +29,16 @@ class _rekapKehadiranState extends State<rekapKehadiran> {
   bool isLoadingAll = true;
   bool isErrorAll = false;
   List<Rekap> kehadiran = [];
+  String textTanggal = "";
 
   @override
   void initState() {
-    getBawahanUser();
+    textTanggal = DateFormat('MMMM yyyy').format(DateTime.now());
+    getBawahanUser(DateTime.now());
     super.initState();
   }
 
-  void getBawahanUser() async {
+  void getBawahanUser(DateTime filter) async {
     setState(() {
       isLoading = true;
       isError = false;
@@ -51,21 +56,24 @@ class _rekapKehadiranState extends State<rekapKehadiran> {
         isError = true;
       });
     }
-    getDataPresensi();
+    getDataPresensi(filter: filter);
   }
 
-  void getDataPresensi() async {
+  void getDataPresensi({required DateTime filter}) async {
+    String tahunFilter = DateFormat('yyyy').format(filter);
+    String bulanFilter = DateFormat('MM').format(filter);
     try {
       kehadiran = await db2.getDataRekat(
-        nik_atasan: '1',
-      );
+          nik_atasan: '1', bulan: bulanFilter, tahun: tahunFilter);
+      // print(kehadiran);
       setState(() {
         isLoadingAll = false;
       });
     } catch (e) {
+      print(e.toString());
       setState(() {
-        isLoadingAll = false;
-        isErrorAll = true;
+        isLoading = false;
+        isError = true;
       });
     }
   }
@@ -79,14 +87,58 @@ class _rekapKehadiranState extends State<rekapKehadiran> {
             padding: EdgeInsets.all(15),
             child: Column(
               children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      autofocus: true,
+                      onTap: () {
+                        getDataPresensi(filter: DateTime.now());
+                      },
+                      child: Icon(Icons.refresh),
+                    ),
+                    Text(
+                      'Rekap Kehadiran',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        DatePicker.showPicker(
+                          context,
+                          pickerModel: CustomMonthPicker(
+                            currentTime: DateTime.now(),
+                            minTime: DateTime(2020, 1, 1),
+                            maxTime: DateTime.now(),
+                          ),
+                          onConfirm: (val) {
+                            setState(() {
+                              kehadiran.clear;
+                              textTanggal = DateFormat('MMMM yyyy').format(val);
+                              getDataPresensi(filter: val);
+                            });
+                          },
+                        );
+                      },
+                      child: Icon(FontAwesomeIcons.calendar),
+                    ),
+                  ],
+                ),
                 Text(
-                  'Rekap Kehadiran',
+                  textTanggal,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                   ),
                 ),
-                Expanded(child: cardTeamSaya())
+                SizedBox(
+                  height: 15,
+                ),
+                cardTeamSaya()
               ],
             ),
           ),
@@ -97,60 +149,64 @@ class _rekapKehadiranState extends State<rekapKehadiran> {
 
   Widget cardTeamSaya() {
     if (isLoading == false && isError == false) {
-      return ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: kehadiran.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              // pindahkeMenuDetail(
-              //     detail: bawahan[index], jabatan: widget.jabatan);
-            },
-            child: Container(
-              margin: EdgeInsets.only(bottom: 5),
-              padding:
-                  EdgeInsets.only(top: 10, left: 20, bottom: 10, right: 10),
-              alignment: Alignment.centerLeft,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: index % 2 == 0
-                      ? HexColor('#FFA133')
-                      : HexColor('#C3CF0A')),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Text(
-                      //   bawahan[index].nama.toString(),
-                      //   style: TextStyle(
-                      //       fontWeight: FontWeight.bold, fontSize: 15),
-                      // ),
-                      Text(
-                        'NIK : ' + kehadiran[index].nik.toString(),
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Text(
-                        'Posisi : ' + kehadiran[index].kategori.toString(),
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Text(
-                        'Kategori : ' + kehadiran[index].jumlah.toString(),
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
+      return Expanded(
+        child: SingleChildScrollView(
+          child: DataTable(
+            columnSpacing: 30,
+            columns: [
+              DataColumn(
+                label: Container(
+                  width: 90,
+                  child: Text(
+                    'NIK',
+                    textAlign: TextAlign.center,
                   ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  )
-                ],
+                ),
               ),
-            ),
-          );
-        },
+              DataColumn(
+                  label: Text(
+                'Kategori',
+                textAlign: TextAlign.center,
+              )),
+              DataColumn(
+                  label: Text(
+                'Jumlah',
+                textAlign: TextAlign.center,
+              )),
+            ],
+            rows: kehadiran.map((e) {
+              return DataRow(cells: [
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      e.nik,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      e.kategori.toString(),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      e.jumlah.toString(),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        ),
       );
     } else if (isLoading == true) {
       return const Center(
@@ -160,12 +216,14 @@ class _rekapKehadiranState extends State<rekapKehadiran> {
       return Center(
         child: Column(
           children: [
-            Text("Unknown Error"),
+            Text("Data Tidak Ditemukan"),
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  // daftarIzin.clear();
-                  // getSemuaMateri();
+                  isError = false;
+                  kehadiran.clear;
+                  textTanggal = DateFormat('MMMM yyyy').format(DateTime.now());
+                  getDataPresensi(filter: DateTime.now());
                 });
               },
               child: Text("Tap to refresh"),
@@ -174,5 +232,23 @@ class _rekapKehadiranState extends State<rekapKehadiran> {
         ),
       );
     }
+  }
+}
+
+class CustomMonthPicker extends DatePickerModel {
+  CustomMonthPicker(
+      {required DateTime currentTime,
+      DateTime? minTime,
+      DateTime? maxTime,
+      LocaleType? locale})
+      : super(
+            locale: locale,
+            minTime: minTime,
+            maxTime: maxTime,
+            currentTime: currentTime);
+
+  @override
+  List<int> layoutProportions() {
+    return [1, 1, 0];
   }
 }
