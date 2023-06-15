@@ -191,6 +191,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     margin: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height / 15),
                     child: TextField(
+                      obscureText: true,
+                      keyboardType: TextInputType.number,
                       controller: tfLoginNIK,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(
@@ -206,6 +208,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     margin: EdgeInsets.only(top: 5),
                     child: TextField(
+                      obscureText: true,
+                      keyboardType: TextInputType.number,
                       controller: tfLoginPassword,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(

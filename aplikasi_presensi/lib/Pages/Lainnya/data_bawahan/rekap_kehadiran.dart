@@ -94,6 +94,8 @@ class _rekapKehadiranState extends State<rekapKehadiran> {
                     InkWell(
                       autofocus: true,
                       onTap: () {
+                        textTanggal =
+                            DateFormat('MMMM yyyy').format(DateTime.now());
                         getDataPresensi(filter: DateTime.now());
                       },
                       child: Icon(Icons.refresh),
