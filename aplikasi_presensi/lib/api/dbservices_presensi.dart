@@ -1,4 +1,5 @@
 import 'package:aplikasi_presensi/models/presensi.dart';
+import 'package:aplikasi_presensi/models/rekap.dart';
 
 import 'apidbconfig.dart';
 import 'dart:convert';
@@ -56,22 +57,21 @@ class PresensiService {
       {String nik = "",
       String bulan = "",
       String tahun = "",
-      String id = ""}) async {
+      String id = "",
+      String nik_atasan = ""}) async {
     Map<String, String> requestHeaders = {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*"
     };
     String uri;
-    print('masuk');
-    // print(id);
-    // print(nik);
-    // print(tahun);
     if (nik != '') {
       uri = "$apiUrl/presensi.php?nik=$nik";
     } else if (nik != '' && bulan != '' && tahun != '') {
       uri = "$apiUrl/presensi.php?nikk=$nik&tahun=$tahun&bulan=$bulan";
     } else if (id != '') {
       uri = "$apiUrl/presensi.php?id=$id";
+    } else if (nik_atasan != '') {
+      uri = "$apiUrl/presensi.php?nik_atasan=$nik_atasan";
     } else {
       uri = "$apiUrl/presensi.php";
     }
@@ -100,6 +100,42 @@ class PresensiService {
               kategori: data[i]['kategori'].toString(),
               status: data[i]['status'].toString());
           listPresensi.add(presensi);
+        }
+        return listPresensi;
+      }
+    } else {
+      throw ("Gagal mengambil data sub-materi");
+    }
+  }
+
+  Future<List<Rekap>> getDataRekat({String nik_atasan = ""}) async {
+    Map<String, String> requestHeaders = {
+      "Accept": "application/json",
+      "Access-Control_Allow_Origin": "*"
+    };
+    String uri;
+
+    uri = "$apiUrl/presensi.php?nik_atasan=$nik_atasan";
+    final response = await http.get(
+      Uri.parse(uri),
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['status'] == 0) {
+        throw (map['message']);
+      } else {
+        List<dynamic> data = map['data'];
+        print(data);
+        List<Rekap> listPresensi = [];
+        for (int i = 0; i < data.length; i++) {
+          Rekap rekap = Rekap(
+            nik: data[i]['nik'].toString(),
+            jumlah: data[i]['jumlah'].toString(),
+            kategori: data[i]['kategori'].toString(),
+          );
+          listPresensi.add(rekap);
         }
         return listPresensi;
       }

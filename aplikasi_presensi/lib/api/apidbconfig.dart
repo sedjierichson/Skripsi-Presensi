@@ -12,4 +12,4 @@ const apiUrl = "http://127.0.0.1:8888/api-presensi/api-presensi/api";
 // NGROK
 // const apiUrl = "https://4aa2-182-16-163-206.ngrok-free.app/api-presensi/api";
 // const apiUrl =
-//     "https://2a31-203-189-122-12.ngrok-free.app/api-presensi/api-presensi/api";
+//     "https://4566-203-189-122-12.ngrok-free.app/api-presensi/api-presensi/api";

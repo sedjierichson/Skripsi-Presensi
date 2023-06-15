@@ -195,6 +195,7 @@ class _menuDetailBawahanState extends State<menuDetailBawahan> {
                                             '-' +
                                             '$bulanFilter'));
                                     getJumlahIzin();
+                                    getJumlahKehadiran();
                                   });
                                 });
                               },
