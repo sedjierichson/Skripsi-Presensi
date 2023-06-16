@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  # connectivity_plus: ^4.0.1
   cupertino_icons: ^1.0.2
   firebase_messaging: ^14.6.1
   flutter:
@@ -39,6 +40,7 @@ dependencies:
   hexcolor: ^3.0.1
   http: ^0.13.5
   image_picker: ^0.8.7
+  internet_connection_checker: ^1.0.0+1
   intl: ^0.18.0
   loading_animation_widget: ^1.2.0+4
   permission_handler: ^10.2.0

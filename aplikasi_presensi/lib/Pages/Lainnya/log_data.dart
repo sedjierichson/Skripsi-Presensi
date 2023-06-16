@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:aplikasi_presensi/globals.dart' as globals;
 
 class LogData extends StatefulWidget {
   const LogData({super.key});
@@ -17,6 +19,7 @@ class LogData extends StatefulWidget {
 
 class _LogDataState extends State<LogData> {
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+  String tanggalAbsen = DateFormat('yyyy-MM-dd').format(DateTime.now());
   late final BluetoothDevice device;
   bool hasilScanAdaSama = false;
   LogService dbLog = LogService();
@@ -26,6 +29,8 @@ class _LogDataState extends State<LogData> {
   PresensiService dbPresensi = PresensiService();
   List<String> beacon = [];
   Timer? timer;
+  Timer? timer2;
+  String idPresensiHistory = '';
 
   void insertLog(
       {required String jarak,
@@ -121,10 +126,79 @@ class _LogDataState extends State<LogData> {
     return DateFormat("HH:mm:ss").format(dateTime);
   }
 
+  void checkKoneksiInternet(bool res) async {
+    // bool result = await InternetConnectionChecker().hasConnection;
+    if (res == true) {
+      if (globals.pegawai.read('jam_offline') == null) {
+        globals.pegawai.write('jam_offline', DateTime.now());
+      } else {
+        DateTime temp = globals.pegawai.read('jam_offline');
+        DateTime temp2 = DateTime.now();
+        //membandingkan perbedaan waktu terakhir & waktu sekarang
+        int diff = temp2.difference(temp).inSeconds;
+        print('Jam Online = ' + DateTime.now().toString());
+        print('Perbedaan = ' + diff.toString());
+        if (diff > 10) {
+          //catat sebagai history
+          insertHistoryAbsenKeluarOtomatis(
+              DateFormat("HH:mm:ss").format(temp).toString(),
+              DateFormat("HH:mm:ss").format(temp2).toString());
+          globals.pegawai.remove('jam_offline');
+        } else {
+          //replace jam online
+          globals.pegawai.write('jam_offline', DateTime.now());
+        }
+      }
+    } else {
+      globals.pegawai.write('jam_offline', DateTime.now());
+      print('Jam offline = ' + globals.pegawai.read('jam_offline').toString());
+    }
+  }
+
+  void insertHistoryAbsenKeluarOtomatis(
+      String jamKeluar, String jamKembali) async {
+    //klik tombol untuk harian (not history keluar masuk)
+    try {
+      var res = await dbPresensi.insertAbsenMasuk(
+          globals.pegawai.read('nik'),
+          999,
+          tanggalAbsen.toString(),
+          jamKeluar,
+          "history",
+          "history",
+          "D",
+          1);
+      if (res['status'] == 1) {
+        setState(() {
+          idPresensiHistory = res['message'];
+          globals.pegawai.write('idhistory', idPresensiHistory);
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    updateHistoryJamKembali(jamKembali);
+  }
+
+  void updateHistoryJamKembali(String jam) async {
+    try {
+      await dbPresensi.updateHistoryJamKembali(
+        nik: globals.pegawai.read('nik'),
+        jam: jam,
+        tanggal: tanggalAbsen.toString(),
+      );
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
   @override
   void initState() {
     getBeacon();
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
+    // timer2 = Timer.periodic(Duration(seconds: 5), (timer) {
+    //   checkKoneksiInternet();
+    // });
     super.initState();
   }
 
@@ -316,6 +390,18 @@ class _LogDataState extends State<LogData> {
                       ),
                     ],
                   ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    checkKoneksiInternet(true);
+                  },
+                  child: Text('check koneksi online'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    checkKoneksiInternet(false);
+                  },
+                  child: Text('check koneksi offline'),
                 )
               ],
             ),

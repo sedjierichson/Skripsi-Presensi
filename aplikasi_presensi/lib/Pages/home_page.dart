@@ -16,6 +16,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:aplikasi_presensi/globals.dart' as globals;
 // import 'package:modal_bottom_sheet/src/bottom_sheet_route.dart' as mymodal;
@@ -45,6 +46,7 @@ class _HomePageState extends State<HomePage> {
   // late final BluetoothDevice device;
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   Timer? timer;
+  Timer? timer2;
   bool isLoading = true;
   List<ScanResult> scanResultList = [];
   List<String> hasilbeacon = [];
@@ -329,64 +331,6 @@ class _HomePageState extends State<HomePage> {
           isLoading = false;
         });
       }
-      // for (int i = 0; i < beacon.length; i++) {
-      //   var hasil = hasilbeacon.contains(beacon[i].toString());
-
-      //   if (hasil == false) {
-      //     //simpan jam beacon tidak terdeteksi
-      //     setState(() {
-      //       jamBeaconTidakTerdeteksi = jamSekarang;
-      //     });
-
-      //     //Kalau sudah absen masuk & beacon tidak ada
-      //     // if (sudahAbsenMasuk == true) {
-      //     //   NotificationWidget.showNotification(
-      //     //     title: "Presensi PT X",
-      //     //     body: 'Beacon tidak terdeteksi!',
-      //     //   );
-      //     // }
-      //     //kalau sudah absen masuk, tapi belum meninggalkan kantor
-      //     if (absenHistory == false && sudahAbsenMasuk == true) {
-      //       //kalau sudah absen masuk harian & tidak ada beacon
-      //       print('absen keluar is history');
-      //       //catat jam keluar
-      //       insertHistoryAbsenKeluarOtomatis();
-      //     }
-      //     // getJamPulangKerja();
-      //     // timer?.cancel();
-      //     setState(() {
-      //       hasilScanAdaSama = false;
-      //       isLoading = false;
-      //     });
-      //     break;
-      //   } else {
-      //     //ada beacon
-      //     // Keluar kantor -> Kembali ke kantor & beacon terdeteksi
-      //     if (absenHistory == true && sudahAbsenMasuk == true) {
-      //       //Update jam kembali setelah meninggalkan kantor
-      //       print('update history kembali is history');
-      //       updateHistoryJamKembali();
-      //       // setState(() {
-      //       //   absenHistory = false;
-      //       // });
-      //     }
-      //     // Ada beacon & belum absen masuk harian
-      //     else if (sudahAbsenMasuk == false) {
-      //       // Berada di kantor tapi belum absen masuk harian
-      //       print('baru datang kantor, belum absen');
-      //       NotificationWidget.showNotification(
-      //         title: "Presensi PT X",
-      //         body:
-      //             'Beacon presensi terdeteksi ! Silahkan lakukan presensi masuk !',
-      //       );
-      //     }
-      //     setState(() {
-      //       hasilScanAdaSama = true;
-      //       isLoading = false;
-      //     });
-      //     break;
-      //   }
-      // }
     } catch (e) {
       print(e.toString());
     }
@@ -532,6 +476,9 @@ class _HomePageState extends State<HomePage> {
     Future.delayed(const Duration(seconds: 5), () {
       checkBeacon();
     });
+    // timer2 = Timer.periodic(Duration(seconds: 5), (timer) {
+    //   checkKoneksiInternet();
+    // });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
     super.initState();
@@ -541,6 +488,15 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     timer?.cancel();
     super.dispose();
+  }
+
+  void checkKoneksiInternet() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      print('Online');
+    } else {
+      print('Offline');
+    }
   }
 
   @override
