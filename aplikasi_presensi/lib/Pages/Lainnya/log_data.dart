@@ -145,8 +145,10 @@ class _LogDataState extends State<LogData> {
               DateFormat("HH:mm:ss").format(temp2).toString());
           globals.pegawai.remove('jam_offline');
         } else {
-          //replace jam online
-          globals.pegawai.write('jam_offline', DateTime.now());
+          // catat jam offline hanya kalau belum tercatat di local storage
+          if (globals.pegawai.read('jam_offline') == null) {
+            globals.pegawai.write('jam_offline', DateTime.now());
+          }
         }
       }
     } else {
