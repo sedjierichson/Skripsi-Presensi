@@ -127,6 +127,8 @@ class _LogDataState extends State<LogData> {
   }
 
   void checkKoneksiInternet(bool res) async {
+    // globals.pegawai.remove('jam_offline');
+
     // bool result = await InternetConnectionChecker().hasConnection;
     if (res == true) {
       if (globals.pegawai.read('jam_offline') == null) {
@@ -146,13 +148,17 @@ class _LogDataState extends State<LogData> {
           globals.pegawai.remove('jam_offline');
         } else {
           // catat jam offline hanya kalau belum tercatat di local storage
-          if (globals.pegawai.read('jam_offline') == null) {
-            globals.pegawai.write('jam_offline', DateTime.now());
-          }
+          // if (globals.pegawai.read('jam_offline') == null) {
+          globals.pegawai.write('jam_offline', DateTime.now());
+          // }
         }
       }
     } else {
-      globals.pegawai.write('jam_offline', DateTime.now());
+      if (globals.pegawai.read('jam_offline') == null) {
+        globals.pegawai.write('jam_offline', DateTime.now());
+      } else {
+        print('offline tercatat');
+      }
       print('Jam offline = ' + globals.pegawai.read('jam_offline').toString());
     }
   }

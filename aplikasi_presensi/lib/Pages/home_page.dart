@@ -171,6 +171,46 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void insertHistoryAbsenKeluarOtomatisInternetMati(
+      String jamKeluar, String jamKembali) async {
+    //klik tombol untuk harian (not history keluar masuk)
+    try {
+      var res = await dbPresensi.insertAbsenMasuk(
+          globals.pegawai.read('nik'),
+          999,
+          tanggalAbsen.toString(),
+          jamKeluar,
+          "history",
+          "history",
+          "D",
+          1);
+      if (res['status'] == 1) {
+        setState(() {
+          idPresensiHistory = res['message'];
+          globals.pegawai.write('idhistory', idPresensiHistory);
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    updateHistoryJamKembaliInternetMati(jamKembali);
+  }
+
+  void updateHistoryJamKembaliInternetMati(String jam) async {
+    try {
+      await dbPresensi.updateHistoryJamKembali(
+        nik: globals.pegawai.read('nik'),
+        jam: jamSekarang,
+        tanggal: tanggalAbsen.toString(),
+      );
+      setState(() {
+        absenHistory = false;
+      });
+    } catch (e) {
+      globals.showAlertError(context: context, message: e.toString());
+    }
+  }
+
   void cekSudahAbsen() async {
     try {
       var res = await dbPresensi.cekSudahAbsen(
@@ -477,7 +517,7 @@ class _HomePageState extends State<HomePage> {
       checkBeacon();
     });
     // timer2 = Timer.periodic(Duration(seconds: 5), (timer) {
-    //   checkKoneksiInternet();
+    // checkKoneksiInternet();
     // });
     jamSekarang = _format(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (timer) => getTime());
@@ -493,9 +533,35 @@ class _HomePageState extends State<HomePage> {
   void checkKoneksiInternet() async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == true) {
-      print('Online');
+      if (globals.pegawai.read('jam_offline') == null) {
+        globals.pegawai.write('jam_offline', DateTime.now());
+      } else {
+        DateTime temp = globals.pegawai.read('jam_offline');
+        DateTime temp2 = DateTime.now();
+        //membandingkan perbedaan waktu terakhir & waktu sekarang
+        int diff = temp2.difference(temp).inSeconds;
+        print('Jam Online = ' + DateTime.now().toString());
+        print('Perbedaan = ' + diff.toString());
+        if (diff > 10) {
+          //catat sebagai history
+          insertHistoryAbsenKeluarOtomatisInternetMati(
+              DateFormat("HH:mm:ss").format(temp).toString(),
+              DateFormat("HH:mm:ss").format(temp2).toString());
+          globals.pegawai.remove('jam_offline');
+        } else {
+          // catat jam offline hanya kalau belum tercatat di local storage
+          // if (globals.pegawai.read('jam_offline') == null) {
+          globals.pegawai.write('jam_offline', DateTime.now());
+          // }
+        }
+      }
     } else {
-      print('Offline');
+      if (globals.pegawai.read('jam_offline') == null) {
+        globals.pegawai.write('jam_offline', DateTime.now());
+      } else {
+        print('offline tercatat');
+      }
+      print('Jam offline = ' + globals.pegawai.read('jam_offline').toString());
     }
   }
 
