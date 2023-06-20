@@ -134,7 +134,7 @@ class _LogDataState extends State<LogData> {
       if (globals.pegawai.read('jam_offline') == null) {
         globals.pegawai.write('jam_offline', DateTime.now());
       } else {
-        DateTime temp = globals.pegawai.read('jam_offline');
+        DateTime temp = DateTime.parse(globals.pegawai.read('jam_offline'));
         DateTime temp2 = DateTime.now();
         //membandingkan perbedaan waktu terakhir & waktu sekarang
         int diff = temp2.difference(temp).inSeconds;
@@ -149,13 +149,16 @@ class _LogDataState extends State<LogData> {
         } else {
           // catat jam offline hanya kalau belum tercatat di local storage
           // if (globals.pegawai.read('jam_offline') == null) {
-          globals.pegawai.write('jam_offline', DateTime.now());
+          globals.pegawai.remove('jam_offline');
+          globals.pegawai
+              .write('jam_offline', DateTime.now().toIso8601String());
           // }
         }
       }
     } else {
       if (globals.pegawai.read('jam_offline') == null) {
-        globals.pegawai.write('jam_offline', DateTime.now());
+        globals.pegawai.remove('jam_offline');
+        globals.pegawai.write('jam_offline', DateTime.now().toIso8601String());
       } else {
         print('offline tercatat');
       }
