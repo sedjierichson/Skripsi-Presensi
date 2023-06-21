@@ -132,7 +132,7 @@ class _LogDataState extends State<LogData> {
     // bool result = await InternetConnectionChecker().hasConnection;
     if (res == true) {
       if (globals.pegawai.read('jam_offline') == null) {
-        globals.pegawai.write('jam_offline', DateTime.now());
+        globals.pegawai.write('jam_offline', DateTime.now().toIso8601String());
       } else {
         DateTime temp = DateTime.parse(globals.pegawai.read('jam_offline'));
         DateTime temp2 = DateTime.now();
@@ -140,7 +140,7 @@ class _LogDataState extends State<LogData> {
         int diff = temp2.difference(temp).inSeconds;
         print('Jam Online = ' + DateTime.now().toString());
         print('Perbedaan = ' + diff.toString());
-        if (diff > 10) {
+        if (diff > 5) {
           //catat sebagai history
           insertHistoryAbsenKeluarOtomatis(
               DateFormat("HH:mm:ss").format(temp).toString(),
